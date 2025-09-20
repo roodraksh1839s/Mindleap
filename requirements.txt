@@ -1,0 +1,6 @@
+flask
+mysql.connector
+scikit-learn
+pandas
+numpy
+datetime

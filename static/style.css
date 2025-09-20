@@ -1,0 +1,28 @@
+body{
+      background-image: url("clam.jpg");
+      margin-top: 100px;
+      margin-bottom: 100px;
+      margin-left:500px;
+      margin-right:150px;
+    }
+
+    h1{
+        margin-left:100px;
+    }
+    input{
+        width:70%;
+        padding:12px 20px;
+        margin:8px 0;
+        box-sizing: border-box;
+        border-bottom: 4px solid black;   }
+    button{
+        background-color:#4CAF50;
+        margin: auto;
+        color:white;
+        padding:15px 100px;
+        text-align : center;
+        text-decoration: name;
+        display:inline-block;
+        font-size : 16px;
+        margin-left: 170px;
+    }
