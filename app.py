@@ -17,30 +17,30 @@ except Exception as e:
     print("Model not found or failed to load — using rule-based scoring.", e)
     model = None
 
-# def get_db_connection():
-#     return mysql.connector.connect(
-#         host = 'localhost',
-#         user = 'root',
-#         password = 'superb$1839S',
-#         database = 'mindleap'
-#     )
-
-
 def get_db_connection():
-    # Get database credentials from Railway environment variables
-    DB_HOST = os.environ.get("mysql.railway.internal") or os.environ.get("DB_HOST")
-    DB_USER = os.environ.get("root") or os.environ.get("DB_USER")
-    DB_PASSWORD = os.environ.get("XLiyuRZEDTPlNAtnDHqmVsrWYMyPYRCm") or os.environ.get("DB_PASSWORD")
-    DB_NAME = os.environ.get("railway") or os.environ.get("DB_NAME")
-    DB_PORT = int(os.environ.get("3306", 3306))  # default MySQL port
-
     return mysql.connector.connect(
-        host=DB_HOST,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME,
-        port=DB_PORT
+        host = 'localhost',
+        user = 'root',
+        password = 'superb$1839S',
+        database = 'mindleap'
     )
+
+
+# def get_db_connection():
+#     # Get database credentials from Railway environment variables
+#     DB_HOST = os.environ.get("mysql.railway.internal") or os.environ.get("DB_HOST")
+#     DB_USER = os.environ.get("root") or os.environ.get("DB_USER")
+#     DB_PASSWORD = os.environ.get("XLiyuRZEDTPlNAtnDHqmVsrWYMyPYRCm") or os.environ.get("DB_PASSWORD")
+#     DB_NAME = os.environ.get("railway") or os.environ.get("DB_NAME")
+#     DB_PORT = int(os.environ.get("3306", 3306))  # default MySQL port
+
+#     return mysql.connector.connect(
+#         host=DB_HOST,
+#         user=DB_USER,
+#         password=DB_PASSWORD,
+#         database=DB_NAME,
+#         port=DB_PORT
+#     )
 
 @app.route('/')
 def home():
