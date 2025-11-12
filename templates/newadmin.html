@@ -120,22 +120,21 @@
 
       <!-- Right Section -->
       <div class="flex items-center space-x-4">
-        <button class="p-2 rounded-xl hover:bg-purple-100 transition-colors relative">
+        <!-- <button class="p-2 rounded-xl hover:bg-purple-100 transition-colors relative">
           <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5-5 5-5v10z"/>
           </svg>
           <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-        </button>
+        </button> -->
         
         <div class="flex items-center space-x-3">
           <div class="text-right">
            <a href="{{ url_for('home') }}"><button>Log out</button></a>
 
             <div class="text-sm text-gray-500">Admin</div>
-            <div class="font-semibold text-gray-800">Dr. Meera Shah</div>
+            <div class="font-semibold text-gray-800">Dr.Roodraksh Bisen</div>
           </div>
           <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold">
-            MS
           </div>
         </div>
       </div>
@@ -156,17 +155,7 @@
             <div class="text-2xl">👥</div>
             <span class="font-medium">Students</span>
           </div>
-          
-           <!-- <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer">
-            <div class="text-2xl">📋</div>
-            <span class="font-medium">Screenings</span>
-          </div>
-          
-          <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer">
-            <div class="text-2xl">💬</div>
-            <span class="font-medium">AI Chatbot</span>
-          </div> -->
-          
+           
           <div  id="addResourcesBtn"  class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer">
             <div class="text-2xl">📋</div>
             <span class="font-medium">Add Learning Resources</span>
@@ -446,29 +435,45 @@
 
   <script>
     // Wait for DOM to load
-    document.addEventListener('DOMContentLoaded', function() {
-      
-      // Sidebar Toggle
+    document.addEventListener('DOMContentLoaded', function(event) {
+        
+      // Sidebar Toggle with smooth animation
       document.getElementById('sidebarToggle').addEventListener('click', () => {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('w-64');
-        sidebar.classList.toggle('w-16');
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('w-64'); 
+      sidebar.classList.toggle('w-10');
+      sidebar.classList.toggle('overflow-hidden');
+      // sidebaritems = sidebar.querySelectorAll('.sidebar-item');
+      
+      // if(sidebar.classList.contains('w-10')){
+      //   sidebaritems.forEach(item => {
+      //     item.style.backgroundColor = 'transparent';
+      //     item.style.borderLeft = '0px';
+      //   })
+      // }else{
+      //   sidebaritems.forEach(item => {
+      //     item.style.backgroundColor = 'rgba(167, 139, 250, 0.2)';
+      //     item.style.borderLeft = '4px solid #667eea';
+      //   }
+      // )}
+      // Add smooth transition
+      sidebar.style.transition = 'width 0.3s ease';
       });
 
       // Charts Implementation with Chart.js v4
-      
-      // 1. Mental Health Trends Line Chart
+      // 1. Mental Health Trends Line Chart with improved visualization
       const trendsCtx = document.getElementById('trendsChart').getContext('2d');
       new Chart(trendsCtx, {
-        type: 'line',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-          datasets: [
-            {
-              label: 'Stress',
-              data: [42, 45, 39, 48, 51, 47, 44, 46],
-              borderColor: '#8B5CF6',
-              backgroundColor: 'rgba(139, 92, 246, 0.1)',
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+        datasets: [
+        {
+          label: 'Stress',
+          data: [42, 45, 39, 48, 51, 47, 44, 46],
+          borderColor: '#8B5CF6',
+          backgroundColor: 'rgba(139, 92, 246, 0.1)',
+          borderWidth: 2, // Added border width
               fill: true,
               tension: 0.4,
               pointBackgroundColor: '#8B5CF6',

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confidential Booking System - Mindleap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover, .tag.active {
+            background: rgba(102, 126, 234, 0.6);
+            transform: scale(1.05);
+        }
+
+        .calendar-day {
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .calendar-day.available {
+            background: rgba(102, 234, 142, 0.3);
+        }
+
+        .calendar-day.booked {
+            background: rgba(234, 102, 102, 0.3);
+            cursor: not-allowed;
+        }
+
+        .calendar-day.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .time-slot {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin: 0.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .time-slot:hover, .time-slot.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .time-slot.booked {
+            background: rgba(234, 102, 102, 0.3);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .alert.success {
+            background: rgba(102, 234, 142, 0.3);
+            border: 1px solid rgba(102, 234, 142, 0.6);
+            color: white;
+        }
+
+        .session-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-upcoming {
+            background: rgba(102, 126, 234, 0.3);
+        }
+
+        .status-completed {
+            background: rgba(102, 234, 142, 0.3);
+        }
+
+        .status-cancelled {
+            background: rgba(234, 102, 102, 0.3);
+        }
+
+        input, select, textarea {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: white;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.6);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-white">🧠 Mindleap</h1>
+            <div class="flex gap-6 text-white">
+                <a href="index.html" class="hover:text-purple-300 transition">Home</a>
+                <a href="resource.html" class="hover:text-purple-300 transition">Resources</a>
+                <a href="booking.html" class="text-purple-300">Booking</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-12">
+        <!-- Hero Section -->
+        <div class="text-center mb-12 fade-in-up">
+            <h1 class="text-5xl font-bold text-white mb-4">Confidential Booking System</h1>
+            <p class="text-xl text-white opacity-90">Choose your preferred counselor type and schedule a confidential session that suits your needs.</p>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="glass-card p-6 mb-8 fade-in-up delay-1">
+            <h3 class="text-2xl font-semibold text-white mb-4">🔍 Filter Counselors</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="text-white font-semibold mb-2 block">Specialization</label>
+                    <div class="flex flex-wrap">
+                        <span class="tag" onclick="toggleTag(this)">Stress</span>
+                        <span class="tag" onclick="toggleTag(this)">Anxiety</span>
+                        <span class="tag" onclick="toggleTag(this)">Relationships</span>
+                        <span class="tag" onclick="toggleTag(this)">Career</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-white font-semibold mb-2 block">Language</label>
+                    <div class="flex flex-wrap">
+                        <span class="tag" onclick="toggleTag(this)">Hindi</span>
+                        <span class="tag" onclick="toggleTag(this)">English</span>
+                        <span class="tag" onclick="toggleTag(this)">Regional</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Cards -->
+        <div class="grid md:grid-cols-3 gap-8 mb-12">
+            <!-- College Counselor -->
+            <div class="glass-card p-8 text-white fade-in-up delay-2">
+                <div class="text-5xl mb-4">🏫</div>
+                <h3 class="text-2xl font-bold mb-3">College Counselor</h3>
+                <p class="mb-4 opacity-90">Available during campus hours, free for enrolled students.</p>
+                <div class="mb-4">
+                    <span class="text-yellow-300 text-xl">⭐ 4.8 / 5</span>
+                    <span class="text-sm opacity-75 ml-2">(127 reviews)</span>
+                </div>
+                <button class="btn-primary w-full" onclick="openBookingModal('College')">Book Now</button>
+            </div>
+
+            <!-- Government Counselor -->
+            <div class="glass-card p-8 text-white fade-in-up delay-3">
+                <div class="text-5xl mb-4">🏛️</div>
+                <h3 class="text-2xl font-bold mb-3">Government Counselor</h3>
+                <p class="mb-4 opacity-90">Free national-level tele-counseling professionals.</p>
+                <div class="mb-4">
+                    <span class="text-yellow-300 text-xl">⭐ 4.6 / 5</span>
+                    <span class="text-sm opacity-75 ml-2">(89 reviews)</span>
+                </div>
+                <button class="btn-primary w-full" onclick="openBookingModal('Government')">Book Now</button>
+            </div>
+
+            <!-- Private Counselor -->
+            <div class="glass-card p-8 text-white fade-in-up delay-4">
+                <div class="text-5xl mb-4">💼</div>
+                <h3 class="text-2xl font-bold mb-3">Private Counselor</h3>
+                <p class="mb-4 opacity-90">Licensed online professionals (affordable private sessions).</p>
+                <div class="mb-4">
+                    <span class="text-yellow-300 text-xl">⭐ 4.9 / 5</span>
+                    <span class="text-sm opacity-75 ml-2">(203 reviews)</span>
+                </div>
+                <button class="btn-primary w-full" onclick="openBookingModal('Private')">Book Now</button>
+            </div>
+        </div>
+
+        <!-- My Sessions -->
+        <div class="glass-card p-8 text-white fade-in-up">
+            <h3 class="text-3xl font-bold mb-6">📅 My Sessions</h3>
+            
+            <div class="session-card">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h4 class="font-semibold text-lg">Dr. Priya Sharma</h4>
+                        <p class="text-sm opacity-75">College Counselor - Stress Management</p>
+                    </div>
+                    <span class="status-badge status-upcoming">Upcoming</span>
+                </div>
+                <p class="text-sm mt-2">📅 Nov 15, 2025 | ⏰ 2:00 PM - 3:00 PM</p>
+            </div>
+
+            <div class="session-card">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h4 class="font-semibold text-lg">Dr. Rajesh Kumar</h4>
+                        <p class="text-sm opacity-75">Government Counselor - Career Guidance</p>
+                    </div>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+                <p class="text-sm mt-2">📅 Nov 5, 2025 | ⏰ 10:00 AM - 11:00 AM</p>
+                <button class="btn-primary mt-3 py-2 px-4 text-sm" onclick="openFeedbackModal()">Leave Feedback</button>
+            </div>
+
+            <div class="session-card">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h4 class="font-semibold text-lg">Dr. Anita Verma</h4>
+                        <p class="text-sm opacity-75">Private Counselor - Anxiety</p>
+                    </div>
+                    <span class="status-badge status-cancelled">Cancelled</span>
+                </div>
+                <p class="text-sm mt-2">📅 Oct 28, 2025 | ⏰ 4:00 PM - 5:00 PM</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-white">Book Appointment</h2>
+                <button onclick="closeBookingModal()" class="text-white text-3xl hover:text-red-300">&times;</button>
+            </div>
+
+            <form id="bookingForm">
+                <!-- Counselor Type -->
+                <div class="mb-4">
+                    <label class="text-white font-semibold mb-2 block">Counselor Type</label>
+                    <input type="text" id="counselorType" readonly class="opacity-75 cursor-not-allowed">
+                </div>
+
+                <!-- Anonymous Toggle -->
+                <div class="mb-6 flex items-center justify-between">
+                    <span class="text-white font-semibold">Book Anonymously</span>
+                    <label class="switch">
+                        <input type="checkbox" id="anonymousToggle" onchange="toggleAnonymous()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- User Details -->
+                <div id="userDetails">
+                    <div class="mb-4">
+                        <label class="text-white font-semibold mb-2 block">Full Name</label>
+                        <input type="text" id="userName" placeholder="Enter your name" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="text-white font-semibold mb-2 block">Email</label>
+                        <input type="email" id="userEmail" placeholder="Enter your email" required>
+                    </div>
+                </div>
+
+                <!-- Select Counselor -->
+                <div class="mb-4">
+                    <label class="text-white font-semibold mb-2 block">Select Counselor</label>
+                    <select id="counselorSelect" required>
+                        <option value="">Choose a counselor</option>
+                    </select>
+                </div>
+
+                <!-- Mini Calendar -->
+                <div class="mb-4">
+                    <label class="text-white font-semibold mb-2 block">Select Date</label>
+                    <div class="grid grid-cols-7 gap-2" id="calendar">
+                        <!-- Calendar will be generated by JS -->
+                    </div>
+                </div>
+
+                <!-- Time Slots -->
+                <div class="mb-4">
+                    <label class="text-white font-semibold mb-2 block">Select Time</label>
+                    <div class="flex flex-wrap gap-2" id="timeSlots">
+                        <!-- Time slots will be generated by JS -->
+                    </div>
+                </div>
+
+                <!-- Reminder -->
+                <div class="mb-6 flex items-center">
+                    <input type="checkbox" id="reminderToggle" class="mr-3 w-5 h-5">
+                    <label for="reminderToggle" class="text-white">Send reminder (WhatsApp/Email) 1 hour before</label>
+                </div>
+
+                <!-- Success Alert -->
+                <div id="successAlert" class="alert success">
+                    ✅ Your confidential appointment has been booked successfully!
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-primary w-full">Confirm Appointment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-white">Anonymous Feedback</h2>
+                <button onclick="closeFeedbackModal()" class="text-white text-3xl hover:text-red-300">&times;</button>
+            </div>
+
+            <form id="feedbackForm">
+                <div class="mb-4">
+                    <label class="text-white font-semibold mb-2 block">Rating</label>
+                    <div class="flex gap-2 text-3xl">
+                        <span class="cursor-pointer hover:scale-110 transition" onclick="setRating(1)">⭐</span>
+                        <span class="cursor-pointer hover:scale-110 transition" onclick="setRating(2)">⭐</span>
+                        <span class="cursor-pointer hover:scale-110 transition" onclick="setRating(3)">⭐</span>
+                        <span class="cursor-pointer hover:scale-110 transition" onclick="setRating(4)">⭐</span>
+                        <span class="cursor-pointer hover:scale-110 transition" onclick="setRating(5)">⭐</span>
+                    </div>
+                    <input type="hidden" id="rating" value="5">
+                </div>
+
+                <div class="mb-4">
+                    <label class="text-white font-semibold mb-2 block">Your Feedback</label>
+                    <textarea id="feedbackText" rows="4" placeholder="Share your experience..." required></textarea>
+                </div>
+
+                <div id="feedbackSuccess" class="alert success">
+                    ✅ Thank you for your anonymous feedback!
+                </div>
+
+                <button type="submit" class="btn-primary w-full">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer py-8 px-6 mt-12">
+        <div class="container mx-auto text-center text-white">
+            <p class="mb-4">&copy; 2025 Mindleap. Your mental health matters. 💜</p>
+            <div class="flex justify-center gap-6">
+                <a href="#" class="hover:text-purple-300 transition">Privacy Policy</a>
+                <a href="#" class="hover:text-purple-300 transition">Terms of Service</a>
+                <a href="#" class="hover:text-purple-300 transition">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample counselor data
+        const counselors = {
+            College: [
+                { name: 'Dr. Priya Sharma', specialization: 'Stress Management' },
+                { name: 'Dr. Amit Patel', specialization: 'Anxiety & Depression' },
+                { name: 'Ms. Neha Gupta', specialization: 'Career Counseling' }
+            ],
+            Government: [
+                { name: 'Dr. Rajesh Kumar', specialization: 'General Counseling' },
+                { name: 'Dr. Sunita Singh', specialization: 'Family Therapy' },
+                { name: 'Mr. Vikram Rao', specialization: 'Addiction Support' }
+            ],
+            Private: [
+                { name: 'Dr. Anita Verma', specialization: 'Anxiety & Panic Disorders' },
+                { name: 'Dr. Karan Mehta', specialization: 'Relationship Counseling' },
+                { name: 'Ms. Riya Desai', specialization: 'Stress & Burnout' }
+            ]
+        };
+
+        let selectedDate = null;
+        let selectedTime = null;
+
+        function toggleTag(element) {
+            element.classList.toggle('active');
+        }
+
+        function openBookingModal(type) {
+            document.getElementById('counselorType').value = type + ' Counselor';
+            populateCounselors(type);
+            generateCalendar();
+            generateTimeSlots();
+            document.getElementById('bookingModal').classList.add('active');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('active');
+            document.getElementById('bookingForm').reset();
+            document.getElementById('successAlert').style.display = 'none';
+            document.getElementById('userDetails').style.display = 'block';
+        }
+
+        function populateCounselors(type) {
+            const select = document.getElementById('counselorSelect');
+            select.innerHTML = '<option value="">Choose a counselor</option>';
+            counselors[type].forEach(c => {
+                select.innerHTML += `<option value="${c.name}">${c.name} - ${c.specialization}</option>`;
+            });
+        }
+
+        function generateCalendar() {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+            
+            const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            days.forEach(day => {
+                calendar.innerHTML += `<div class="text-center text-white font-semibold">${day}</div>`;
+            });
+
+            const today = new Date();
+            for (let i = 0; i < 14; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                const dayNum = date.getDate();
+                const isAvailable = Math.random() > 0.3;
+                const classes = isAvailable ? 'calendar-day available' : 'calendar-day booked';
+                
+                calendar.innerHTML += `
+                    <div class="${classes}" onclick="selectDate(this, '${date.toDateString()}')" data-available="${isAvailable}">
+                        ${dayNum}
+                    </div>
+                `;
+            }
+        }
+
+        function selectDate(element, dateStr) {
+            if (!element.classList.contains('booked')) {
+                document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                element.classList.add('selected');
+                selectedDate = dateStr;
+                generateTimeSlots();
+            }
+        }
+
+        function generateTimeSlots() {
+            const container = document.getElementById('timeSlots');
+            container.innerHTML = '';
+            
+            const times = ['9:00 AM', '10:00 AM', '11:00 AM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'];
+            times.forEach(time => {
+                const isBooked = Math.random() > 0.7;
+                const classes = isBooked ? 'time-slot booked' : 'time-slot';
+                
+                container.innerHTML += `
+                    <div class="${classes}" onclick="selectTime(this, '${time}')" data-booked="${isBooked}">
+                        ${time}
+                    </div>
+                `;
+            });
+        }
+
+        function selectTime(element, time) {
+            if (!element.classList.contains('booked')) {
+                document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('selected'));
+                element.classList.add('selected');
+                selectedTime = time;
+            }
+        }
+
+        function toggleAnonymous() {
+            const isAnonymous = document.getElementById('anonymousToggle').checked;
+            const userDetails = document.getElementById('userDetails');
+            userDetails.style.display = isAnonymous ? 'none' : 'block';
+            
+            const nameInput = document.getElementById('userName');
+            const emailInput = document.getElementById('userEmail');
+            
+            if (isAnonymous) {
+                nameInput.removeAttribute('required');
+                emailInput.removeAttribute('required');
+            } else {
+                nameInput.setAttribute('required', 'required');
+                emailInput.setAttribute('required', 'required');
+            }
+        }
+
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!selectedDate || !selectedTime) {
+                alert('Please select both date and time');
+                return;
+            }
+
+            document.getElementById('successAlert').style.display = 'block';
+            
+            setTimeout(() => {
+                closeBookingModal();
+            }, 3000);
+        });
+
+        function openFeedbackModal() {
+            document.getElementById('feedbackModal').classList.add('active');
+        }
+
+        function closeFeedbackModal() {
+            document.getElementById('feedbackModal').classList.remove('active');
+            document.getElementById('feedbackForm').reset();
+            document.getElementById('feedbackSuccess').style.display = 'none';
+        }
+
+        function setRating(stars) {
+            document.getElementById('rating').value = stars;
+            const starElements = document.querySelectorAll('#feedbackModal .cursor-pointer');
+            starElements.forEach((star, index) => {
+                star.style.opacity = index < stars ? '1' : '0.3';
+            });
+        }
+
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('feedbackSuccess').style.display = 'block';
+            
+            setTimeout(() => {
+                closeFeedbackModal();
+            }, 2000);
+        });
+
+        // Initialize rating display
+        setRating(5);
+    </script>
+</body>
+</html>
