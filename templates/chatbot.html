@@ -191,158 +191,92 @@
         </div>
         
     </div>
-    
-    <script>
-        // DOM elements
-        const chatMessages = document.getElementById('chatMessages');
-        const userInput = document.getElementById('userInput');
-        const sendButton = document.getElementById('sendButton');
-        
-        // Sample bot responses for demo purposes
-        const botResponses = {
-            greetings: [
-                "Hello! I'm here to support you. What's on your mind?",
-                "Hi there! How can I help you today?",
-                "Welcome back! I'm here to listen."
-            ],
-            feelings: [
-                "Thank you for sharing that with me. Your feelings are completely valid. Would you like to talk more about what's causing these feelings?",
-                "I appreciate you opening up. It takes courage to express how you feel. Can you tell me more?",
-                "It's okay to feel this way. I'm here to support you through this. What would help you most right now?"
-            ],
-            anxiety: [
-                "Anxiety can be overwhelming. Have you tried any breathing exercises? Taking slow, deep breaths can help calm your nervous system.",
-                "I understand anxiety can be difficult. Remember, you're not alone in this. Would you like to try a quick grounding technique?",
-                "When you feel anxious, try the 5-4-3-2-1 technique: Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, and 1 you taste."
-            ],
-            stress: [
-                "Stress is a natural response, but managing it is important. What activities usually help you relax?",
-                "I hear you. Stress can build up quickly. Have you taken any breaks today? Even a 5-minute walk can help.",
-                "Let's work through this together. What's the main thing causing you stress right now?"
-            ],
-            support: [
-                "I'm glad you reached out. You're taking a positive step by talking about this.",
-                "Remember, seeking help is a sign of strength, not weakness. I'm here for you.",
-                "You're doing great by acknowledging your feelings and seeking support."
-            ],
-            default: [
-                "I'm here to listen. Can you tell me more about that?",
-                "That's interesting. How does that make you feel?",
-                "I understand. What would you like to explore about this?",
-                "Thank you for sharing. How can I best support you with this?"
-            ]
-        };
-        
-        // Function to add a message to the chat
-        function addMessage(text, isUser) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `flex mb-4 ${isUser ? 'justify-end slide-in-right' : 'justify-start slide-in-left'}`;
-            
-            const bubbleDiv = document.createElement('div');
-            bubbleDiv.className = `${isUser ? 'message-user' : 'message-bot'} max-w-[75%] px-6 py-4 rounded-2xl ${isUser ? 'rounded-br-md' : 'rounded-bl-md'}`;
-            bubbleDiv.innerHTML = `<p class="text-gray-800 leading-relaxed">${text}</p>`;
-            
-            messageDiv.appendChild(bubbleDiv);
-            chatMessages.appendChild(messageDiv);
-            
-            // Scroll to bottom smoothly
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        
-        // Function to show typing indicator
-        function showTypingIndicator() {
-            const typingDiv = document.createElement('div');
-            typingDiv.id = 'typingIndicator';
-            typingDiv.className = 'flex justify-start mb-4 slide-in-left';
-            typingDiv.innerHTML = `
-                <div class="message-bot px-6 py-4 rounded-2xl rounded-bl-md">
-                    <span class="typing-indicator-dot"></span>
-                    <span class="typing-indicator-dot"></span>
-                    <span class="typing-indicator-dot"></span>
-                </div>
-            `;
-            chatMessages.appendChild(typingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        
-        // Function to hide typing indicator
-        function hideTypingIndicator() {
-            const typingIndicator = document.getElementById('typingIndicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-        }
-        
-        // Function to get bot response based on keywords
-        function getBotResponse(userMessage) {
-            const message = userMessage.toLowerCase();
-            
-            // Check for keywords and return appropriate response
-            if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-                return getRandomResponse(botResponses.greetings);
-            } else if (message.includes('anxious') || message.includes('anxiety') || message.includes('worried') || message.includes('panic')) {
-                return getRandomResponse(botResponses.anxiety);
-            } else if (message.includes('stress') || message.includes('overwhelmed') || message.includes('pressure')) {
-                return getRandomResponse(botResponses.stress);
-            } else if (message.includes('sad') || message.includes('depressed') || message.includes('down') || message.includes('feel')) {
-                return getRandomResponse(botResponses.feelings);
-            } else if (message.includes('thank') || message.includes('help')) {
-                return getRandomResponse(botResponses.support);
-            } else {
-                return getRandomResponse(botResponses.default);
-            }
-        }
-        
-        // Function to get random response from array
-        function getRandomResponse(responseArray) {
-            return responseArray[Math.floor(Math.random() * responseArray.length)];
-        }
-        
-        // Function to handle sending messages
-        function sendMessage() {
-            const message = userInput.value.trim();
-            
-            // Don't send empty messages
-            if (message === '') return;
-            
-            // Add user message
-            addMessage(message, true);
-            
-            // Clear input
-            userInput.value = '';
-            
-            // Show typing indicator
-            showTypingIndicator();
-            
-            // Simulate bot "thinking" time
-            setTimeout(() => {
-                hideTypingIndicator();
-                const botReply = getBotResponse(message);
-                addMessage(botReply, false);
-            }, 1000 + Math.random() * 1000); // Random delay between 1-2 seconds
-        }
-        
-        // Event listeners
-        sendButton.addEventListener('click', sendMessage);
-        
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+<script>
+const chatMessages = document.getElementById('chatMessages');
+const userInput = document.getElementById('userInput');
+const sendButton = document.getElementById('sendButton');
+
+// Add message bubble
+function addMessage(text, isUser) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `flex mb-4 ${isUser ? 'justify-end slide-in-right' : 'justify-start slide-in-left'}`;
+    const bubbleDiv = document.createElement('div');
+    bubbleDiv.className = `${isUser ? 'message-user' : 'message-bot'} max-w-[75%] px-6 py-4 rounded-2xl ${isUser ? 'rounded-br-md' : 'rounded-bl-md'}`;
+    bubbleDiv.innerHTML = `<p class="text-gray-800 leading-relaxed">${text}</p>`;
+    messageDiv.appendChild(bubbleDiv);
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Typing animation
+function showTypingIndicator() {
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'typingIndicator';
+    typingDiv.className = 'flex justify-start mb-4 slide-in-left';
+    typingDiv.innerHTML = `
+        <div class="message-bot px-6 py-4 rounded-2xl rounded-bl-md">
+            <span class="typing-indicator-dot"></span>
+            <span class="typing-indicator-dot"></span>
+            <span class="typing-indicator-dot"></span>
+        </div>`;
+    chatMessages.appendChild(typingDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    const t = document.getElementById('typingIndicator');
+    if (t) t.remove();
+}
+
+// Send message to Flask backend
+async function sendMessage() {
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    addMessage(message, true);
+    userInput.value = '';
+    showTypingIndicator();
+
+    try {
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
         });
-        
-        // Display greeting message when page loads
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                addMessage("Hi, I'm MindLeap! How are you feeling today? 😊", false);
-            }, 500);
-        });
-        
-        // Focus on input field when page loads
-        window.addEventListener('load', () => {
-            userInput.focus();
-        });
-    </script>
+
+        const data = await response.json();
+        hideTypingIndicator();
+
+        if (data.reply) {
+            addMessage(data.reply, false);
+        } else {
+            addMessage("⚠️ Sorry, I couldn't understand that.", false);
+        }
+    } catch (error) {
+        hideTypingIndicator();
+        console.error('Error:', error);
+        addMessage("⚠️ Something went wrong while connecting to the server.", false);
+    }
+}
+
+// Event listeners
+sendButton.addEventListener('click', sendMessage);
+userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+// Greeting on load
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        addMessage("🌿 Hi, I'm MindLeap — your wellness companion. How are you feeling today?", false);
+        userInput.focus();
+    }, 500);
+});
+</script>
+
     
 </body>
 </html>

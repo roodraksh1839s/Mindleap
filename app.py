@@ -4,6 +4,15 @@ import pickle
 import mysql.connector
 from datetime import datetime
 import os
+'''
+--------CHAT_BOT INTEGRATION (OPENAI)--------
+'''
+from flask import jsonify, request
+# from openai import OpenAI
+import pandas as pd
+from sentence_transformers import SentenceTransformer
+import faiss, numpy as np
+import requests
 
 app = Flask(__name__)
 
@@ -26,21 +35,98 @@ def get_db_connection():
     )
 
 
-# def get_db_connection():
-#     # Get database credentials from Railway environment variables
-#     DB_HOST = os.environ.get("mysql.railway.internal") or os.environ.get("DB_HOST")
-#     DB_USER = os.environ.get("root") or os.environ.get("DB_USER")
-#     DB_PASSWORD = os.environ.get("XLiyuRZEDTPlNAtnDHqmVsrWYMyPYRCm") or os.environ.get("DB_PASSWORD")
-#     DB_NAME = os.environ.get("railway") or os.environ.get("DB_NAME")
-#     DB_PORT = int(os.environ.get("3306", 3306))  # default MySQL port
+df = pd.read_csv('data/faq.csv')
 
-#     return mysql.connector.connect(
-#         host=DB_HOST,
-#         user=DB_USER,
-#         password=DB_PASSWORD,
-#         database=DB_NAME,
-#         port=DB_PORT
+# client = OpenAI(api_key="AIzaSyDsOxXjJpL3skc06Yo5d00SmLpcXQABxAE")
+# embed_model = SentenceTransformer('all-MiniLM-L6-v2')
+
+#Ensure columns are clean
+
+df.columns = [c.strip().lower() for c in df.columns]
+
+questions = df['questions'].tolist()
+answers = df['answers'].tolist()
+
+#Compute embeddings
+
+# Load or create FAISS embeddings
+embed_model = SentenceTransformer('all-MiniLM-L6-v2')
+
+if os.path.exists("data/embeddings.pkl"):
+    with open("data/embeddings.pkl", "rb") as f:
+        embeddings, index = pickle.load(f)
+    print("✅ Loaded cached embeddings")
+else:
+    embeddings = embed_model.encode(questions, show_progress_bar=True)
+    dimension = embeddings.shape[1]
+    index = faiss.IndexFlatL2(dimension)
+    index.add(np.array(embeddings))
+    with open("data/embeddings.pkl", "wb") as f:
+        pickle.dump((embeddings, index), f)
+    print("✅ Created and saved embeddings")
+    
+    
+def search_best_match(user_query, top_k=2):
+    """Find top-k most similar Q&A pairs"""
+    query_emb = embed_model.encode([user_query])
+    distances, indices = index.search(np.array(query_emb), top_k)
+    results =[]
+    for idx in indices[0]:
+        results.append((questions[idx], answers[idx]))
+    return results
+
+# def generate_response(user_input):
+#     """Send prompt to GPT-4o with context"""
+#     top_matches = search_best_match(user_input)
+#     context = "\n".join([f"Q: {q}\nA: {a}" for q,a in top_matches])
+
+#     completion = client.chat.completions.create(
+#         model="gpt-4o-mini",
+#         messages=[
+#             {"role": "system", "content": "You are a multilingual assistant that only answers from the provided context."},
+#             {"role": "user", "content": f"Context:\n{context}\n\nUser question: {user_input}\nGive a helpful answer in the same language as the question."}
+#         ]
 #     )
+#     reply = completion.choices[0].message.content
+#     return reply.strip()
+
+def generate_response(user_input):
+    """Generate reply using Google Gemini API"""
+    GEMINI_API_KEY = "AIzaSyDPmpOMohKrH-IWjomBgb8X26h2Ei_zPmg"
+    GEMINI_URL = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+
+    # Retrieve top matches from your FAQ data
+    top_matches = search_best_match(user_input)
+    context = "\n".join([f"Q: {q}\nA: {a}" for q, a in top_matches])
+
+    # Prepare prompt
+    prompt = (
+        f"You are a multilingual, calm, and empathetic mental wellness assistant.\n"
+        f"Use the given Q&A context to answer naturally in the same language as the user's question.\n\n"
+        f"Context:\n{context}\n\nUser question: {user_input}"
+    )
+
+    payload = {
+        "contents": [
+            {"parts": [{"text": prompt}]}
+        ]
+    }
+
+    try:
+        res = requests.post(GEMINI_URL, json=payload)
+        data = res.json()
+
+        # Extract response text safely
+        if "candidates" in data and len(data["candidates"]) > 0:
+            return data["candidates"][0]["content"]["parts"][0]["text"]
+        else:
+            print("⚠️ Gemini API unexpected response:", data)
+            return "Sorry, I couldn’t find an appropriate answer right now."
+    except Exception as e:
+        print("⚠️ Gemini API Error:", e)
+        # Fallback to FAQ answer directly
+        return top_matches[0][1] if top_matches else "Sorry, I'm unable to respond right now."
+
 
 @app.route('/')
 def home():
@@ -97,6 +183,21 @@ def student_ui():
 def chatbot_ui():
     return render_template("chatbot.html")
 
+@app.route('/chat',methods=['POST'])
+def chat():
+    data = request.get_json()
+    user_msg = data.get('message','').strip()
+    
+    if not user_msg:
+        return jsonify({"reply":"Please write your query."})
+    
+    try:
+        reply = generate_response(user_msg)
+        return jsonify({'reply': reply})
+    except Exception as e:
+        print("Error:", e)
+        top_match = search_best_match(user_msg)[0][1]
+        return top_match or "Sorry, I couldn't process your request."
 @app.route('/peer-support')
 def peer_support_ui():
     return render_template('Peer_support.html')
