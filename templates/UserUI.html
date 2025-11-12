@@ -61,6 +61,8 @@
     }
 
     /* Ensure content stays above the animation */
+
+    /* I have changed the file checking 123 */
     #hero-background > .max-w-4xl {
       position: relative;
       z-index: 10;
@@ -130,8 +132,8 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
 .carousel::-webkit-scrollbar-track{background:rgba(255,255,255,0.1);border-radius:10px;}
 .carousel::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.3);border-radius:10px;}
 .carousel::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.5);}
-.carousel-track{display:flex;gap:25px;animation:smoothScroll 30s ease-in-out infinite;width:max-content;padding:20px 0;}
-.carousel:hover .carousel-track{animation-play-state:paused;}
+.carousel-track{display:flex;gap:25px;width:max-content;padding:20px 0;}
+/* .carousel:hover .carousel-track{animation-play-state:paused;} */
 .card{flex:0 0 350px;min-height:420px;height:auto;background:white;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.2);padding:30px;transition:all 0.4s cubic-bezier(0.25,0.8,0.25,1);display:flex;flex-direction:column;position:relative;overflow:hidden;}
 .card.popular::before{content:"Most Popular";position:absolute;top:15px;right:-30px;background:linear-gradient(45deg,#ff6b6b,#ee5a24);color:white;padding:5px 40px;font-size:12px;font-weight:bold;transform:rotate(45deg);box-shadow:0 2px 10px rgba(0,0,0,0.2);}
 .card:hover{transform:scale(1.05) translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,0.3);z-index:10;}
@@ -157,10 +159,13 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
 @media(max-width:480px){.card{flex:0 0 250px;min-height:380px;padding:15px;}}
 
 #mental-carousel {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
   padding: 40px 0;
 }
-
+  #peer-support {
+    width : 100%;
+    margin-top: 8%;
+  }
   </style>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
@@ -258,135 +263,7 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
 
 
 
-<!-- Stress Dashboard Section -->
-<section id="dashboard" class="py-20 px-6 bg-gradient-to-br from-purple-50 to-indigo-50">
-  <div class="max-w-6xl mx-auto">
-    <h2 class="text-4xl font-bold text-center mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-      Stress Monitoring Dashboard
-    </h2>
-    <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-      Track your vital health indicators and see how they relate to your stress level
-    </p>
 
-    <!-- Live Metrics -->
-    <div class="grid md:grid-cols-4 gap-6 mb-12 text-center">
-      <div class="feature-card p-6 rounded-2xl">
-        <h3 class="text-lg font-bold text-gray-800 mb-2">💓 Heart Rate</h3>
-        <input type="range" id="heartRate" min="50" max="140" value="80" class="w-full">
-        <p class="mt-2 text-xl font-bold text-purple-600" id="heartRateValue">80 bpm</p>
-      </div>
-
-      <div class="feature-card p-6 rounded-2xl">
-        <h3 class="text-lg font-bold text-gray-800 mb-2">🩸 SPO₂</h3>
-        <input type="range" id="spo2" min="85" max="100" value="96" class="w-full">
-        <p class="mt-2 text-xl font-bold text-purple-600" id="spo2Value">96 %</p>
-      </div>
-
-      <div class="feature-card p-6 rounded-2xl">
-        <h3 class="text-lg font-bold text-gray-800 mb-2">🫀 Blood Pressure</h3>
-        <input type="range" id="bp" min="90" max="160" value="120" class="w-full">
-        <p class="mt-2 text-xl font-bold text-purple-600" id="bpValue">120 mmHg</p>
-      </div>
-
-      <div class="feature-card p-6 rounded-2xl">
-        <h3 class="text-lg font-bold text-gray-800 mb-2">😰 Stress Level</h3>
-        <p class="mt-4 text-2xl font-bold" id="stressLevel">Moderate</p>
-        <p class="text-sm text-gray-500">Based on your vitals</p>
-      </div>
-    </div>
-
-    <!-- Charts -->
-    <div class="grid md:grid-cols-2 gap-8">
-      <div class="feature-card p-6 rounded-3xl">
-        <h3 class="text-lg font-bold text-gray-800 mb-4 text-center">📊 Weekly Stress Trend</h3>
-        <canvas id="weeklyChart"></canvas>
-      </div>
-
-      <div class="feature-card p-6 rounded-3xl">
-        <h3 class="text-lg font-bold text-gray-800 mb-4 text-center">📅 Monthly Stress Trend</h3>
-        <canvas id="monthlyChart"></canvas>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-  // Elements
-  const heartRate = document.getElementById("heartRate");
-  const spo2 = document.getElementById("spo2");
-  const bp = document.getElementById("bp");
-
-  const heartRateValue = document.getElementById("heartRateValue");
-  const spo2Value = document.getElementById("spo2Value");
-  const bpValue = document.getElementById("bpValue");
-  const stressLevel = document.getElementById("stressLevel");
-
-  // Update function
-  function updateValues() {
-    const hr = parseInt(heartRate.value);
-    const sp = parseInt(spo2.value);
-    const bpv = parseInt(bp.value);
-
-    heartRateValue.textContent = hr + " bpm";
-    spo2Value.textContent = sp + " %";
-    bpValue.textContent = bpv + " mmHg";
-
-    // Stress logic (simplified demo)
-    if (hr > 110 || sp < 90 || bpv > 140) {
-      stressLevel.textContent = "High 🚨";
-      stressLevel.className = "text-red-600 text-2xl font-bold";
-    } else if (hr > 90 || sp < 95 || bpv > 130) {
-      stressLevel.textContent = "Moderate 😟";
-      stressLevel.className = "text-yellow-600 text-2xl font-bold";
-    } else {
-      stressLevel.textContent = "Low 😊";
-      stressLevel.className = "text-green-600 text-2xl font-bold";
-    }
-  }
-
-  [heartRate, spo2, bp].forEach(input => {
-    input.addEventListener("input", updateValues);
-  });
-
-  updateValues(); // Initial run
-
-  // Weekly Chart
-  const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
-  new Chart(weeklyCtx, {
-    type: 'line',
-    data: {
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      datasets: [{
-        label: 'Stress Level',
-        data: [2, 3, 2, 4, 3, 5, 2],
-        borderColor: '#764ba2',
-        backgroundColor: 'rgba(118, 75, 162, 0.2)',
-        tension: 0.4,
-        fill: true,
-      }]
-    },
-    options: { responsive: true, plugins: { legend: { display: false } } }
-  });
-
-  // Monthly Chart
-  const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-  new Chart(monthlyCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-      datasets: [{
-        label: 'Stress Level',
-        data: [3, 4, 2, 5],
-        backgroundColor: '#667eea',
-        borderRadius: 12
-      }]
-    },
-    options: { responsive: true, plugins: { legend: { display: false } } }
-  });
-</script>
 
 
 
@@ -451,6 +328,135 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
           <div class="text-4xl mb-4">📞</div>
           <h3 class="text-xl font-bold mb-3 text-gray-800">Emergency Helplines</h3>
           <p class="text-gray-600">Quick access to local and national mental health helplines with one-click calling and crisis intervention</p>
+          <!-- Inline Emergency Helpline Expansion -->
+<div style="margin-top: 20px; text-align: center;">
+  <button 
+    onclick="toggleHelplinePanel()" 
+    style="
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    "
+    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(102,126,234,0.4)'"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
+    View Helpline Numbers
+  </button>
+</div>
+
+<!-- Overlay -->
+<div id="overlayBg"
+     style="
+      display: none;
+      border-radius: 3xl;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(246, 232, 254, 0.908);
+      backdrop-filter: blur(4px);
+      z-index: 90;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+     "
+     onclick="toggleHelplinePanel()">
+</div>
+
+<!-- Centered Helpline Panel -->
+<div id="helplinePanel" 
+     style="
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 25px;
+      padding: 40px 30px;
+      box-shadow: 0 8px 32px rgba(167, 139, 250, 0.3);
+      color: #333;
+      text-align: center;
+      transition: all 0.3s ease;
+      z-index: 100;
+      max-width: 500px;
+      width: 90%;
+      opacity: 0;
+     ">
+  
+  <!-- Close Button -->
+  <button 
+    onclick="toggleHelplinePanel()" 
+    style="
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    "
+    onmouseover="this.style.color='red'"
+    onmouseout="this.style.color='#555'">
+    ✖
+  </button>
+
+  <h3 style="
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 25px;
+    ">
+    Emergency Helplines
+  </h3>
+
+  <div style="font-size: 18px; font-weight: 500; line-height: 1.8;">
+    ☎️ <a href="tel:18005990019" style="color:#5b21b6; text-decoration:none;">Government Free Tele-Counseling: <b>1800-599-0019</b></a><br>
+    🧑‍⚕️ <a href="tel:07551234567" style="color:#5b21b6; text-decoration:none;">Institute Counseling Number: <b>0755-1234567</b></a>
+  </div>
+</div>
+
+<script>
+  function toggleHelplinePanel() {
+    const panel = document.getElementById("helplinePanel");
+    const overlay = document.getElementById("overlayBg");
+    const isHidden = panel.style.display === "none" || panel.style.display === "";
+
+    if (isHidden) {
+      // Show overlay
+      overlay.style.display = "block";
+      setTimeout(() => overlay.style.opacity = "1", 10);
+
+      // Show panel with animation
+      panel.style.display = "block";
+      setTimeout(() => {
+        panel.style.opacity = "1";
+        panel.style.transform = "translate(-50%, -50%) scale(1)";
+      }, 50);
+    } else {
+      // Hide with smooth fade
+      panel.style.opacity = "0";
+      panel.style.transform = "translate(-50%, -50%) scale(0.9)";
+      overlay.style.opacity = "0";
+      setTimeout(() => {
+        panel.style.display = "none";
+        overlay.style.display = "none";
+      }, 300);
+    }
+  }
+</script>
+
         </div>
         
         <div class="feature-card p-8 rounded-3xl text-center">
@@ -899,6 +905,72 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
       audio = null;
     }
   }
+
+
+
+
+// === Improved Auto-Sliding Carousel ===
+document.addEventListener("DOMContentLoaded", function () {
+  const carousel = document.querySelector(".carousel");
+  if (!carousel) return;
+
+  let direction = 1; // 1 = right, -1 = left
+  let isHovered = false;
+  let userInteracting = false;
+  let lastInteractionTime = 0;
+  const baseSpeed = 0.6; // default scroll speed
+  let scrollTimer;
+
+  // Auto-slide using requestAnimationFrame
+  function autoSlide() {
+    const now = Date.now();
+
+    // Slow or pause for a bit after manual interaction
+    const isRecentlyInteracted = now - lastInteractionTime < 1500;
+    const speed = isRecentlyInteracted ? 0.1 : baseSpeed;
+
+    if (!isHovered && !userInteracting) {
+      carousel.scrollLeft += direction * speed;
+
+      // When reaching the end, reverse direction
+      if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 1) {
+        direction = -1;
+      } else if (carousel.scrollLeft <= 0) {
+        direction = 1;
+      }
+    }
+
+    requestAnimationFrame(autoSlide);
+  }
+
+  // Handle manual scroll interaction
+  let lastScrollLeft = carousel.scrollLeft;
+  carousel.addEventListener("scroll", () => {
+    const diff = Math.abs(carousel.scrollLeft - lastScrollLeft);
+    if (diff > 1) {
+      userInteracting = true;
+      lastInteractionTime = Date.now();
+
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        userInteracting = false; // resume smoothly
+      }, 1200);
+    }
+    lastScrollLeft = carousel.scrollLeft;
+  });
+
+  // Pause on hover or touch
+  carousel.addEventListener("mouseenter", () => (isHovered = true));
+  carousel.addEventListener("mouseleave", () => (isHovered = false));
+  carousel.addEventListener("touchstart", () => (isHovered = true));
+  carousel.addEventListener("touchend", () => (isHovered = false));
+
+  // Start the animation
+  autoSlide();
+});
+
+
+
 </script>
 
 
