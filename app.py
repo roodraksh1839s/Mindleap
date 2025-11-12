@@ -93,8 +93,17 @@ def student_ui():
     return redirect(url_for('home'))
 
 
+@app.route('/aichat')
+def chatbot_ui():
+    return render_template("chatbot.html")
 
+@app.route('/peer-support')
+def peer_support_ui():
+    return render_template('Peer_support.html')
 
+@app.route('/resources')
+def resources_ui():
+    return render_template(resource.html)
 
 @app.route('/admin')
 def admin():
