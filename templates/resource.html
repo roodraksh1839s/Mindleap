@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindleap - Wellness Resources</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(168, 237, 234, 0.3);
+        }
+        
+        .tab-button {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(168, 237, 234, 0.6);
+            box-shadow: 0 4px 15px rgba(168, 237, 234, 0.3);
+        }
+        
+        .tab-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        .modal {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+        }
+        
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            animation: fadeInUp 0.4s ease-out;
+        }
+        
+        .search-bar {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .search-bar:focus {
+            background: rgba(255, 255, 255, 0.4);
+            outline: none;
+            border: 1px solid rgba(168, 237, 234, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+
+      <!-- Navbar -->
+  <nav class="flex justify-between items-center px-6 py-4 glass-card sticky top-0 z-50">
+    <div class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+      🧠 Mindleap
+    </div>
+    <ul class="hidden md:flex space-x-6 font-medium">
+      <li><a href="#features" class="hover:text-purple-600 transition-colors" >Features</a></li>
+      <li><a href="#resources" class="hover:text-purple-600 transition-colors">Resources</a></li>
+      <li><a href="#peer-support" class="hover:text-purple-600 transition-colors">Peer Support</a></li>
+      <!-- <li><a href="#dashboard" class="hover:text-purple-600 transition-colors">Admin Analytics</a></li> -->
+      <li><a href="#contact" class="hover:text-purple-600 transition-colors">Contact</a></li>
+      <li><a href="{{ url_for('home') }}" class="hover:text-purple-600 transition-colors">Log Out</a></li>
+    </ul>
+    
+  </nav>
+    
+    <!-- Header Section -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="text-center mb-12 fade-in-up">
+            <h1 class="text-5xl font-bold text-gray-800 mb-4">🌿 Wellness Resources</h1>
+            <p class="text-xl text-gray-700 max-w-2xl mx-auto">Explore mindful guides, videos, and tools to recharge your mind and soul.</p>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="max-w-2xl mx-auto mb-8 fade-in-up" style="animation-delay: 0.1s;">
+            <input 
+                type="text" 
+                id="searchBar"
+                placeholder="🔍 Search resources..." 
+                class="search-bar w-full px-6 py-4 rounded-2xl text-gray-700 placeholder-gray-600"
+            />
+        </div>
+        
+        <!-- Category Tabs -->
+        <div class="flex flex-wrap justify-center gap-4 mb-12 fade-in-up" style="animation-delay: 0.2s;">
+            <button class="tab-button active px-6 py-3 rounded-full text-gray-800 font-medium" data-category="all">
+                ✨ All Resources
+            </button>
+            <button class="tab-button px-6 py-3 rounded-full text-gray-800 font-medium" data-category="articles">
+                📘 Articles
+            </button>
+            <button class="tab-button px-6 py-3 rounded-full text-gray-800 font-medium" data-category="meditation">
+                🧘 Meditation
+            </button>
+            <button class="tab-button px-6 py-3 rounded-full text-gray-800 font-medium" data-category="relaxation">
+                🎧 Relaxation
+            </button>
+        </div>
+        
+        <!-- Resources Grid -->
+        <div id="resourcesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Articles & Self-Help Guides -->
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="articles" style="animation-delay: 0.3s;">
+                <div class="text-5xl mb-4">📘</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Understanding Anxiety</h3>
+                <p class="text-gray-700 mb-4">A comprehensive guide to recognizing anxiety patterns and developing healthy coping strategies for daily life.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="Understanding Anxiety" data-content="article">
+                    View Resource →
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="articles" style="animation-delay: 0.4s;">
+                <div class="text-5xl mb-4">📘</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Sleep Wellness Guide</h3>
+                <p class="text-gray-700 mb-4">Discover evidence-based techniques to improve your sleep quality and establish healthy bedtime routines.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="Sleep Wellness Guide" data-content="article">
+                    View Resource →
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="articles" style="animation-delay: 0.5s;">
+                <div class="text-5xl mb-4">📘</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Building Resilience</h3>
+                <p class="text-gray-700 mb-4">Learn practical methods to strengthen your mental resilience and bounce back from life's challenges.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="Building Resilience" data-content="article">
+                    View Resource →
+                </button>
+            </div>
+            
+            <!-- Guided Meditations & Breathing Tools -->
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="meditation" style="animation-delay: 0.6s;">
+                <div class="text-5xl mb-4">🧘</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">5-Minute Mindfulness</h3>
+                <p class="text-gray-700 mb-4">A quick guided meditation perfect for busy students. Reset your mind and find your center in just five minutes.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="5-Minute Mindfulness" data-content="meditation">
+                    Listen Now →
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="meditation" style="animation-delay: 0.7s;">
+                <div class="text-5xl mb-4">💨</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Box Breathing Exercise</h3>
+                <p class="text-gray-700 mb-4">Follow this simple breathing technique used by athletes and professionals to reduce stress instantly.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="Box Breathing Exercise" data-content="breathing">
+                    Start Practice →
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="meditation" style="animation-delay: 0.8s;">
+                <div class="text-5xl mb-4">🧘</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Body Scan Meditation</h3>
+                <p class="text-gray-700 mb-4">Release tension and connect with your body through this calming 10-minute guided meditation practice.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="Body Scan Meditation" data-content="meditation">
+                    Listen Now →
+                </button>
+            </div>
+            
+            <!-- Relaxation Sounds & Wellness Videos -->
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="relaxation" style="animation-delay: 0.9s;">
+                <div class="text-5xl mb-4">🌊</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Ocean Waves Soundscape</h3>
+                <p class="text-gray-700 mb-4">Immerse yourself in the gentle rhythm of ocean waves. Perfect for studying, sleeping, or unwinding.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="Ocean Waves Soundscape" data-content="audio">
+                    Play Sounds →
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="relaxation" style="animation-delay: 1s;">
+                <div class="text-5xl mb-4">🌧️</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Rainfall & Thunder</h3>
+                <p class="text-gray-700 mb-4">Cozy rain sounds with distant thunder. Create a peaceful atmosphere for relaxation and focus.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="Rainfall & Thunder" data-content="audio">
+                    Play Sounds →
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="relaxation" style="animation-delay: 1.1s;">
+                <div class="text-5xl mb-4">🎧</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Motivational Wellness Talk</h3>
+                <p class="text-gray-700 mb-4">An inspiring 15-minute video about maintaining mental wellness during challenging academic periods.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="Motivational Wellness Talk" data-content="video">
+                    Watch Now →
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="meditation" style="animation-delay: 1.2s;">
+                <div class="text-5xl mb-4">💨</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">4-7-8 Sleep Breathing</h3>
+                <p class="text-gray-700 mb-4">A powerful breathing technique to help you fall asleep faster and improve sleep quality naturally.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="4-7-8 Sleep Breathing" data-content="breathing">
+                    Start Practice →
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="relaxation" style="animation-delay: 1.3s;">
+                <div class="text-5xl mb-4">🌲</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Forest Ambience</h3>
+                <p class="text-gray-700 mb-4">Birds chirping, leaves rustling, and gentle forest sounds to transport you to nature's tranquility.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="Forest Ambience" data-content="audio">
+                    Play Sounds →
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-6 fade-in-up resource-card" data-category="articles" style="animation-delay: 1.4s;">
+                <div class="text-5xl mb-4">📘</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Stress Management Tips</h3>
+                <p class="text-gray-700 mb-4">Practical, science-backed strategies to manage academic stress and maintain a healthy study-life balance.</p>
+                <button class="view-resource bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-6 py-2 rounded-full transition-all" data-title="Stress Management Tips" data-content="article">
+                    View Resource →
+                </button>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div id="resourceModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content rounded-3xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto relative">
+            <button id="closeModal" class="absolute top-6 right-6 text-gray-600 hover:text-gray-800 text-3xl font-bold">&times;</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab filtering
+        const tabs = document.querySelectorAll('.tab-button');
+        const cards = document.querySelectorAll('.resource-card');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.dataset.category;
+                
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Filter cards
+                cards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                        card.classList.add('fade-in-up');
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Search functionality
+        const searchBar = document.getElementById('searchBar');
+        searchBar.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+        
+        // Modal functionality
+        const modal = document.getElementById('resourceModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalContent = document.getElementById('modalContent');
+        const viewButtons = document.querySelectorAll('.view-resource');
+        
+        viewButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const title = button.dataset.title;
+                const contentType = button.dataset.content;
+                
+                let content = '';
+                
+                if (contentType === 'article') {
+                    content = `
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+                        <div class="prose prose-lg text-gray-700">
+                            <p class="mb-4">Welcome to this comprehensive guide on mental wellness. This resource is designed to help you understand and navigate your mental health journey.</p>
+                            <h3 class="text-xl font-bold mt-6 mb-3">Key Takeaways:</h3>
+                            <ul class="list-disc pl-6 mb-4">
+                                <li>Understanding your emotions is the first step toward wellness</li>
+                                <li>Small daily practices can lead to significant improvements</li>
+                                <li>Seeking support is a sign of strength, not weakness</li>
+                                <li>Everyone's journey is unique and valid</li>
+                            </ul>
+                            <p class="mb-4">Remember, mental wellness is a continuous journey, not a destination. Be patient and kind to yourself as you explore these strategies.</p>
+                            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded mt-6">
+                                <p class="text-sm text-gray-700">💡 <strong>Pro Tip:</strong> Start with just one small change and build from there. Consistency matters more than intensity.</p>
+                            </div>
+                        </div>
+                    `;
+                } else if (contentType === 'meditation' || contentType === 'breathing') {
+                    content = `
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+                        <div class="mb-6">
+                            <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 text-center">
+                                <p class="text-6xl mb-4">🧘‍♀️</p>
+                                <p class="text-gray-700 mb-4">Find a quiet, comfortable space where you won't be disturbed.</p>
+                                <button class="bg-white/60 hover:bg-white/80 text-gray-800 font-semibold px-8 py-3 rounded-full transition-all">
+                                    ▶️ Begin Practice
+                                </button>
+                            </div>
+                        </div>
+                        <div class="prose text-gray-700">
+                            <h3 class="text-xl font-bold mb-3">How to Practice:</h3>
+                            <ol class="list-decimal pl-6 mb-4">
+                                <li class="mb-2">Sit or lie down in a comfortable position</li>
+                                <li class="mb-2">Close your eyes and take a deep breath</li>
+                                <li class="mb-2">Follow the gentle guidance to center yourself</li>
+                                <li class="mb-2">Allow thoughts to pass without judgment</li>
+                                <li class="mb-2">Return your focus to your breath whenever you drift</li>
+                            </ol>
+                            <p class="mt-4 text-sm italic">Duration: 5-10 minutes • Difficulty: Beginner-friendly</p>
+                        </div>
+                    `;
+                } else if (contentType === 'audio') {
+                    content = `
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+                        <div class="mb-6">
+                            <div class="bg-gradient-to-r from-blue-100 to-cyan-100 rounded-2xl p-8 text-center">
+                                <p class="text-6xl mb-4">🌊</p>
+                                <p class="text-gray-700 mb-6">Immerse yourself in calming nature sounds designed to help you relax, focus, or sleep.</p>
+                                <div class="flex justify-center gap-4">
+                                    <button class="bg-white/60 hover:bg-white/80 text-gray-800 font-semibold px-8 py-3 rounded-full transition-all">
+                                        ▶️ Play
+                                    </button>
+                                    <button class="bg-white/40 hover:bg-white/60 text-gray-800 font-semibold px-8 py-3 rounded-full transition-all">
+                                        ⏸️ Pause
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="prose text-gray-700">
+                            <h3 class="text-xl font-bold mb-3">Benefits:</h3>
+                            <ul class="list-disc pl-6">
+                                <li>Reduces stress and anxiety</li>
+                                <li>Improves focus and concentration</li>
+                                <li>Promotes better sleep quality</li>
+                                <li>Creates a peaceful environment</li>
+                            </ul>
+                        </div>
+                    `;
+                } else if (contentType === 'video') {
+                    content = `
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+                        <div class="mb-6">
+                            <div class="bg-gray-200 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+                                <div class="text-center">
+                                    <p class="text-6xl mb-4">🎥</p>
+                                    <p class="text-gray-600 mb-4">Video Player Placeholder</p>
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-full transition-all">
+                                        ▶️ Watch Video
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="prose text-gray-700">
+                            <p class="mb-4">This inspiring video explores practical strategies for maintaining mental wellness during challenging times. Perfect for students navigating academic pressures.</p>
+                            <p class="text-sm italic">Duration: 15 minutes • Language: English</p>
+                        </div>
+                    `;
+                }
+                
+                modalContent.innerHTML = content;
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+
+    
+    
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindLeap - AI-powered Mental Wellness System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .slide-in-right {
+            animation: slideInFromRight 0.4s ease-out forwards;
+        }
+        
+        .slide-in-left {
+            animation: slideInFromLeft 0.4s ease-out forwards;
+        }
+        
+        .glass-container {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        .glass-header {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .message-user {
+            background: rgba(168, 237, 234, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(168, 237, 234, 0.4);
+        }
+        
+        .message-bot {
+            background: linear-gradient(135deg, rgba(168, 237, 234, 0.4) 0%, rgba(254, 214, 227, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .chat-input-glass {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .chat-input-glass:focus {
+            background: rgba(255, 255, 255, 0.5);
+            outline: none;
+            border: 1px solid rgba(168, 237, 234, 0.6);
+        }
+        
+        .send-button {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(168, 237, 234, 0.4);
+        }
+        
+        .send-button:active {
+            transform: translateY(0);
+        }
+        
+        .chat-messages-area {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+        }
+        
+        .typing-indicator-dot {
+            height: 8px;
+            width: 8px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-indicator-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+        
+        /* Custom scrollbar */
+        .chat-messages-area::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-messages-area::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        
+        .chat-messages-area::-webkit-scrollbar-thumb {
+            background: rgba(168, 237, 234, 0.5);
+            border-radius: 10px;
+        }
+        
+        .chat-messages-area::-webkit-scrollbar-thumb:hover {
+            background: rgba(168, 237, 234, 0.7);
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans flex items-center justify-center p-4" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+    
+    <!-- Main Chat Container -->
+    <div class="glass-container rounded-3xl w-full max-w-4xl h-[90vh] max-h-[900px] flex flex-col overflow-hidden fade-in-up">
+        
+        <!-- Header Section -->
+        <div class="glass-header px-8 py-6">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">🌿 MindLeap Chat Support </h1>
+                <p class="text-lg text-gray-700">AI-powered Mental Wellness System</p>
+            </div>
+        </div>
+        
+        <!-- Chat Messages Area -->
+        <div id="chatMessages" class="chat-messages-area flex-1 overflow-y-auto px-6 py-6 scroll-smooth">
+            <!-- Messages will be dynamically added here -->
+        </div>
+        
+        <!-- Input Area -->
+        <div class="px-6 py-6 bg-white/20 backdrop-blur-lg border-t border-white/30">
+            <div class="flex gap-3">
+                <input 
+                    type="text" 
+                    id="userInput"
+                    placeholder="💬 Type your message here..." 
+                    class="chat-input-glass flex-1 px-6 py-4 rounded-2xl text-gray-800 placeholder-gray-600"
+                    autocomplete="off"
+                />
+                <button id="sendButton" class="send-button px-8 py-4 rounded-2xl text-gray-800 font-semibold">
+                    Send ✈️
+                </button>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+        // DOM elements
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+        
+        // Sample bot responses for demo purposes
+        const botResponses = {
+            greetings: [
+                "Hello! I'm here to support you. What's on your mind?",
+                "Hi there! How can I help you today?",
+                "Welcome back! I'm here to listen."
+            ],
+            feelings: [
+                "Thank you for sharing that with me. Your feelings are completely valid. Would you like to talk more about what's causing these feelings?",
+                "I appreciate you opening up. It takes courage to express how you feel. Can you tell me more?",
+                "It's okay to feel this way. I'm here to support you through this. What would help you most right now?"
+            ],
+            anxiety: [
+                "Anxiety can be overwhelming. Have you tried any breathing exercises? Taking slow, deep breaths can help calm your nervous system.",
+                "I understand anxiety can be difficult. Remember, you're not alone in this. Would you like to try a quick grounding technique?",
+                "When you feel anxious, try the 5-4-3-2-1 technique: Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, and 1 you taste."
+            ],
+            stress: [
+                "Stress is a natural response, but managing it is important. What activities usually help you relax?",
+                "I hear you. Stress can build up quickly. Have you taken any breaks today? Even a 5-minute walk can help.",
+                "Let's work through this together. What's the main thing causing you stress right now?"
+            ],
+            support: [
+                "I'm glad you reached out. You're taking a positive step by talking about this.",
+                "Remember, seeking help is a sign of strength, not weakness. I'm here for you.",
+                "You're doing great by acknowledging your feelings and seeking support."
+            ],
+            default: [
+                "I'm here to listen. Can you tell me more about that?",
+                "That's interesting. How does that make you feel?",
+                "I understand. What would you like to explore about this?",
+                "Thank you for sharing. How can I best support you with this?"
+            ]
+        };
+        
+        // Function to add a message to the chat
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex mb-4 ${isUser ? 'justify-end slide-in-right' : 'justify-start slide-in-left'}`;
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = `${isUser ? 'message-user' : 'message-bot'} max-w-[75%] px-6 py-4 rounded-2xl ${isUser ? 'rounded-br-md' : 'rounded-bl-md'}`;
+            bubbleDiv.innerHTML = `<p class="text-gray-800 leading-relaxed">${text}</p>`;
+            
+            messageDiv.appendChild(bubbleDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom smoothly
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Function to show typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'flex justify-start mb-4 slide-in-left';
+            typingDiv.innerHTML = `
+                <div class="message-bot px-6 py-4 rounded-2xl rounded-bl-md">
+                    <span class="typing-indicator-dot"></span>
+                    <span class="typing-indicator-dot"></span>
+                    <span class="typing-indicator-dot"></span>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Function to hide typing indicator
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Function to get bot response based on keywords
+        function getBotResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // Check for keywords and return appropriate response
+            if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+                return getRandomResponse(botResponses.greetings);
+            } else if (message.includes('anxious') || message.includes('anxiety') || message.includes('worried') || message.includes('panic')) {
+                return getRandomResponse(botResponses.anxiety);
+            } else if (message.includes('stress') || message.includes('overwhelmed') || message.includes('pressure')) {
+                return getRandomResponse(botResponses.stress);
+            } else if (message.includes('sad') || message.includes('depressed') || message.includes('down') || message.includes('feel')) {
+                return getRandomResponse(botResponses.feelings);
+            } else if (message.includes('thank') || message.includes('help')) {
+                return getRandomResponse(botResponses.support);
+            } else {
+                return getRandomResponse(botResponses.default);
+            }
+        }
+        
+        // Function to get random response from array
+        function getRandomResponse(responseArray) {
+            return responseArray[Math.floor(Math.random() * responseArray.length)];
+        }
+        
+        // Function to handle sending messages
+        function sendMessage() {
+            const message = userInput.value.trim();
+            
+            // Don't send empty messages
+            if (message === '') return;
+            
+            // Add user message
+            addMessage(message, true);
+            
+            // Clear input
+            userInput.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Simulate bot "thinking" time
+            setTimeout(() => {
+                hideTypingIndicator();
+                const botReply = getBotResponse(message);
+                addMessage(botReply, false);
+            }, 1000 + Math.random() * 1000); // Random delay between 1-2 seconds
+        }
+        
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Display greeting message when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                addMessage("Hi, I'm MindLeap! How are you feeling today? 😊", false);
+            }, 500);
+        });
+        
+        // Focus on input field when page loads
+        window.addEventListener('load', () => {
+            userInput.focus();
+        });
+    </script>
+    
+</body>
+</html>
