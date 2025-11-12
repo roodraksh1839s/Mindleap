@@ -15,7 +15,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -62,7 +62,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: #4CA1AF;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #C4E0E5, #94ebf9);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #C4E0E5, #96f1ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            /* background: rgba(147, 144, 144, 0.7); */
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -98,8 +101,8 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(to right, #77A1D3 0%, #79CBCA  51%, #77A1D3  100%);
+            color: black;
             padding: 0.75rem 1.5rem;
             border-radius: 12px;
             border: none;
@@ -229,7 +232,7 @@
         .alert.success {
             background: rgba(102, 234, 142, 0.3);
             border: 1px solid rgba(102, 234, 142, 0.6);
-            color: white;
+            color: black;
         }
 
         .session-card {
@@ -264,13 +267,13 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             padding: 0.75rem;
-            color: white;
+            color: black;
             width: 100%;
             transition: all 0.3s ease;
         }
 
         input::placeholder, textarea::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(2, 2, 2, 0.6);
         }
 
         input:focus, select:focus, textarea:focus {
@@ -309,11 +312,10 @@
     <!-- Navbar -->
     <nav class="navbar py-4 px-6">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-white">🧠 Mindleap</h1>
-            <div class="flex gap-6 text-white">
+            <h1 class="text-2xl font-bold text-black">🧠 Mindleap</h1>
+            <div class="flex gap-6 text-black">
                 <a href="index.html" class="hover:text-purple-300 transition">Home</a>
                 <a href="resource.html" class="hover:text-purple-300 transition">Resources</a>
-                <a href="booking.html" class="text-purple-300">Booking</a>
             </div>
         </div>
     </nav>
@@ -322,16 +324,16 @@
     <div class="container mx-auto px-6 py-12">
         <!-- Hero Section -->
         <div class="text-center mb-12 fade-in-up">
-            <h1 class="text-5xl font-bold text-white mb-4">Confidential Booking System</h1>
-            <p class="text-xl text-white opacity-90">Choose your preferred counselor type and schedule a confidential session that suits your needs.</p>
+            <h1 class="text-5xl font-bold text-black mb-4">Confidential Booking System</h1>
+            <p class="text-xl text-black opacity-90">Choose your preferred counselor type and schedule a confidential session that suits your needs.</p>
         </div>
 
         <!-- Filters Section -->
         <div class="glass-card p-6 mb-8 fade-in-up delay-1">
-            <h3 class="text-2xl font-semibold text-white mb-4">🔍 Filter Counselors</h3>
+            <h3 class="text-2xl font-semibold text-black mb-4">🔍 Filter Counselors</h3>
             <div class="grid md:grid-cols-2 gap-6">
                 <div>
-                    <label class="text-white font-semibold mb-2 block">Specialization</label>
+                    <label class="text-black font-semibold mb-2 block">Specialization</label>
                     <div class="flex flex-wrap">
                         <span class="tag" onclick="toggleTag(this)">Stress</span>
                         <span class="tag" onclick="toggleTag(this)">Anxiety</span>
@@ -340,7 +342,7 @@
                     </div>
                 </div>
                 <div>
-                    <label class="text-white font-semibold mb-2 block">Language</label>
+                    <label class="text-black font-semibold mb-2 block">Language</label>
                     <div class="flex flex-wrap">
                         <span class="tag" onclick="toggleTag(this)">Hindi</span>
                         <span class="tag" onclick="toggleTag(this)">English</span>
@@ -353,7 +355,7 @@
         <!-- Booking Cards -->
         <div class="grid md:grid-cols-3 gap-8 mb-12">
             <!-- College Counselor -->
-            <div class="glass-card p-8 text-white fade-in-up delay-2">
+            <div class="glass-card p-8 text-black fade-in-up delay-2">
                 <div class="text-5xl mb-4">🏫</div>
                 <h3 class="text-2xl font-bold mb-3">College Counselor</h3>
                 <p class="mb-4 opacity-90">Available during campus hours, free for enrolled students.</p>
@@ -365,7 +367,7 @@
             </div>
 
             <!-- Government Counselor -->
-            <div class="glass-card p-8 text-white fade-in-up delay-3">
+            <div class="glass-card p-8 text-black fade-in-up delay-3">
                 <div class="text-5xl mb-4">🏛️</div>
                 <h3 class="text-2xl font-bold mb-3">Government Counselor</h3>
                 <p class="mb-4 opacity-90">Free national-level tele-counseling professionals.</p>
@@ -377,7 +379,7 @@
             </div>
 
             <!-- Private Counselor -->
-            <div class="glass-card p-8 text-white fade-in-up delay-4">
+            <div class="glass-card p-8 text-black fade-in-up delay-4">
                 <div class="text-5xl mb-4">💼</div>
                 <h3 class="text-2xl font-bold mb-3">Private Counselor</h3>
                 <p class="mb-4 opacity-90">Licensed online professionals (affordable private sessions).</p>
@@ -390,7 +392,7 @@
         </div>
 
         <!-- My Sessions -->
-        <div class="glass-card p-8 text-white fade-in-up">
+        <div class="glass-card p-8 text-black fade-in-up">
             <h3 class="text-3xl font-bold mb-6">📅 My Sessions</h3>
             
             <div class="session-card">
@@ -433,20 +435,20 @@
     <div id="bookingModal" class="modal">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-white">Book Appointment</h2>
-                <button onclick="closeBookingModal()" class="text-white text-3xl hover:text-red-300">&times;</button>
+                <h2 class="text-3xl font-bold text-black">Book Appointment</h2>
+                <button onclick="closeBookingModal()" class="text-black text-3xl hover:text-red-300">&times;</button>
             </div>
 
             <form id="bookingForm">
                 <!-- Counselor Type -->
                 <div class="mb-4">
-                    <label class="text-white font-semibold mb-2 block">Counselor Type</label>
+                    <label class="text-black font-semibold mb-2 block">Counselor Type</label>
                     <input type="text" id="counselorType" readonly class="opacity-75 cursor-not-allowed">
                 </div>
 
                 <!-- Anonymous Toggle -->
                 <div class="mb-6 flex items-center justify-between">
-                    <span class="text-white font-semibold">Book Anonymously</span>
+                    <span class="text-black font-semibold">Book Anonymously</span>
                     <label class="switch">
                         <input type="checkbox" id="anonymousToggle" onchange="toggleAnonymous()">
                         <span class="slider"></span>
@@ -456,18 +458,18 @@
                 <!-- User Details -->
                 <div id="userDetails">
                     <div class="mb-4">
-                        <label class="text-white font-semibold mb-2 block">Full Name</label>
+                        <label class="text-black font-semibold mb-2 block">Full Name</label>
                         <input type="text" id="userName" placeholder="Enter your name" required>
                     </div>
                     <div class="mb-4">
-                        <label class="text-white font-semibold mb-2 block">Email</label>
+                        <label class="text-black font-semibold mb-2 block">Email</label>
                         <input type="email" id="userEmail" placeholder="Enter your email" required>
                     </div>
                 </div>
 
                 <!-- Select Counselor -->
                 <div class="mb-4">
-                    <label class="text-white font-semibold mb-2 block">Select Counselor</label>
+                    <label class="text-black font-semibold mb-2 block">Select Counselor</label>
                     <select id="counselorSelect" required>
                         <option value="">Choose a counselor</option>
                     </select>
@@ -475,7 +477,7 @@
 
                 <!-- Mini Calendar -->
                 <div class="mb-4">
-                    <label class="text-white font-semibold mb-2 block">Select Date</label>
+                    <label class="text-black font-semibold mb-2 block">Select Date</label>
                     <div class="grid grid-cols-7 gap-2" id="calendar">
                         <!-- Calendar will be generated by JS -->
                     </div>
@@ -483,7 +485,7 @@
 
                 <!-- Time Slots -->
                 <div class="mb-4">
-                    <label class="text-white font-semibold mb-2 block">Select Time</label>
+                    <label class="text-black font-semibold mb-2 block">Select Time</label>
                     <div class="flex flex-wrap gap-2" id="timeSlots">
                         <!-- Time slots will be generated by JS -->
                     </div>
@@ -492,7 +494,7 @@
                 <!-- Reminder -->
                 <div class="mb-6 flex items-center">
                     <input type="checkbox" id="reminderToggle" class="mr-3 w-5 h-5">
-                    <label for="reminderToggle" class="text-white">Send reminder (WhatsApp/Email) 1 hour before</label>
+                    <label for="reminderToggle" class="text-black">Send reminder (WhatsApp/Email) 1 hour before</label>
                 </div>
 
                 <!-- Success Alert -->
@@ -510,13 +512,13 @@
     <div id="feedbackModal" class="modal">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-white">Anonymous Feedback</h2>
-                <button onclick="closeFeedbackModal()" class="text-white text-3xl hover:text-red-300">&times;</button>
+                <h2 class="text-3xl font-bold text-black">Anonymous Feedback</h2>
+                <button onclick="closeFeedbackModal()" class="text-black text-3xl hover:text-red-300">&times;</button>
             </div>
 
             <form id="feedbackForm">
                 <div class="mb-4">
-                    <label class="text-white font-semibold mb-2 block">Rating</label>
+                    <label class="text-black font-semibold mb-2 block">Rating</label>
                     <div class="flex gap-2 text-3xl">
                         <span class="cursor-pointer hover:scale-110 transition" onclick="setRating(1)">⭐</span>
                         <span class="cursor-pointer hover:scale-110 transition" onclick="setRating(2)">⭐</span>
@@ -528,7 +530,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="text-white font-semibold mb-2 block">Your Feedback</label>
+                    <label class="text-black font-semibold mb-2 block">Your Feedback</label>
                     <textarea id="feedbackText" rows="4" placeholder="Share your experience..." required></textarea>
                 </div>
 
@@ -543,7 +545,7 @@
 
     <!-- Footer -->
     <footer class="footer py-8 px-6 mt-12">
-        <div class="container mx-auto text-center text-white">
+        <div class="container mx-auto text-center text-black">
             <p class="mb-4">&copy; 2025 Mindleap. Your mental health matters. 💜</p>
             <div class="flex justify-center gap-6">
                 <a href="#" class="hover:text-purple-300 transition">Privacy Policy</a>
@@ -609,7 +611,7 @@
             
             const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
             days.forEach(day => {
-                calendar.innerHTML += `<div class="text-center text-white font-semibold">${day}</div>`;
+                calendar.innerHTML += `<div class="text-center text-black font-semibold">${day}</div>`;
             });
 
             const today = new Date();
