@@ -179,8 +179,8 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
     </div>
     <ul class="hidden md:flex space-x-6 font-medium">
       <li><a href="#features" class="hover:text-purple-600 transition-colors">Features</a></li>
-      <li><a href="#resources" class="hover:text-purple-600 transition-colors">Resources</a></li>
-      <li><a href="#peer-support" class="hover:text-purple-600 transition-colors">Peer Support</a></li>
+      <li><a href="{{url_for('resources_ui')}}" class="hover:text-purple-600 transition-colors">Resources</a></li>
+      <li><a href="{{url_for('peer_support_ui')}}" class="hover:text-purple-600 transition-colors">Peer Support</a></li>
       <!-- <li><a href="#dashboard" class="hover:text-purple-600 transition-colors">Admin Analytics</a></li> -->
       <li><a href="#contact" class="hover:text-purple-600 transition-colors">Contact</a></li>
       <li><a href="{{ url_for('home') }}" class="hover:text-purple-600 transition-colors">Log Out</a></li>
@@ -250,8 +250,8 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
 <div class="carousel-container">
 <div class="carousel">
 <div class="carousel-track">
-<div class="card"><div class="card-icon">🤖</div><h3>AI-Guided First Aid Support</h3><p class="card-description">24/7 intelligent chatbot offering coping strategies, crisis intervention, and professional referrals when needed.</p><ul class="features"><li>24/7 availability</li><li>Crisis intervention ready</li><li>Professional referrals</li></ul><div class="card-buttons"><a href="#" class="btn">Start Chat</a></div></div>
-<div class="card popular"><div class="card-icon">📚</div><h3>Psychoeducational Hub</h3><p class="card-description">Curated videos, guided meditations, wellness content, and educational materials in regional languages.</p><ul class="features"><li>Multilingual resources</li><li>Evidence-based content</li><li>Guided meditations</li></ul><div class="card-buttons"><a href="#" class="btn">Explore Resources</a></div></div>
+<div class="card"><div class="card-icon">🤖</div><h3>AI-Guided First Aid Support</h3><p class="card-description">24/7 intelligent chatbot offering coping strategies, crisis intervention, and professional referrals when needed.</p><ul class="features"><li>24/7 availability</li><li>Crisis intervention ready</li><li>Professional referrals</li></ul><div class="card-buttons"><a href="{{url_for('chatbot_ui')}}" class="btn">Start Chat</a></div></div>
+<div class="card popular"><div class="card-icon">📚</div><h3>Psychoeducational Hub</h3><p class="card-description">Curated videos, guided meditations, wellness content, and educational materials in regional languages.</p><ul class="features"><li>Multilingual resources</li><li>Evidence-based content</li><li>Guided meditations</li></ul><div class="card-buttons"><a href="{{url_for('resources_ui')}}" class="btn">Explore Resources</a></div></div>
 <div class="card"><div class="card-icon">📅</div><h3>Confidential Booking System</h3><p class="card-description">Secure appointment scheduling with on-campus counselors and mental health professionals.</p><ul class="features"><li>100% confidential</li><li>Professional counselors</li><li>Flexible scheduling</li></ul><div class="card-buttons"><a href="#" class="btn">Book Appointment</a></div></div>
 <div class="card"><div class="card-icon">📊</div><h3>Mental Health Assessment</h3><p class="card-description">Standardized screening tools (PHQ-9, GAD-7, GHQ) for early detection and monitoring.</p><ul class="features"><li>Scientific validation</li><li>Progress tracking</li><li>Early detection</li></ul><div class="card-buttons"><a href="{{ url_for('form') }}" class="btn">Take Assessment</a></div></div>
 <div class="card"><div class="card-icon">📈</div><h3>Personal Progress Tracking</h3><p class="card-description">Monitor your mental health journey with mood tracking, goal setting, and progress visualization.</p><ul class="features"><li>Mood tracking</li><li>Goal setting</li><li>Visual insights</li></ul><div class="card-buttons"><a href="#" class="btn">View Progress</a></div></div>
