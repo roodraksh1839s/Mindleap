@@ -103,7 +103,7 @@ def peer_support_ui():
 
 @app.route('/resources')
 def resources_ui():
-    return render_template(resource.html)
+    return render_template('resource.html')
 
 @app.route('/admin')
 def admin():
