@@ -105,6 +105,10 @@ def peer_support_ui():
 def resources_ui():
     return render_template('resource.html')
 
+@app.route('/book-session')
+def booking_ui():
+    return render_template('booking_page.html')
+
 @app.route('/admin')
 def admin():
     if 'role' not in session or session["role"] != 'ADMIN':
