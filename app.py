@@ -186,6 +186,7 @@ def chat():
         print("Error:", e)
         top_match = search_best_match(user_msg)[0][1]
         return top_match or "Sorry, I couldn't process your request."
+    
 @app.route('/peer-support')
 def peer_support_ui():
     return render_template('Peer_support.html')
@@ -197,6 +198,9 @@ def resources_ui():
 @app.route('/book-session')
 def booking_ui():
     return render_template('booking_page.html')
+
+@app.route('/therapy')
+def therapy_ui():
 
 @app.route('/admin')
 def admin():
