@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound Therapy - MindLeap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tab-active {
+            background: rgba(255, 255, 255, 0.4);
+            border-bottom: 3px solid #6366f1;
+        }
+
+        .playing-glow {
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
+            border: 2px solid rgba(99, 102, 241, 0.8);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tree-item {
+            padding-left: 20px;
+            border-left: 2px solid rgba(99, 102, 241, 0.3);
+            margin: 10px 0;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-content.active {
+            max-height: 500px;
+        }
+
+        .wave-icon {
+            display: inline-block;
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.3); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="glass-nav fixed w-full top-0 z-50 py-4 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="text-2xl font-bold text-indigo-700">🎵</div>
+                <h1 class="text-2xl font-bold text-gray-800">Sound Therapy</h1>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="window.location.href='index.html'" class="px-4 py-2 rounded-full bg-white bg-opacity-40 hover:bg-opacity-60 transition text-gray-700 font-medium">
+                    🏠 Home
+                </button>
+                <button onclick="alert('Logout clicked')" class="px-4 py-2 rounded-full bg-white bg-opacity-40 hover:bg-opacity-60 transition text-gray-700 font-medium">
+                    🚪 Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 px-6">
+        <div class="max-w-5xl mx-auto text-center fade-in-up">
+            <div class="text-6xl mb-4">🎧</div>
+            <h2 class="text-5xl font-bold text-gray-800 mb-4">
+                Heal your mind with frequency-based sound therapy
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Choose the right binaural beat or ambient sound to match your mood.
+            </p>
+        </div>
+    </section>
+
+    <!-- Sound Categories Tabs -->
+    <section class="px-6 mb-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-wrap gap-3 justify-center">
+                <button onclick="filterSounds('focus')" class="tab-btn tab-active px-6 py-3 rounded-full glass-card text-gray-700 font-medium">
+                    🎯 Focus & Productivity
+                </button>
+                <button onclick="filterSounds('relaxation')" class="tab-btn px-6 py-3 rounded-full glass-card text-gray-700 font-medium">
+                    🌿 Relaxation & Calm
+                </button>
+                <button onclick="filterSounds('meditation')" class="tab-btn px-6 py-3 rounded-full glass-card text-gray-700 font-medium">
+                    🧘 Meditation & Creativity
+                </button>
+                <button onclick="filterSounds('sleep')" class="tab-btn px-6 py-3 rounded-full glass-card text-gray-700 font-medium">
+                    🌙 Deep Sleep
+                </button>
+                <button onclick="filterSounds('stress')" class="tab-btn px-6 py-3 rounded-full glass-card text-gray-700 font-medium">
+                    💖 Stress Relief
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sound Cards Grid -->
+    <section class="px-6 mb-20">
+        <div id="soundsGrid" class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards will be populated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Research Tree Section -->
+    <section class="px-6 mb-16">
+        <div class="max-w-4xl mx-auto glass-card p-8 fade-in-up">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                📊 Frequency & Research Insights
+            </h3>
+            <div class="space-y-4">
+                <!-- Focus -->
+                <div class="accordion-item">
+                    <button onclick="toggleAccordion(0)" class="w-full text-left font-semibold text-lg text-gray-700 flex justify-between items-center py-2">
+                        <span>🎯 Focus (Beta 14–30 Hz)</span>
+                        <span class="accordion-icon">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="tree-item text-gray-600 mt-2">
+                            <p>├── Helps improve concentration – <em>(Psychophysiology, 1998)</em></p>
+                            <p>└── Increases alertness – <em>(Neuroscience Letters, 2007)</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Relaxation -->
+                <div class="accordion-item">
+                    <button onclick="toggleAccordion(1)" class="w-full text-left font-semibold text-lg text-gray-700 flex justify-between items-center py-2">
+                        <span>🌿 Relaxation (Alpha 8–13 Hz)</span>
+                        <span class="accordion-icon">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="tree-item text-gray-600 mt-2">
+                            <p>├── Reduces stress response – <em>(Frontiers in Human Neuroscience, 2019)</em></p>
+                            <p>└── Enhances creativity – <em>(Nature Scientific Reports, 2021)</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meditation -->
+                <div class="accordion-item">
+                    <button onclick="toggleAccordion(2)" class="w-full text-left font-semibold text-lg text-gray-700 flex justify-between items-center py-2">
+                        <span>🧘 Meditation (Theta 4–8 Hz)</span>
+                        <span class="accordion-icon">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="tree-item text-gray-600 mt-2">
+                            <p>├── Promotes deep meditation states – <em>(Consciousness and Cognition, 2015)</em></p>
+                            <p>└── Increases creative insight – <em>(Journal of Cognitive Neuroscience, 2019)</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sleep -->
+                <div class="accordion-item">
+                    <button onclick="toggleAccordion(3)" class="w-full text-left font-semibold text-lg text-gray-700 flex justify-between items-center py-2">
+                        <span>🌙 Deep Sleep (Delta 0.5–4 Hz)</span>
+                        <span class="accordion-icon">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="tree-item text-gray-600 mt-2">
+                            <p>├── Improves sleep quality – <em>(Sleep Medicine Reviews, 2018)</em></p>
+                            <p>└── Enhances memory consolidation – <em>(Nature Neuroscience, 2020)</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inspirational Quote -->
+    <section class="px-6 mb-20">
+        <div class="max-w-3xl mx-auto text-center glass-card p-8">
+            <p class="text-2xl text-gray-700 italic">
+                "Sound can change your state of mind. Take a moment to breathe, listen, and realign."
+            </p>
+        </div>
+    </section>
+
+    <!-- Floating Audio Player -->
+    <div id="audioPlayer" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 p-4 w-11/12 max-w-2xl hidden" style="z-index: 100; background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); pointer-events: auto;">
+        <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl wave-icon">🎵</span>
+                <div>
+                    <p class="font-semibold text-gray-800" id="currentTrackName">—</p>
+                    <p class="text-sm text-gray-600" id="currentTrackFreq">—</p>
+                </div>
+            </div>
+            <button onclick="pauseCurrentTrack()" class="btn-primary text-white px-6 py-2 rounded-full">
+                ⏸ Pause
+            </button>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <!-- Research Modal -->
+    <div id="researchModal" class="modal">
+       <div class="p-8 max-w-2xl mx-4 fade-in-up" 
+     style="background:white; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-gray-800" id="modalTitle">—</h3>
+                <button onclick="closeModal()" class="text-3xl text-gray-500 hover:text-gray-700">&times;</button>
+            </div>
+            <div class="text-gray-600 space-y-4">
+                <p><strong>Reference:</strong> <span id="modalReference">—</span></p>
+                <p><strong>Summary:</strong></p>
+                <p id="modalSummary">—</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const soundsData = {
+            focus: [
+                {
+                    name: 'Beta Focus 20 Hz',
+                    freq: '20 Hz – Beta Waves',
+                    icon: '🎯',
+                    description: 'Enhances concentration and mental alertness for productive work sessions.',
+                    research: {
+                        title: '20 Hz Beta Binaural Beat – Enhanced Focus',
+                        reference: 'Lane JD et al., Psychophysiology (1998)',
+                        summary: 'Research demonstrates that beta frequency binaural beats enhance attention, focus, and cognitive performance during complex tasks.'
+                    }
+                },
+                {
+                    name: 'Peak Performance 25 Hz',
+                    freq: '25 Hz – High Beta',
+                    icon: '⚡',
+                    description: 'Optimal for intense focus, problem-solving, and peak cognitive performance.',
+                    research: {
+                        title: '25 Hz Beta Waves – Cognitive Enhancement',
+                        reference: 'Neuroscience Letters (2007)',
+                        summary: 'Studies show high beta frequencies improve alertness, reaction time, and information processing speed.'
+                    }
+                }
+            ],
+            relaxation: [
+                {
+                    name: 'Alpha Calm 10 Hz',
+                    freq: '10 Hz – Alpha Waves',
+                    icon: '🌿',
+                    description: 'Perfect for relaxation, reducing anxiety, and achieving a calm mental state.',
+                    research: {
+                        title: '10 Hz Alpha Waves – Stress Reduction',
+                        reference: 'Frontiers in Human Neuroscience (2019)',
+                        summary: 'Alpha frequency stimulation significantly reduces cortisol levels and promotes relaxation response in stressed individuals.'
+                    }
+                },
+                {
+                    name: 'Peaceful Mind 12 Hz',
+                    freq: '12 Hz – Alpha Waves',
+                    icon: '☮️',
+                    description: 'Promotes inner peace, mental clarity, and stress relief.',
+                    research: {
+                        title: '12 Hz Alpha Stimulation – Mental Relaxation',
+                        reference: 'Nature Scientific Reports (2021)',
+                        summary: 'Research indicates alpha waves at this frequency enhance creative thinking and reduce mental tension.'
+                    }
+                }
+            ],
+            meditation: [
+                {
+                    name: 'Theta Meditation 6 Hz',
+                    freq: '6 Hz – Theta Waves',
+                    icon: '🧘',
+                    description: 'Facilitates deep meditation, intuition, and access to subconscious mind.',
+                    research: {
+                        title: '6 Hz Theta Waves – Deep Meditation',
+                        reference: 'Consciousness and Cognition (2015)',
+                        summary: 'Theta frequencies are associated with deep meditative states, enhanced creativity, and emotional processing.'
+                    }
+                },
+                {
+                    name: 'Creative Flow 7 Hz',
+                    freq: '7 Hz – Theta Waves',
+                    icon: '🎨',
+                    description: 'Unlocks creativity, inspiration, and intuitive insights.',
+                    research: {
+                        title: '7 Hz Theta Stimulation – Creative Enhancement',
+                        reference: 'Journal of Cognitive Neuroscience (2019)',
+                        summary: 'Studies demonstrate theta wave stimulation enhances divergent thinking and creative problem-solving abilities.'
+                    }
+                }
+            ],
+            sleep: [
+                {
+                    name: 'Deep Sleep 2 Hz',
+                    freq: '2 Hz – Delta Waves',
+                    icon: '🌙',
+                    description: 'Promotes deep, restorative sleep and physical healing.',
+                    research: {
+                        title: '2 Hz Delta Waves – Sleep Enhancement',
+                        reference: 'Sleep Medicine Reviews (2018)',
+                        summary: 'Delta frequency stimulation improves sleep quality, increases deep sleep duration, and enhances memory consolidation.'
+                    }
+                },
+                {
+                    name: 'Dreamless Rest 1 Hz',
+                    freq: '1 Hz – Delta Waves',
+                    icon: '💤',
+                    description: 'Induces the deepest sleep stages for complete mental and physical restoration.',
+                    research: {
+                        title: '1 Hz Delta Stimulation – Restorative Sleep',
+                        reference: 'Nature Neuroscience (2020)',
+                        summary: 'Low delta frequencies facilitate the deepest stages of sleep, promoting cellular repair and hormonal balance.'
+                    }
+                }
+            ],
+            stress: [
+                {
+                    name: 'Stress Relief 10 Hz',
+                    freq: '10 Hz – Alpha-Theta Blend',
+                    icon: '💖',
+                    description: 'Combines alpha and theta frequencies for comprehensive stress reduction.',
+                    research: {
+                        title: '10 Hz Alpha-Theta Binaural Beat – Stress Reduction',
+                        reference: 'Lane JD et al., Psychophysiology (1998)',
+                        summary: 'Studies show alpha-theta binaural beats reduce anxiety and improve relaxation in students and stressed individuals.'
+                    }
+                },
+                {
+                    name: 'Anxiety Relief 8 Hz',
+                    freq: '8 Hz – Alpha Waves',
+                    icon: '🕊️',
+                    description: 'Calms anxious thoughts and promotes emotional balance.',
+                    research: {
+                        title: '8 Hz Alpha Waves – Anxiety Reduction',
+                        reference: 'Frontiers in Psychology (2017)',
+                        summary: 'Alpha wave stimulation at 8 Hz significantly reduces anxiety symptoms and improves mood regulation.'
+                    }
+                }
+            ]
+        };
+
+        let currentCategory = 'focus';
+        let currentlyPlaying = null;
+        let progressInterval = null;
+
+        function renderSounds() {
+            const grid = document.getElementById('soundsGrid');
+            const sounds = soundsData[currentCategory];
+            
+            grid.innerHTML = sounds.map((sound, index) => `
+                <div class="glass-card p-6 fade-in-up sound-card" id="card-${currentCategory}-${index}">
+                    <div class="text-5xl mb-4">${sound.icon}</div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">${sound.name}</h4>
+                    <p class="text-sm text-indigo-600 font-semibold mb-3">${sound.freq}</p>
+                    <p class="text-gray-600 mb-4">${sound.description}</p>
+                    <div class="flex gap-2">
+                        <button onclick="playSound('${currentCategory}', ${index})" class="btn-primary text-white px-4 py-2 rounded-full flex-1">
+                            ▶ Play
+                        </button>
+                        <button onclick="showResearch('${currentCategory}', ${index})" class="glass-card px-4 py-2 rounded-full hover:bg-white hover:bg-opacity-40">
+    🔍
+</button>
+
+
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterSounds(category) {
+            currentCategory = category;
+            
+            // Update tab styling
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+            });
+            event.target.classList.add('tab-active');
+            
+            renderSounds();
+        }
+
+        function playSound(category, index) {
+            const sound = soundsData[category][index];
+            
+            // Remove glow from previous card
+            if (currentlyPlaying) {
+                const prevCard = document.getElementById(`card-${currentlyPlaying.category}-${currentlyPlaying.index}`);
+                if (prevCard) prevCard.classList.remove('playing-glow');
+            }
+            
+            // Add glow to current card
+            const currentCard = document.getElementById(`card-${category}-${index}`);
+            currentCard.classList.add('playing-glow');
+            
+            // Update player
+            currentlyPlaying = { category, index };
+            document.getElementById('currentTrackName').textContent = sound.name;
+            document.getElementById('currentTrackFreq').textContent = sound.freq;
+            document.getElementById('audioPlayer').classList.remove('hidden');
+            
+            // Simulate progress
+            if (progressInterval) clearInterval(progressInterval);
+            let progress = 0;
+            progressInterval = setInterval(() => {
+                progress += 0.5;
+                if (progress > 100) progress = 0;
+                document.getElementById('progressBar').style.width = progress + '%';
+            }, 100);
+            
+            // In a real implementation, you would play actual audio here
+            console.log(`Playing: ${sound.name}`);
+        }
+
+        function pauseCurrentTrack() {
+            if (currentlyPlaying) {
+                const card = document.getElementById(`card-${currentlyPlaying.category}-${currentlyPlaying.index}`);
+                if (card) card.classList.remove('playing-glow');
+            }
+            
+            document.getElementById('audioPlayer').classList.add('hidden');
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+            currentlyPlaying = null;
+        }
+
+        function showResearch(category, index) {
+            const sound = soundsData[category][index];
+            document.getElementById('modalTitle').textContent = sound.research.title;
+            document.getElementById('modalReference').textContent = sound.research.reference;
+            document.getElementById('modalSummary').textContent = sound.research.summary;
+            document.getElementById('researchModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('researchModal').classList.remove('active');
+        }
+
+        function toggleAccordion(index) {
+            const accordions = document.querySelectorAll('.accordion-content');
+            const icons = document.querySelectorAll('.accordion-icon');
+            
+            accordions[index].classList.toggle('active');
+            icons[index].textContent = accordions[index].classList.contains('active') ? '▲' : '▼';
+        }
+
+        // Close modal on outside click
+        document.getElementById('researchModal').addEventListener('click', (e) => {
+            if (e.target.id === 'researchModal') {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        renderSounds();
+    </script>
+</body>
+</html>

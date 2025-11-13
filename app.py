@@ -75,20 +75,7 @@ def search_best_match(user_query, top_k=2):
         results.append((questions[idx], answers[idx]))
     return results
 
-# def generate_response(user_input):
-#     """Send prompt to GPT-4o with context"""
-#     top_matches = search_best_match(user_input)
-#     context = "\n".join([f"Q: {q}\nA: {a}" for q,a in top_matches])
 
-#     completion = client.chat.completions.create(
-#         model="gpt-4o-mini",
-#         messages=[
-#             {"role": "system", "content": "You are a multilingual assistant that only answers from the provided context."},
-#             {"role": "user", "content": f"Context:\n{context}\n\nUser question: {user_input}\nGive a helpful answer in the same language as the question."}
-#         ]
-#     )
-#     reply = completion.choices[0].message.content
-#     return reply.strip()
 
 def generate_response(user_input):
     """Generate reply using Google Gemini API"""
@@ -103,6 +90,7 @@ def generate_response(user_input):
     prompt = (
         f"You are a multilingual, calm, and empathetic mental wellness assistant.\n"
         f"Use the given Q&A context to answer naturally in the same language as the user's question.\n\n"
+        f"Use short sentences until user asks you to give in detail."
         f"Context:\n{context}\n\nUser question: {user_input}"
     )
 
@@ -198,6 +186,7 @@ def chat():
         print("Error:", e)
         top_match = search_best_match(user_msg)[0][1]
         return top_match or "Sorry, I couldn't process your request."
+    
 @app.route('/peer-support')
 def peer_support_ui():
     return render_template('Peer_support.html')
@@ -209,6 +198,10 @@ def resources_ui():
 @app.route('/book-session')
 def booking_ui():
     return render_template('booking_page.html')
+
+@app.route('/therapy')
+def therapy_ui():
+    return render_template('sound_therapy.html')
 
 @app.route('/admin')
 def admin():
