@@ -201,6 +201,7 @@ def booking_ui():
 
 @app.route('/therapy')
 def therapy_ui():
+    return render_template('sound_therapy.html')
 
 @app.route('/admin')
 def admin():
