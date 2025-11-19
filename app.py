@@ -236,7 +236,7 @@ def admin():
 
 @app.route('/form')
 def form():
-    return render_template('style.html')
+    return render_template('quesions.html')
 
 # @app.route('/submit', methods=['POST'])
 @app.route('/submit', methods=['POST'])
