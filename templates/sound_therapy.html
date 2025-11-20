@@ -140,10 +140,10 @@
                 <h1 class="text-2xl font-bold text-gray-800">Sound Therapy</h1>
             </div>
             <div class="flex gap-3">
-                <button onclick="window.location.href='index.html'" class="px-4 py-2 rounded-full bg-white bg-opacity-40 hover:bg-opacity-60 transition text-gray-700 font-medium">
+                <button onclick="window.location.href={{url_for('student_ui')}}" class="px-4 py-2 rounded-full bg-white bg-opacity-40 hover:bg-opacity-60 transition text-gray-700 font-medium">
                     🏠 Home
                 </button>
-                <button onclick="alert('Logout clicked')" class="px-4 py-2 rounded-full bg-white bg-opacity-40 hover:bg-opacity-60 transition text-gray-700 font-medium">
+                <button onclick="window.location.href={{url_for('home')}}" class="px-4 py-2 rounded-full bg-white bg-opacity-40 hover:bg-opacity-60 transition text-gray-700 font-medium">
                     🚪 Logout
                 </button>
             </div>
