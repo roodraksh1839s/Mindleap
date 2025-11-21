@@ -169,41 +169,36 @@
 
   <div class="flex">
     <!-- Sidebar -->
-    <aside id="sidebar" class="w-64 min-h-screen glass-card border-r border-purple-200 transition-all duration-300">
-      <div class="p-6">
-        <nav class="space-y-2">
-          <div class="sidebar-item active flex items-center space-x-3 p-3 rounded-xl cursor-pointer">
-            <div class="text-2xl">👁️</div>
-            <span class="font-medium">Overview</span>
-          </div>
-          
-          <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer">
-            <div class="text-2xl">👥</div>
-            <span class="font-medium">Students</span>
-          </div>
-           
-          <div  id="addResourcesBtn"  class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer">
-            <div class="text-2xl">📋</div>
-            <span class="font-medium">Add Learning Resources</span>
-          </div>
-          
-          <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer">
-            <div class="text-2xl">📅</div>
-            <span class="font-medium">Appointments</span>
-          </div>
-          
-          <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer">
-            <div class="text-2xl">📚</div>
-            <span class="font-medium">Resources</span>
-          </div>
-          
-          <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer">
-            <div class="text-2xl">⚠️</div>
-            <span class="font-medium">Crisis Alerts</span>
-          </div>
-        </nav>
+<aside id="sidebar" class="w-64 min-h-screen glass-card border-r border-purple-200 transition-all duration-300">
+  <div class="p-6">
+    <nav class="space-y-2">
+      <div class="sidebar-item active flex items-center space-x-3 p-3 rounded-xl cursor-pointer" data-page="overview">
+        <div class="text-2xl">👁️</div>
+        <span class="font-medium">Overview</span>
       </div>
-    </aside>
+      
+      <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer" data-page="students">
+        <div class="text-2xl">👥</div>
+        <span class="font-medium">Students</span>
+      </div>
+      
+      <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer" data-page="resources">
+        <div class="text-2xl">📚</div>
+        <span class="font-medium">Resources</span>
+      </div>
+      
+      <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer" data-page="appointments">
+        <div class="text-2xl">📅</div>
+        <span class="font-medium">Appointments</span>
+      </div>
+      
+      <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer" data-page="crisis">
+        <div class="text-2xl">⚠️</div>
+        <span class="font-medium">Crisis Alerts</span>
+      </div>
+    </nav>
+  </div>
+</aside>
 
     <!-- Main Content -->
     <main class="flex-1 p-6">
@@ -448,6 +443,422 @@
           </div>
         </div>
       </section>
+      </section>
+
+      <!-- Resources Management Page (Initially Hidden) -->
+  <section id="resourcesPage" class="hidden">
+  <!-- Header with Add Button -->
+  <div class="mb-8 flex justify-between items-center animate-fade-in-up">
+    <div>
+      <h2 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+        🌿 Wellness Resources
+      </h2>
+      <p class="text-gray-600">Manage mindful guides, videos, and tools for students</p>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="max-w-2xl mb-8 animate-fade-in-up" style="animation-delay: 0.1s;">
+    <input 
+      type="text" 
+      id="adminSearchBar"
+      placeholder="🔍 Search resources..." 
+      class="w-full px-6 py-4 rounded-2xl glass-card text-gray-700 placeholder-gray-600 border-purple-200"
+    />
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="flex flex-wrap gap-4 mb-8 animate-fade-in-up" style="animation-delay: 0.2s;">
+    <button class="admin-tab-button active stat-card px-6 py-3 rounded-full text-gray-800 font-medium transition-all" data-category="all">
+      ✨ All Resources
+    </button>
+    <button class="admin-tab-button stat-card px-6 py-3 rounded-full text-gray-800 font-medium transition-all" data-category="articles">
+      📘 Articles
+    </button>
+    <button class="admin-tab-button stat-card px-6 py-3 rounded-full text-gray-800 font-medium transition-all" data-category="meditation">
+      🧘 Meditation
+    </button>
+    <button class="admin-tab-button stat-card px-6 py-3 rounded-full text-gray-800 font-medium transition-all" data-category="relaxation">
+      🎧 Relaxation
+    </button>
+  </div>
+
+  <!-- Resources Grid -->
+  <div id="adminResourcesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    
+    <!-- Article Cards -->
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="articles" style="animation-delay: 0.3s;">
+      <div class="text-5xl mb-4">📘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Understanding Anxiety</h3>
+      <p class="text-gray-700 mb-4">A comprehensive guide to recognizing anxiety patterns and developing healthy coping strategies for daily life.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Understanding Anxiety" data-content="article">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="articles" style="animation-delay: 0.4s;">
+      <div class="text-5xl mb-4">📘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Sleep Wellness Guide</h3>
+      <p class="text-gray-700 mb-4">Discover evidence-based techniques to improve your sleep quality and establish healthy bedtime routines.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Sleep Wellness Guide" data-content="article">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="articles" style="animation-delay: 0.5s;">
+      <div class="text-5xl mb-4">📘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Building Resilience</h3>
+      <p class="text-gray-700 mb-4">Learn practical methods to strengthen your mental resilience and bounce back from life's challenges.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Building Resilience" data-content="article">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <!-- Meditation Cards -->
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="meditation" style="animation-delay: 0.6s;">
+      <div class="text-5xl mb-4">🧘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">5-Minute Mindfulness</h3>
+      <p class="text-gray-700 mb-4">A quick guided meditation perfect for busy students. Reset your mind and find your center in just five minutes.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="5-Minute Mindfulness" data-content="meditation">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="meditation" style="animation-delay: 0.7s;">
+      <div class="text-5xl mb-4">💨</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Box Breathing Exercise</h3>
+      <p class="text-gray-700 mb-4">Follow this simple breathing technique used by athletes and professionals to reduce stress instantly.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Box Breathing Exercise" data-content="breathing">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="meditation" style="animation-delay: 0.8s;">
+      <div class="text-5xl mb-4">🧘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Body Scan Meditation</h3>
+      <p class="text-gray-700 mb-4">Release tension and connect with your body through this calming 10-minute guided meditation practice.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Body Scan Meditation" data-content="meditation">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <!-- Relaxation Cards -->
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="relaxation" style="animation-delay: 0.9s;">
+      <div class="text-5xl mb-4">🌊</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Ocean Waves Soundscape</h3>
+      <p class="text-gray-700 mb-4">Immerse yourself in the gentle rhythm of ocean waves. Perfect for studying, sleeping, or unwinding.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Ocean Waves Soundscape" data-content="audio">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="relaxation" style="animation-delay: 1s;">
+      <div class="text-5xl mb-4">🌧️</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Rainfall & Thunder</h3>
+      <p class="text-gray-700 mb-4">Cozy rain sounds with distant thunder. Create a peaceful atmosphere for relaxation and focus.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Rainfall & Thunder" data-content="audio">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="relaxation" style="animation-delay: 1.1s;">
+      <div class="text-5xl mb-4">🎧</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Motivational Wellness Talk</h3>
+      <p class="text-gray-700 mb-4">An inspiring 15-minute video about maintaining mental wellness during challenging academic periods.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Motivational Wellness Talk" data-content="video">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="meditation" style="animation-delay: 1.2s;">
+      <div class="text-5xl mb-4">💨</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">4-7-8 Sleep Breathing</h3>
+      <p class="text-gray-700 mb-4">A powerful breathing technique to help you fall asleep faster and improve sleep quality naturally.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="4-7-8 Sleep Breathing" data-content="breathing">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="relaxation" style="animation-delay: 1.3s;">
+      <div class="text-5xl mb-4">🌲</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Forest Ambience</h3>
+      <p class="text-gray-700 mb-4">Birds chirping, leaves rustling, and gentle forest sounds to transport you to nature's tranquility.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Forest Ambience" data-content="audio">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="articles" style="animation-delay: 1.4s;">
+      <div class="text-5xl mb-4">📘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Stress Management Tips</h3>
+      <p class="text-gray-700 mb-4">Practical, science-backed strategies to manage academic stress and maintain a healthy study-life balance.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Stress Management Tips" data-content="article">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- PASTE THIS SECTION INSIDE <main> TAG -->
+<!-- Right after the existing sections in your admin dashboard -->
+<!-- ========================================== -->
+
+<section id="studentsSection" class="hidden animate-fade-in-up">
+  <!-- Top Control Bar -->
+  <div class="stat-card p-6 rounded-2xl mb-6">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <!-- Title -->
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">Student Management</h2>
+        <p class="text-sm text-gray-500 mt-1">Secure access to student activity monitoring</p>
+      </div>
+      
+      <!-- Controls -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <!-- Search by ID -->
+        <div class="relative">
+          <input 
+            type="text" 
+            id="studentSearch" 
+            placeholder="Search by Student ID..." 
+            class="px-4 py-2 w-full sm:w-64 rounded-lg border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm"
+          />
+          <svg class="absolute right-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+
+        <!-- Risk Filter -->
+        <select id="riskFilter" class="px-4 py-2 rounded-lg border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm">
+          <option value="all">All Risk Levels</option>
+          <option value="Low">Low Risk</option>
+          <option value="Moderate">Moderate Risk</option>
+          <option value="High">High Risk</option>
+        </select>
+
+        <!-- Sort Options -->
+        <select id="sortOption" class="px-4 py-2 rounded-lg border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm">
+          <option value="lastLogin">Sort by Last Login</option>
+          <option value="activityScore">Sort by Activity Score</option>
+          <option value="studentId">Sort by Student ID</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <div class="stat-card p-5 rounded-xl">
+      <p class="text-gray-500 text-sm font-medium">Total Students</p>
+      <p class="text-3xl font-bold text-gray-800 mt-1" id="totalStudents">0</p>
+    </div>
+    <div class="stat-card p-5 rounded-xl">
+      <p class="text-gray-500 text-sm font-medium">Active Now</p>
+      <p class="text-3xl font-bold text-green-600 mt-1" id="activeStudents">0</p>
+    </div>
+    <div class="stat-card p-5 rounded-xl">
+      <p class="text-gray-500 text-sm font-medium">High Risk</p>
+      <p class="text-3xl font-bold text-red-600 mt-1" id="highRiskCount">0</p>
+    </div>
+    <div class="stat-card p-5 rounded-xl">
+      <p class="text-gray-500 text-sm font-medium">Verified</p>
+      <p class="text-3xl font-bold text-purple-600 mt-1" id="verifiedCount">0</p>
+    </div>
+  </div>
+
+  <!-- Student Cards Grid -->
+  <div id="studentGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Cards will be dynamically generated here -->
+  </div>
+
+  <!-- Empty State -->
+  <div id="emptyState" class="hidden stat-card p-12 rounded-2xl text-center">
+    <div class="text-6xl mb-4">🔍</div>
+    <p class="text-gray-500 text-lg">No students found matching your criteria</p>
+  </div>
+</section>
+
+<!-- ------------------ Crisis Alerts Page ------------------ -->
+<section id="crisisPage" class="hidden animate-fade-in-up">
+  <!-- Header / Summary -->
+  <div class="mb-6 flex flex-col lg:flex-row justify-between items-start gap-4">
+    <div>
+      <h2 class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-1">
+        ⚠️ Crisis Alerts
+      </h2>
+      <p class="text-gray-600">Live incidents flagged by assessments, AI-chat, appointments and peer support.</p>
+    </div>
+
+    <div class="flex gap-4 items-center w-full lg:w-auto">
+      <div class="stat-card p-4 rounded-2xl flex items-center gap-3">
+        <div class="text-xl font-semibold">Total</div>
+        <div id="summaryTotal" class="text-2xl font-bold text-gray-800">0</div>
+      </div>
+
+      <div class="stat-card p-4 rounded-2xl flex items-center gap-3">
+        <div class="text-sm">High</div>
+        <div id="summaryHigh" class="text-xl font-bold text-red-600">0</div>
+      </div>
+
+      <div class="stat-card p-4 rounded-2xl flex items-center gap-3">
+        <div class="text-sm">Moderate</div>
+        <div id="summaryMod" class="text-xl font-bold text-yellow-600">0</div>
+      </div>
+
+      <div class="stat-card p-4 rounded-2xl flex items-center gap-3">
+        <div class="text-sm">Low</div>
+        <div id="summaryLow" class="text-xl font-bold text-green-600">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters / Search -->
+  <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+    <input id="crisisSearch" type="text" placeholder="Search student name or ID..." class="px-4 py-3 rounded-2xl search-bar w-full" />
+
+    <div class="flex gap-3">
+      <select id="filterRisk" class="px-4 py-3 rounded-2xl w-full">
+        <option value="">All Risk Levels</option>
+        <option value="high">High Risk</option>
+        <option value="moderate">Moderate</option>
+        <option value="low">Low / Watchlist</option>
+      </select>
+
+      <select id="filterType" class="px-4 py-3 rounded-2xl w-full">
+        <option value="">All Alert Types</option>
+        <option value="assessment">Assessment</option>
+        <option value="chat">Chatbot</option>
+        <option value="appointment">Appointment</option>
+        <option value="peer">Peer Support</option>
+      </select>
+    </div>
+
+    <div class="flex gap-3">
+      <select id="sortBy" class="px-4 py-3 rounded-2xl w-full">
+        <option value="recent">Sort: Most Recent</option>
+        <option value="risk">Sort: High → Low Risk</option>
+        <option value="unresolved">Sort: Unresolved First</option>
+      </select>
+      <button id="resetFilters" class="px-4 py-3 rounded-2xl glass-card">Reset</button>
+    </div>
+  </div>
+
+  <!-- Alerts list -->
+  <div id="alertsContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
+    <!-- alert cards will be injected here by JS -->
+  </div>
+
+  <!-- load more / empty state -->
+  <div id="crisisEmpty" class="hidden p-8 text-center glass-card rounded-2xl">
+    <p class="text-gray-600">No alerts found. All clear ✅</p>
+  </div>
+
+  <!-- Modals (View / Contact) -->
+  <div id="modalOverlay" class="fixed inset-0 z-50 hidden items-center justify-center modal-bg">
+    <div id="modalContent" class="modal-content glass-card rounded-2xl p-6 max-w-xl w-full">
+      <!-- JS will populate -->
+    </div>
+  </div>
+</section>
+
+
     </main>
   </div>
 
@@ -459,201 +870,360 @@
     </div>
   </footer>
 
-  <script>
-    // Wait for DOM to load
-    document.addEventListener('DOMContentLoaded', function(event) {
-        
-      // Sidebar Toggle with smooth animation
-      document.getElementById('sidebarToggle').addEventListener('click', () => {
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    // ========================================
+    // SIDEBAR TOGGLE
+    // ========================================
+    document.getElementById('sidebarToggle').addEventListener('click', () => {
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('w-64'); 
       sidebar.classList.toggle('w-10');
       sidebar.classList.toggle('collapsed');
-     // Add smooth transition
       sidebar.style.transition = 'width 0.3s ease';
-      });
+    });
 
-      // Charts Implementation with Chart.js v4
-      // 1. Mental Health Trends Line Chart with improved visualization
-      const trendsCtx = document.getElementById('trendsChart').getContext('2d');
-      new Chart(trendsCtx, {
+    // ========================================
+    // UPLOAD MODAL (Original functionality)
+    // ========================================
+    const uploadModal = document.getElementById('uploadModal');
+    const closeModal = document.getElementById('closeModal');
+    const uploadForm = document.getElementById('uploadForm');    
+
+
+    // Open modal from Resources page button
+document.querySelectorAll('.add-resource-card').forEach(button => {
+  button.addEventListener('click', () => {
+    uploadModal.classList.remove('hidden');
+    uploadModal.classList.add('flex');
+  });
+});
+
+
+    
+    closeModal.addEventListener('click', () => {
+      uploadModal.classList.add('hidden');
+      uploadModal.classList.remove('flex');
+    });
+    
+    uploadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const file = document.getElementById('resourceFile').files[0];
+      if (file) {
+        alert(`File uploaded: ${file.name}`);
+        // Send to backend here
+      }
+      uploadModal.classList.add('hidden');
+      uploadModal.classList.remove('flex');
+    });
+
+    // ========================================
+    // RESOURCES PAGE: TAB FILTERING
+    // ========================================
+    const adminTabs = document.querySelectorAll('.admin-tab-button');
+    const resourceCards = document.querySelectorAll('.resource-card');
+    
+    adminTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const category = tab.dataset.category;
+        
+        // Update active tab
+        adminTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Filter cards
+        resourceCards.forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+    
+    // ========================================
+    // RESOURCES PAGE: SEARCH
+    // ========================================
+    const adminSearchBar = document.getElementById('adminSearchBar');
+    adminSearchBar.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      resourceCards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const description = card.querySelector('p').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+    
+    // ========================================
+    // RESOURCE PREVIEW MODAL
+    // ========================================
+    const previewModal = document.getElementById('resourcePreviewModal');
+    const closePreviewModal = document.getElementById('closePreviewModal');
+    const previewModalContent = document.getElementById('previewModalContent');
+    const viewButtons = document.querySelectorAll('.admin-view-resource');
+    
+    viewButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const title = button.dataset.title;
+        const contentType = button.dataset.content;
+        
+        let content = '';
+        
+        if (contentType === 'article') {
+          content = `
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+            <div class="prose prose-lg text-gray-700">
+              <p class="mb-4">Welcome to this comprehensive guide on mental wellness. This resource is designed to help you understand and navigate your mental health journey.</p>
+              <h3 class="text-xl font-bold mt-6 mb-3">Key Takeaways:</h3>
+              <ul class="list-disc pl-6 mb-4">
+                <li>Understanding your emotions is the first step toward wellness</li>
+                <li>Small daily practices can lead to significant improvements</li>
+                <li>Seeking support is a sign of strength, not weakness</li>
+                <li>Everyone's journey is unique and valid</li>
+              </ul>
+              <p class="mb-4">Remember, mental wellness is a continuous journey, not a destination. Be patient and kind to yourself as you explore these strategies.</p>
+              <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded mt-6">
+                <p class="text-sm text-gray-700">💡 <strong>Pro Tip:</strong> Start with just one small change and build from there. Consistency matters more than intensity.</p>
+              </div>
+            </div>
+          `;
+        } else if (contentType === 'meditation' || contentType === 'breathing') {
+          content = `
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+            <div class="mb-6">
+              <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 text-center">
+                <p class="text-6xl mb-4">🧘‍♀️</p>
+                <p class="text-gray-700 mb-4">Find a quiet, comfortable space where you won't be disturbed.</p>
+                <button class="stat-card text-gray-800 font-semibold px-8 py-3 rounded-full transition-all hover:shadow-xl">
+                  ▶️ Begin Practice
+                </button>
+              </div>
+            </div>
+            <div class="prose text-gray-700">
+              <h3 class="text-xl font-bold mb-3">How to Practice:</h3>
+              <ol class="list-decimal pl-6 mb-4">
+                <li class="mb-2">Sit or lie down in a comfortable position</li>
+                <li class="mb-2">Close your eyes and take a deep breath</li>
+                <li class="mb-2">Follow the gentle guidance to center yourself</li>
+                <li class="mb-2">Allow thoughts to pass without judgment</li>
+                <li class="mb-2">Return your focus to your breath whenever you drift</li>
+              </ol>
+              <p class="mt-4 text-sm italic">Duration: 5-10 minutes • Difficulty: Beginner-friendly</p>
+            </div>
+          `;
+        } else if (contentType === 'audio') {
+          content = `
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+            <div class="mb-6">
+              <div class="bg-gradient-to-r from-blue-100 to-cyan-100 rounded-2xl p-8 text-center">
+                <p class="text-6xl mb-4">🌊</p>
+                <p class="text-gray-700 mb-6">Immerse yourself in calming nature sounds designed to help you relax, focus, or sleep.</p>
+                <div class="flex justify-center gap-4">
+                  <button class="stat-card text-gray-800 font-semibold px-8 py-3 rounded-full transition-all hover:shadow-xl">
+                    ▶️ Play
+                  </button>
+                  <button class="stat-card text-gray-800 font-semibold px-8 py-3 rounded-full transition-all hover:shadow-xl">
+                    ⏸️ Pause
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="prose text-gray-700">
+              <h3 class="text-xl font-bold mb-3">Benefits:</h3>
+              <ul class="list-disc pl-6">
+                <li>Reduces stress and anxiety</li>
+                <li>Improves focus and concentration</li>
+                <li>Promotes better sleep quality</li>
+                <li>Creates a peaceful environment</li>
+              </ul>
+            </div>
+          `;
+        } else if (contentType === 'video') {
+          content = `
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+            <div class="mb-6">
+              <div class="bg-gray-200 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+                <div class="text-center">
+                  <p class="text-6xl mb-4">🎥</p>
+                  <p class="text-gray-600 mb-4">Video Player Placeholder</p>
+                  <button class="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-8 py-3 rounded-full transition-all">
+                    ▶️ Watch Video
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="prose text-gray-700">
+              <p class="mb-4">This inspiring video explores practical strategies for maintaining mental wellness during challenging times. Perfect for students navigating academic pressures.</p>
+              <p class="text-sm italic">Duration: 15 minutes • Language: English</p>
+            </div>
+          `;
+        }
+        
+        previewModalContent.innerHTML = content;
+        previewModal.classList.remove('hidden');
+        previewModal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    
+    closePreviewModal.addEventListener('click', () => {
+      previewModal.classList.add('hidden');
+      previewModal.classList.remove('flex');
+      document.body.style.overflow = 'auto';
+    });
+    
+    previewModal.addEventListener('click', (e) => {
+      if (e.target === previewModal) {
+        previewModal.classList.add('hidden');
+        previewModal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // ========================================
+    // CHARTS (Keep your existing chart code)
+    // ========================================
+    const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+    new Chart(trendsCtx, {
       type: 'line',
       data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
         datasets: [
-        {
-          label: 'Stress',
-          data: [42, 45, 39, 48, 51, 47, 44, 46],
-          borderColor: '#8B5CF6',
-          backgroundColor: 'rgba(139, 92, 246, 0.1)',
-          borderWidth: 2, // Added border width
-              fill: true,
-              tension: 0.4,
-              pointBackgroundColor: '#8B5CF6',
-              pointBorderColor: '#ffffff',
-              pointBorderWidth: 2,
-              pointRadius: 4
-            },
-            {
-              label: 'Anxiety',
-              data: [38, 41, 36, 44, 49, 43, 40, 42],
-              borderColor: '#EC4899',
-              backgroundColor: 'rgba(236, 72, 153, 0.1)',
-              fill: true,
-              tension: 0.4,
-              pointBackgroundColor: '#EC4899',
-              pointBorderColor: '#ffffff',
-              pointBorderWidth: 2,
-              pointRadius: 4
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-              labels: {
-                usePointStyle: true,
-                padding: 15,
-                font: {
-                  size: 12,
-                  weight: 500
-                }
-              }
-            }
+          {
+            label: 'Stress',
+            data: [42, 45, 39, 48, 51, 47, 44, 46],
+            borderColor: '#8B5CF6',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#8B5CF6',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 4
           },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(167, 139, 250, 0.1)'
-              }
-            },
-            x: {
-              grid: {
-                color: 'rgba(167, 139, 250, 0.1)'
-              }
+          {
+            label: 'Anxiety',
+            data: [38, 41, 36, 44, 49, 43, 40, 42],
+            borderColor: '#EC4899',
+            backgroundColor: 'rgba(236, 72, 153, 0.1)',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#EC4899',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 15,
+              font: { size: 12, weight: 500 }
             }
           }
-        }
-      });
-
-      // 2. Risk Distribution Doughnut Chart
-      const riskCtx = document.getElementById('riskChart').getContext('2d');
-      new Chart(riskCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Low', 'Moderate', 'High'],
-          datasets: [{
-            data: [62, 28, 10],
-            backgroundColor: [
-              '#10B981',
-              '#F59E0B', 
-              '#EF4444'
-            ],
-            borderColor: ['#ffffff', '#ffffff', '#ffffff'],
-            borderWidth: 3,
-            hoverOffset: 8
-          }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            }
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(167, 139, 250, 0.1)' }
           },
-          cutout: '60%'
-        }
-      });
-
-      // 3. Resource Usage Horizontal Bar Chart
-      const resourceCtx = document.getElementById('resourceChart').getContext('2d');
-      new Chart(resourceCtx, {
-        type: 'bar',
-        data: {
-          labels: ['CBT Guides', 'Mindfulness', 'Self-Help Videos', 'Crisis Contacts'],
-          datasets: [{
-            label: 'Uses',
-            data: [432, 387, 298, 154],
-            backgroundColor: ['#8B5CF6', '#EC4899', '#F59E0B', '#EF4444'],
-            borderRadius: 8
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          indexAxis: 'y',
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            x: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(167, 139, 250, 0.1)'
-              }
-            },
-            y: {
-              grid: {
-                display: false
-              }
-            }
+          x: {
+            grid: { color: 'rgba(167, 139, 250, 0.1)' }
           }
         }
-      });
-
-      // 4. Chatbot Performance Bar Chart
-      const chatbotCtx = document.getElementById('chatbotChart').getContext('2d');
-      new Chart(chatbotCtx, {
-        type: 'bar',
-        data: {
-          labels: ['Resolved', 'Escalations'],
-          datasets: [{
-            label: 'Count',
-            data: [4300, 930],
-            backgroundColor: ['#10B981', '#EF4444'],
-            borderRadius: 12
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(167, 139, 250, 0.1)'
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              }
-            }
-          }
-        }
-      });
-
-      // Interactive sidebar items
-      document.querySelectorAll('.sidebar-item').forEach(item => {
-        item.addEventListener('click', function() {
-          document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-          this.classList.add('active');
-        });
-      });
+      }
     });
-  </script>
+
+    const riskCtx = document.getElementById('riskChart').getContext('2d');
+    new Chart(riskCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Low', 'Moderate', 'High'],
+        datasets: [{
+          data: [62, 28, 10],
+          backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
+          borderColor: ['#ffffff', '#ffffff', '#ffffff'],
+          borderWidth: 3,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        cutout: '60%'
+      }
+    });
+
+    const resourceCtx = document.getElementById('resourceChart').getContext('2d');
+    new Chart(resourceCtx, {
+      type: 'bar',
+      data: {
+        labels: ['CBT Guides', 'Mindfulness', 'Self-Help Videos', 'Crisis Contacts'],
+        datasets: [{
+          label: 'Uses',
+          data: [432, 387, 298, 154],
+          backgroundColor: ['#8B5CF6', '#EC4899', '#F59E0B', '#EF4444'],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: { color: 'rgba(167, 139, 250, 0.1)' }
+          },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+
+    const chatbotCtx = document.getElementById('chatbotChart').getContext('2d');
+    new Chart(chatbotCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Resolved', 'Escalations'],
+        datasets: [{
+          label: 'Count',
+          data: [4300, 930],
+          backgroundColor: ['#10B981', '#EF4444'],
+          borderRadius: 12
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(167, 139, 250, 0.1)' }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  });
+</script>
 
 
 <!-- Upload Modal -->
@@ -669,33 +1239,598 @@
     </form>
   </div>
 </div>
+<!-- Resource Preview Modal -->
+<div id="resourcePreviewModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 backdrop-blur-sm">
+  <div class="stat-card rounded-3xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto mx-4 relative">
+    <button id="closePreviewModal" class="absolute top-6 right-6 text-gray-600 hover:text-gray-800 text-3xl font-bold">&times;</button>
+    <div id="previewModalContent"></div>
+  </div>
+</div>
 
 <script>
-  const addResourcesBtn = document.getElementById('addResourcesBtn');
-const uploadModal = document.getElementById('uploadModal');
-const closeModal = document.getElementById('closeModal');
-const uploadForm = document.getElementById('uploadForm');
 
-addResourcesBtn.addEventListener('click', () => {
-  uploadModal.classList.remove('hidden');
-  uploadModal.classList.add('flex');   // show modal as flex
-});
+// Student Data (Encrypted - No Personal Info)
+const studentData = [
+  { id: "STU001", status: "Active", risk: "Low", lastLogin: "2025-11-15 09:23", verified: true, activity: 87 },
+  { id: "STU002", status: "Active", risk: "Moderate", lastLogin: "2025-11-15 08:15", verified: true, activity: 72 },
+  { id: "STU003", status: "Inactive", risk: "High", lastLogin: "2025-11-10 14:32", verified: true, activity: 45 },
+  { id: "STU004", status: "Active", risk: "Low", lastLogin: "2025-11-15 10:05", verified: true, activity: 91 },
+  { id: "STU005", status: "Active", risk: "Moderate", lastLogin: "2025-11-14 16:48", verified: false, activity: 68 },
+  { id: "STU006", status: "Active", risk: "High", lastLogin: "2025-11-12 11:20", verified: true, activity: 38 },
+  { id: "STU007", status: "Active", risk: "Low", lastLogin: "2025-11-15 07:55", verified: true, activity: 94 },
+  { id: "STU008", status: "Inactive", risk: "Moderate", lastLogin: "2025-11-08 13:40", verified: true, activity: 62 },
+  { id: "STU009", status: "Active", risk: "Low", lastLogin: "2025-11-15 09:10", verified: true, activity: 85 },
+  { id: "STU010", status: "Active", risk: "High", lastLogin: "2025-11-13 15:25", verified: false, activity: 41 },
+  { id: "STU011", status: "Active", risk: "Moderate", lastLogin: "2025-11-15 08:30", verified: true, activity: 76 },
+  { id: "STU012", status: "Active", risk: "Low", lastLogin: "2025-11-15 10:15", verified: true, activity: 89 },
+  { id: "STU013", status: "Inactive", risk: "Low", lastLogin: "2025-11-05 12:10", verified: true, activity: 55 },
+  { id: "STU014", status: "Active", risk: "Moderate", lastLogin: "2025-11-14 17:20", verified: true, activity: 70 },
+  { id: "STU015", status: "Active", risk: "High", lastLogin: "2025-11-11 09:45", verified: true, activity: 35 }
+];
 
-closeModal.addEventListener('click', () => {
-  uploadModal.classList.add('hidden');
-  uploadModal.classList.remove('flex');
-});
+let filteredData = [...studentData];
 
-uploadForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const file = document.getElementById('resourceFile').files[0];
-  if (file) {
-    alert(`File selected: ${file.name}`);
-    // 👉 here you can send it to your backend with fetch or AJAX
+// Risk Badge Colors
+const riskColors = {
+  "Low": "bg-green-100 text-green-800",
+  "Moderate": "bg-yellow-100 text-yellow-800",
+  "High": "bg-red-100 text-red-800"
+};
+
+const statusColors = {
+  "Active": "bg-blue-100 text-blue-800",
+  "Inactive": "bg-gray-100 text-gray-800"
+};
+
+// Update Statistics
+function updateStats() {
+  document.getElementById('totalStudents').textContent = filteredData.length;
+  document.getElementById('activeStudents').textContent = filteredData.filter(s => s.status === "Active").length;
+  document.getElementById('highRiskCount').textContent = filteredData.filter(s => s.risk === "High").length;
+  document.getElementById('verifiedCount').textContent = filteredData.filter(s => s.verified).length;
+}
+
+// Render Student Cards
+function renderStudents() {
+  const grid = document.getElementById('studentGrid');
+  const emptyState = document.getElementById('emptyState');
+  
+  if (filteredData.length === 0) {
+    grid.classList.add('hidden');
+    emptyState.classList.remove('hidden');
+    return;
   }
-  uploadModal.classList.add('hidden');
-  uploadModal.classList.remove('flex');
+
+  grid.classList.remove('hidden');
+  emptyState.classList.add('hidden');
+  
+  grid.innerHTML = filteredData.map((student, index) => `
+    <div class="stat-card p-6 rounded-xl hover:shadow-xl transition-all duration-300" style="animation-delay: ${index * 0.05}s">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            ${student.id.slice(-2)}
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-800">${student.id}</h3>
+            <span class="${statusColors[student.status]} text-xs px-2 py-1 rounded-full font-medium">
+              ${student.status}
+            </span>
+          </div>
+        </div>
+        <span class="${riskColors[student.risk]} text-xs px-3 py-1 rounded-full font-semibold">
+          ${student.risk} Risk
+        </span>
+      </div>
+
+      <!-- Details -->
+      <div class="space-y-3 mb-4">
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-gray-500">Last Login:</span>
+          <span class="text-gray-800 font-medium">${student.lastLogin}</span>
+        </div>
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-gray-500">Verification:</span>
+          <span class="text-gray-800 font-medium">
+            ${student.verified ? '✓ Verified' : '✗ Unverified'}
+          </span>
+        </div>
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-gray-500">Activity Score:</span>
+          <span class="text-gray-800 font-bold text-lg">${student.activity}</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="pt-4 border-t border-gray-200">
+        <button 
+          onclick="viewStudentLogs('${student.id}')"
+          class="w-full px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all font-medium text-sm"
+        >
+          View Activity Logs
+        </button>
+      </div>
+    </div>
+  `).join('');
+  
+  updateStats();
+}
+
+// Filter and Sort Functions
+function applyFilters() {
+  const searchTerm = document.getElementById('studentSearch').value.toUpperCase();
+  const riskFilter = document.getElementById('riskFilter').value;
+  const sortOption = document.getElementById('sortOption').value;
+
+  // Filter
+  filteredData = studentData.filter(student => {
+    const matchesSearch = student.id.includes(searchTerm);
+    const matchesRisk = riskFilter === 'all' || student.risk === riskFilter;
+    return matchesSearch && matchesRisk;
+  });
+
+  // Sort
+  filteredData.sort((a, b) => {
+    if (sortOption === 'lastLogin') {
+      return new Date(b.lastLogin) - new Date(a.lastLogin);
+    } else if (sortOption === 'activityScore') {
+      return b.activity - a.activity;
+    } else {
+      return a.id.localeCompare(b.id);
+    }
+  });
+
+  renderStudents();
+}
+
+// View Logs Function
+function viewStudentLogs(studentId) {
+  alert(`Viewing encrypted activity logs for ${studentId}\n\nThis would open a secure modal with anonymized activity data.`);
+}
+
+// Event Listeners for Student Section
+document.getElementById('studentSearch').addEventListener('input', applyFilters);
+document.getElementById('riskFilter').addEventListener('change', applyFilters);
+document.getElementById('sortOption').addEventListener('change', applyFilters);
+
+// Sidebar Navigation - Students Section
+
+
+// Clean Navigation Logic
+const mainContent = document.querySelector('main');
+const allSections = mainContent.querySelectorAll('section');
+const studentsSection = document.getElementById('studentsSection');
+const resourcesPage = document.getElementById('resourcesPage');
+
+document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const page = item.dataset.page;
+
+        // Activate the clicked item
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        // Always hide both special sections first
+        studentsSection.classList.add('hidden');
+        resourcesPage.classList.add('hidden');
+
+        if (page === "students") {
+            // Hide ALL overview items
+            allSections.forEach(sec => sec.classList.add('hidden'));
+            studentsSection.classList.remove('hidden');
+            filteredData = [...studentData];
+            renderStudents();
+        }
+        else if (page === "crisis") {
+            document.getElementById("crisisPage").classList.remove('hidden');
+        }
+        else if (page === "resources") {
+            allSections.forEach(sec => sec.classList.add('hidden'));
+            resourcesPage.classList.remove('hidden');
+        }
+        else {
+            // Overview selected → show ONLY overview sections
+            allSections.forEach(sec => {
+                if (
+                    sec.id !== "studentsSection" &&
+                    sec.id !== "resourcesPage"&&
+                    sec.id !== "crisisPage"
+                ) {
+                    sec.classList.remove('hidden'); 
+                }
+            });
+        }
+    });
 });
+
+// <!-- ------------------ Crisis Alerts JS ------------------ -->
+
+  (function() {
+    // ---------- Sample placeholder data ----------
+    // Replace this with API data: fetch('/api/crisis-alerts')...
+    const sampleAlerts = [
+      {
+        id: 'A001',
+        name: 'Sanya P.',
+        studentId: 'S-1023',
+        risk: 'high',
+        type: 'assessment',
+        desc: 'High anxiety score (GAD-7: 17). Rapid increase from last test.',
+        timestamp: '2025-11-15T08:23:00Z',
+        counsellor: 'Dr. Mehta',
+        status: 'contacted' // pending / contacted / escalated / resolved
+      },
+      {
+        id: 'A002',
+        name: 'Arjun B.',
+        studentId: 'S-1178',
+        risk: 'moderate',
+        type: 'appointment',
+        desc: 'Missed 2 sessions in last week; not responding to messages.',
+        timestamp: '2025-11-14T11:10:00Z',
+        counsellor: '',
+        status: 'pending'
+      },
+      {
+        id: 'A003',
+        name: 'Lina M.',
+        studentId: 'S-1210',
+        risk: 'high',
+        type: 'chat',
+        desc: 'Chatbot detected self-harm ideation; recommended immediate escalation.',
+        timestamp: '2025-11-15T09:05:00Z',
+        counsellor: 'Dr. Gupta',
+        status: 'escalated'
+      },
+      {
+        id: 'A004',
+        name: 'Kiran R.',
+        studentId: 'S-1133',
+        risk: 'low',
+        type: 'peer',
+        desc: 'Negative sentiment in peer posts; recommended check-in.',
+        timestamp: '2025-11-13T15:30:00Z',
+        counsellor: '',
+        status: 'pending'
+      }
+    ];
+
+    // ---------- Utility helpers ----------
+    const riskOrder = { 'high': 3, 'moderate': 2, 'low': 1 };
+
+    function formatTime(iso) {
+      try {
+        const d = new Date(iso);
+        return d.toLocaleString();
+      } catch (e) {
+        return iso;
+      }
+    }
+
+    // ---------- DOM references ----------
+    const alertsContainer = document.getElementById('alertsContainer');
+    const searchInput = document.getElementById('crisisSearch');
+    const filterRisk = document.getElementById('filterRisk');
+    const filterType = document.getElementById('filterType');
+    const sortBy = document.getElementById('sortBy');
+    const resetFilters = document.getElementById('resetFilters');
+
+    const summaryTotal = document.getElementById('summaryTotal');
+    const summaryHigh = document.getElementById('summaryHigh');
+    const summaryMod = document.getElementById('summaryMod');
+    const summaryLow = document.getElementById('summaryLow');
+    const crisisEmpty = document.getElementById('crisisEmpty');
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalContent = document.getElementById('modalContent');
+
+    // Use this dataset (could be replaced by fetch)
+    let alerts = sampleAlerts.slice();
+
+    // ---------- Rendering ----------
+    function renderSummary(list) {
+      summaryTotal.textContent = list.length;
+      summaryHigh.textContent = list.filter(a => a.risk === 'high').length;
+      summaryMod.textContent = list.filter(a => a.risk === 'moderate').length;
+      summaryLow.textContent = list.filter(a => a.risk === 'low').length;
+    }
+
+    function createBadge(risk) {
+      if (risk === 'high') return '<span class="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-semibold">High</span>';
+      if (risk === 'moderate') return '<span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">Moderate</span>';
+      return '<span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 font-semibold">Low</span>';
+    }
+
+    function createStatusTag(status) {
+      if (!status) return '';
+      const map = {
+        pending: 'bg-gray-100 text-gray-800',
+        contacted: 'bg-green-100 text-green-800',
+        escalated: 'bg-red-100 text-red-800',
+        resolved: 'bg-blue-100 text-blue-800'
+      };
+      return `<span class="text-xs px-2 py-1 rounded-full font-semibold ${map[status] || map.pending}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
+    }
+
+    function renderAlertCard(a) {
+      return `
+        <div class="glass-card p-4 rounded-2xl border ${a.risk === 'high' ? 'alert-high' : a.risk === 'moderate' ? 'alert-medium' : 'alert-low'}">
+          <div class="flex justify-between items-start gap-3">
+            <div>
+              <div class="flex items-center gap-3">
+                <h4 class="font-semibold text-lg text-gray-800">${a.name}</h4>
+                ${createBadge(a.risk)}
+                <div class="ml-2">${createStatusTag(a.status)}</div>
+              </div>
+              <div class="text-sm text-gray-500 mt-1">${a.type.charAt(0).toUpperCase()+a.type.slice(1)} • ${a.studentId} • ${formatTime(a.timestamp)}</div>
+              <p class="text-gray-700 mt-3">${a.desc}</p>
+            </div>
+
+            <div class="flex flex-col gap-2 items-end">
+              <div class="text-sm text-gray-500">Counsellor</div>
+              <div class="font-medium text-gray-800">${a.counsellor || 'Unassigned'}</div>
+
+              <div class="mt-4 flex flex-col gap-2 w-full">
+                <button data-action="view" data-id="${a.id}" class="px-3 py-2 rounded-full calm-button text-white text-sm w-full">View</button>
+                <button data-action="contact" data-id="${a.id}" class="px-3 py-2 rounded-full glass-card text-sm w-full">Contact</button>
+                <button data-action="escalate" data-id="${a.id}" class="px-3 py-2 rounded-full border text-sm w-full">Escalate</button>
+                <button data-action="resolve" data-id="${a.id}" class="px-3 py-2 rounded-full bg-white/70 text-purple-700 font-semibold text-sm w-full">Mark Resolved</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderList(list) {
+      alertsContainer.innerHTML = '';
+      if (!list.length) {
+        crisisEmpty.classList.remove('hidden');
+        return;
+      } else {
+        crisisEmpty.classList.add('hidden');
+      }
+
+      const html = list.map(renderAlertCard).join('');
+      alertsContainer.innerHTML = html;
+
+      // wire actions
+      document.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const action = btn.getAttribute('data-action');
+          const id = btn.getAttribute('data-id');
+          handleAction(action, id);
+        });
+      });
+    }
+
+    // ---------- Filtering / Sorting ----------
+    function applyFilters() {
+      const q = searchInput.value.trim().toLowerCase();
+      const r = filterRisk.value;
+      const t = filterType.value;
+      const s = sortBy.value;
+
+      let filtered = alerts.filter(a => {
+        const matchesQuery = !q || (a.name.toLowerCase().includes(q) || a.studentId.toLowerCase().includes(q) || a.id.toLowerCase().includes(q));
+        const matchesRisk = !r || a.risk === r;
+        const matchesType = !t || a.type === t;
+        return matchesQuery && matchesRisk && matchesType;
+      });
+
+      if (s === 'risk') {
+        filtered.sort((a,b) => (riskOrder[b.risk] - riskOrder[a.risk]) || new Date(b.timestamp) - new Date(a.timestamp));
+      } else if (s === 'unresolved') {
+        filtered.sort((a,b) => {
+          const scoreA = a.status === 'resolved' ? 0 : 1;
+          const scoreB = b.status === 'resolved' ? 0 : 1;
+          return scoreB - scoreA || (riskOrder[b.risk] - riskOrder[a.risk]);
+        });
+      } else {
+        filtered.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+      }
+
+      renderSummary(filtered);
+      renderList(filtered);
+    }
+
+    // ---------- Actions (View / Contact / Escalate / Resolve) ----------
+    function handleAction(action, id) {
+      const alert = alerts.find(x => x.id === id);
+      if (!alert) return;
+
+      if (action === 'view') return openModal(renderView(alert));
+      if (action === 'contact') return openModal(renderContactForm(alert));
+      if (action === 'escalate') {
+        if (confirm(`Escalate ${alert.name} to emergency?`)) {
+          alert.status = 'escalated';
+          applyFilters();
+        }
+        return;
+      }
+      if (action === 'resolve') {
+        if (confirm(`Mark alert for ${alert.name} resolved?`)) {
+          alert.status = 'resolved';
+          applyFilters();
+        }
+        return;
+      }
+    }
+
+    // Modal renderers
+    function renderView(a) {
+      return `
+        <div>
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">${a.name} <small class="text-sm text-gray-500">(${a.studentId})</small></h3>
+            <button id="modalClose" class="text-gray-500">✕</button>
+          </div>
+          <div class="space-y-3 text-sm text-gray-700">
+            <p><strong>Risk:</strong> ${a.risk}</p>
+            <p><strong>Type:</strong> ${a.type}</p>
+            <p><strong>Timestamp:</strong> ${formatTime(a.timestamp)}</p>
+            <p><strong>Counsellor:</strong> ${a.counsellor || 'Unassigned'}</p>
+            <p><strong>Description:</strong> ${a.desc}</p>
+          </div>
+          <div class="mt-6 flex gap-2">
+            <button id="modalEscalate" class="px-4 py-2 rounded-full border">Escalate</button>
+            <button id="modalResolve" class="px-4 py-2 rounded-full bg-white/70 text-purple-700">Resolve</button>
+            <button id="modalContact" class="px-4 py-2 rounded-full calm-button text-white">Contact Student</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderContactForm(a) {
+      return `
+        <div>
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Contact ${a.name}</h3>
+            <button id="modalClose2" class="text-gray-500">✕</button>
+          </div>
+          <div class="space-y-3">
+            <label class="text-sm text-gray-600">Message</label>
+            <textarea id="contactMsg" rows="5" class="w-full p-3 rounded-lg border" placeholder="Write a short message / support note..."></textarea>
+            <div class="flex gap-2">
+              <button id="sendContact" class="px-4 py-2 rounded-full calm-button text-white">Send</button>
+              <button id="assignCounsellor" class="px-4 py-2 rounded-full glass-card">Assign Counsellor</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function openModal(html) {
+      modalContent.innerHTML = html;
+      modalOverlay.classList.remove('hidden');
+      modalOverlay.classList.add('flex');
+
+      // wire modal controls
+      const closeButtons = modalContent.querySelectorAll('#modalClose, #modalClose2');
+      closeButtons.forEach(b => b && b.addEventListener('click', () => closeModal()));
+
+      // modal buttons (delegated)
+      const mEsc = document.getElementById('modalEscalate');
+      if (mEsc) mEsc.addEventListener('click', () => {
+        const id = getModalAlertId(); // not strictly necessary here
+        if (confirm('Confirm escalate?')) {
+          // locate and escalate
+          // naive: escalate first alert in sample (for real app pass id)
+          const firstId = (alerts[0] || {}).id;
+          if (firstId) {
+            const o = alerts.find(x => x.id === firstId);
+            if (o) o.status = 'escalated';
+            applyFilters();
+            closeModal();
+          }
+        }
+      });
+
+      const mRes = document.getElementById('modalResolve');
+      if (mRes) mRes.addEventListener('click', () => {
+        if (confirm('Resolve this alert?')) {
+          const firstId = (alerts[0] || {}).id;
+          if (firstId) {
+            const o = alerts.find(x => x.id === firstId);
+            if (o) o.status = 'resolved';
+            applyFilters();
+            closeModal();
+          }
+        }
+      });
+
+      const mContact = document.getElementById('modalContact');
+      if (mContact) {
+        mContact.addEventListener('click', () => {
+          alert('Contact action triggered (implement real send via API).');
+        });
+      }
+
+      // contact modal send
+      const sendBtn = document.getElementById('sendContact');
+      if (sendBtn) {
+        sendBtn.addEventListener('click', () => {
+          const msg = document.getElementById('contactMsg').value;
+          if (!msg.trim()) { alert('Please add a message.'); return; }
+          alert('Message sent to student (replace alert with API call).');
+          closeModal();
+        });
+      }
+    }
+
+    function closeModal() {
+      modalOverlay.classList.add('hidden');
+      modalOverlay.classList.remove('flex');
+      modalContent.innerHTML = '';
+    }
+
+    function getModalAlertId() {
+      // if needed, store id in dataset; simplified here
+      return null;
+    }
+
+    // ---------- Events ----------
+    searchInput.addEventListener('input', debounce(applyFilters, 250));
+    filterRisk.addEventListener('change', applyFilters);
+    filterType.addEventListener('change', applyFilters);
+    sortBy.addEventListener('change', applyFilters);
+    resetFilters.addEventListener('click', () => {
+      searchInput.value = '';
+      filterRisk.value = '';
+      filterType.value = '';
+      sortBy.value = 'recent';
+      applyFilters();
+    });
+
+    // delegation to close modal on overlay click
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+    // bootstrap
+    function initCrisis() {
+      // load real data here (fetch)
+      // Example: fetch('/api/crisis-alerts').then(r => r.json()).then(data => { alerts = data; applyFilters(); });
+
+      alerts = sampleAlerts.slice(); // placeholder
+      applyFilters();
+    }
+
+    // Debounce helper
+    function debounce(fn, wait) {
+      let t;
+      return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+
+    // init on load
+    document.addEventListener('DOMContentLoaded', initCrisis);
+
+    // Expose applyFilters in case other nav code wants to refresh
+    window.refreshCrisisPage = initCrisis;
+
+    // Optional: If your sidebar code triggers section show by data-page,
+    // add a little helper: when crisis sidebar item clicked, ensure page is shown.
+    // If your existing sidebar already handles 'data-page="crisis"', ignore this.
+    const sidebarCrisis = document.querySelector('#sidebar .sidebar-item[data-page="crisis"]');
+    if (sidebarCrisis) {
+      sidebarCrisis.addEventListener('click', () => {
+        // hide other pages (if your app hides by .hidden)
+        document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+        document.getElementById('crisisPage').classList.remove('hidden');
+        // refresh data when opened
+        initCrisis();
+      });
+    }
+
+  })();
+
+// <!-- -------------------------------------------------------- -->
+
 </script>
+
 </body>
 </html>
