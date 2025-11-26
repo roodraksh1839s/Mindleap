@@ -1,0 +1,2945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindEase - Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+  <style>
+    /* Custom Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .animate-pulse-soft {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Modern Glassmorphism */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px 0 rgba(167, 139, 250, 0.1);
+    }
+
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+    }
+
+    /* Interactive Elements */
+    .stat-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(167, 139, 250, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(167, 139, 250, 0.3);
+    }
+
+    /* Sidebar Styles */
+    .sidebar-item {
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-item:hover {
+      background: rgba(167, 139, 250, 0.1);
+      transform: translateX(5px);
+    }
+
+    .sidebar-item.active {
+      background: rgba(167, 139, 250, 0.2);
+      border-left: 4px solid #667eea;
+    }
+
+    /* Chart containers */
+    .chart-container {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid rgba(167, 139, 250, 0.1);
+      box-shadow: 0 4px 20px rgba(167, 139, 250, 0.1);
+    }
+
+    /* Alert Styles */
+    .alert-high { border-left: 4px solid #ef4444; }
+    .alert-medium { border-left: 4px solid #f59e0b; }
+    .alert-low { border-left: 4px solid #10b981; }
+
+    /* Ensure charts are visible */
+    canvas {
+      max-height: 300px !important;
+      width: 100% !important;
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+      .sidebar-collapsed {
+        transform: translateX(-100%);
+      }
+    }
+    /* When sidebar is collapsed */
+#sidebar.collapsed .sidebar-item {
+  background: transparent !important;
+  border-left: none !important;
+  padding: 0 !important;
+}
+
+/* Hide text when collapsed */
+#sidebar.collapsed .sidebar-item span {
+  display: none !important;
+}
+
+/* Reduce padding */
+#sidebar.collapsed .sidebar-item {
+  padding-left: 0;
+  padding-right: 0;
+}
+/* Remove hover animation */
+#sidebar.collapsed .sidebar-item:hover {
+  transform: none !important;
+  background: transparent !important;
+}
+#sidebar.collapsed {
+  overflow: hidden !important;
+  width: 29px !important;  /* thin collapsed width */
+}
+
+.counsellor-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(167, 139, 250, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .counsellor-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 35px rgba(167, 139, 250, 0.25);
+    }
+
+    /* Appointment Cards */
+    .appointment-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-left: 4px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .appointment-card:hover {
+      background: rgba(255, 255, 255, 0.95);
+      transform: translateX(5px);
+    }
+
+    .appointment-card.on-time { border-left-color: #10B981; }
+    .appointment-card.delayed { border-left-color: #F59E0B; }
+    .appointment-card.missed { border-left-color: #EF4444; }
+
+    /* Modal Styles */
+    .modal-backdrop {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(167, 139, 250, 0.2);
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    /* Calendar Styles */
+    .calendar-day {
+      min-height: 100px;
+      border: 1px solid rgba(167, 139, 250, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .calendar-day:hover {
+      background: rgba(167, 139, 250, 0.05);
+    }
+
+    .calendar-event {
+      font-size: 0.7rem;
+      padding: 2px 4px;
+      margin: 2px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .calendar-event:hover {
+      transform: scale(1.05);
+    }
+
+    /* Collapsible Sections */
+    .collapsible-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .collapsible-content.active {
+      max-height: 2000px;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* Health Indicators */
+    .health-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .health-on-time { background-color: #10B981; }
+    .health-delayed { background-color: #F59E0B; }
+    .health-missed { background-color: #EF4444; }
+
+    /* Star Rating */
+    .star-rating {
+      color: #F59E0B;
+    }
+
+    /* Scrollbar Styling */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(167, 139, 250, 0.1);
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(167, 139, 250, 0.3);
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(167, 139, 250, 0.5);
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: 0.4s;
+      border-radius: 28px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #8B5CF6;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 min-h-screen">
+
+  <!-- Navigation Header -->
+  <nav class="glass-nav sticky top-0 z-50 px-6 py-4">
+    <div class="flex justify-between items-center">
+      <!-- Left Section -->
+      <div class="flex items-center space-x-4">
+        <button id="sidebarToggle" class="p-2 rounded-xl hover:bg-purple-100 transition-colors">
+          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+        <div class="flex items-center space-x-3">
+          <div class="text-2xl">🧠</div>
+          <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+            MindEase Admin
+          </h1>
+        </div>
+      </div>
+
+      <!-- Right Section -->
+      <div class="flex items-center space-x-4">
+        <!-- <button class="p-2 rounded-xl hover:bg-purple-100 transition-colors relative">
+          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5-5 5-5v10z"/>
+          </svg>
+          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+        </button> -->
+        
+        <div class="flex items-center space-x-3">
+          <div class="text-right">
+           <a href="{{ url_for('home') }}"><button>Log out</button></a>
+
+            <div class="text-sm text-gray-500">Admin</div>
+            <div class="font-semibold text-gray-800">Dr.Roodraksh Bisen</div>
+          </div>
+          <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold">
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="flex">
+    <!-- Sidebar -->
+<aside id="sidebar" class="w-64 min-h-screen glass-card border-r border-purple-200 transition-all duration-300">
+  <div class="p-6">
+    <nav class="space-y-2">
+      <div class="sidebar-item active flex items-center space-x-3 p-3 rounded-xl cursor-pointer" data-page="overview">
+        <div class="text-2xl">👁️</div>
+        <span class="font-medium">Overview</span>
+      </div>
+      
+      <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer" data-page="students">
+        <div class="text-2xl">👥</div>
+        <span class="font-medium">Students</span>
+      </div>
+      
+      <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer" data-page="resources">
+        <div class="text-2xl">📚</div>
+        <span class="font-medium">Resources</span>
+      </div>
+      
+      <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer" data-page="appointments">
+        <div class="text-2xl">📅</div>
+        <span class="font-medium">Appointments</span>
+      </div>
+      
+      <div class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer" data-page="crisis">
+        <div class="text-2xl">⚠️</div>
+        <span class="font-medium">Crisis Alerts</span>
+      </div>
+    </nav>
+  </div>
+</aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <!-- Statistics Cards -->
+      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="stat-card p-6 rounded-2xl">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">Active Users</p>
+              <p class="text-3xl font-bold text-gray-800 mt-1">1,248</p>
+              <p class="text-green-600 text-sm font-medium mt-1">↗ +3.2% from last week</p>
+            </div>
+            <div class="text-4xl animate-pulse-soft">👥</div>
+          </div>
+        </div>
+
+        <div class="stat-card p-6 rounded-2xl">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">Screenings</p>
+              <p class="text-3xl font-bold text-gray-800 mt-1">842</p>
+              <p class="text-green-600 text-sm font-medium mt-1">↗ +5.1% from last week</p>
+            </div>
+            <div class="text-4xl animate-pulse-soft">📊</div>
+          </div>
+        </div>
+
+        <div class="stat-card p-6 rounded-2xl">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">Appointments</p>
+              <p class="text-3xl font-bold text-gray-800 mt-1">178</p>
+              <p class="text-red-600 text-sm font-medium mt-1">↘ -1.8% from last week</p>
+            </div>
+            <div class="text-4xl animate-pulse-soft">📅</div>
+          </div>
+        </div>
+
+        <div class="stat-card p-6 rounded-2xl">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">AI Interactions</p>
+              <p class="text-3xl font-bold text-gray-800 mt-1">5,230</p>
+              <p class="text-green-600 text-sm font-medium mt-1">↗ +7.6% from last week</p>
+            </div>
+            <div class="text-4xl animate-pulse-soft">🤖</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Charts Section -->
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Stress Trends Chart -->
+        <div class="lg:col-span-2 chart-container">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-gray-800">Mental Health Trends</h3>
+            <select class="px-3 py-1 rounded-lg border border-purple-200 text-sm">
+              <option>Last 30 Days</option>
+              <option>Last 7 Days</option>
+              <option>Last 3 Months</option>
+            </select>
+          </div>
+          <div style="height: 300px; position: relative;">
+            <canvas id="trendsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Risk Distribution -->
+        <div class="chart-container">
+          <h3 class="text-xl font-bold text-gray-800 mb-6">Risk Distribution</h3>
+          <div style="height: 250px; position: relative;">
+            <canvas id="riskChart"></canvas>
+          </div>
+          <div class="mt-6 space-y-3">
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                <span>Low Risk</span>
+              </div>
+              <span class="font-semibold">62%</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                <span>Moderate Risk</span>
+              </div>
+              <span class="font-semibold">28%</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                <span>High Risk</span>
+              </div>
+              <span class="font-semibold">10%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Additional Analytics -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Resource Usage -->
+        <div class="chart-container">
+          <h3 class="text-xl font-bold text-gray-800 mb-6">Resource Hub Usage</h3>
+          <div style="height: 250px; position: relative;">
+            <canvas id="resourceChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chatbot Analytics -->
+        <div class="chart-container">
+          <h3 class="text-xl font-bold text-gray-800 mb-6">AI Chatbot Performance</h3>
+          <div style="height: 200px; position: relative;">
+            <canvas id="chatbotChart"></canvas>
+          </div>
+          <div class="mt-4 space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Resolution Rate:</span>
+              <span class="font-semibold text-green-600">86%</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Avg Response Time:</span>
+              <span class="font-semibold">2.3s</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Escalations:</span>
+              <span class="font-semibold text-orange-600">18%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Alerts and Community -->
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Crisis Alerts -->
+        <div class="stat-card p-6 rounded-2xl">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-gray-800">Crisis Alerts</h3>
+            <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">3 Active</span>
+          </div>
+          <div class="space-y-3">
+            <div class="p-3 bg-red-50 rounded-lg alert-high">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="font-semibold text-gray-800">Sanya P.</p>
+                  <p class="text-sm text-gray-600">High anxiety scores detected</p>
+                </div>
+                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Contacted</span>
+              </div>
+            </div>
+            <div class="p-3 bg-yellow-50 rounded-lg alert-medium">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="font-semibold text-gray-800">Arjun B.</p>
+                  <p class="text-sm text-gray-600">Multiple missed appointments</p>
+                </div>
+                <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Pending</span>
+              </div>
+            </div>
+            <div class="p-3 bg-red-50 rounded-lg alert-high">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="font-semibold text-gray-800">Lina M.</p>
+                  <p class="text-sm text-gray-600">Crisis intervention needed</p>
+                </div>
+                <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">Escalated</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Peer Support Stats -->
+        <div class="stat-card p-6 rounded-2xl">
+          <h3 class="text-xl font-bold text-gray-800 mb-4">Community Engagement</h3>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-gray-600">Active Posts:</span>
+              <span class="font-bold text-2xl text-purple-600">278</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-gray-600">Replies:</span>
+              <span class="font-bold text-2xl text-indigo-600">1,102</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-gray-600">Participants:</span>
+              <span class="font-bold text-2xl text-pink-600">94</span>
+            </div>
+            <div class="mt-4">
+              <p class="text-sm text-gray-600 mb-2">Sentiment Analysis:</p>
+              <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                  <span class="text-sm">Positive: 68%</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                  <span class="text-sm">Neutral: 22%</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                  <span class="text-sm">Negative: 10%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointments Today -->
+        <div class="stat-card p-6 rounded-2xl">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-gray-800">Today's Sessions</h3>
+            <button class="text-purple-600 hover:text-purple-700 text-sm font-medium">View All</button>
+          </div>
+          <div class="space-y-3">
+            <div class="p-3 bg-blue-50 rounded-lg">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="font-semibold text-gray-800">Aisha R.</p>
+                  <p class="text-sm text-gray-600">Dr. Mehta - 10:00 AM</p>
+                </div>
+                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Confirmed</span>
+              </div>
+            </div>
+            <div class="p-3 bg-green-50 rounded-lg">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="font-semibold text-gray-800">Rohit K.</p>
+                  <p class="text-sm text-gray-600">Ms. Singh - 2:00 PM</p>
+                </div>
+                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">In Progress</span>
+              </div>
+            </div>
+            <div class="p-3 bg-purple-50 rounded-lg">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="font-semibold text-gray-800">Priya N.</p>
+                  <p class="text-sm text-gray-600">Dr. Gupta - 4:30 PM</p>
+                </div>
+                <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">Scheduled</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      </section>
+
+      <!-- Resources Management Page (Initially Hidden) -->
+  <section id="resourcesPage" class="hidden">
+  <!-- Header with Add Button -->
+  <div class="mb-8 flex justify-between items-center animate-fade-in-up">
+    <div>
+      <h2 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+        🌿 Wellness Resources
+      </h2>
+      <p class="text-gray-600">Manage mindful guides, videos, and tools for students</p>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="max-w-2xl mb-8 animate-fade-in-up" style="animation-delay: 0.1s;">
+    <input 
+      type="text" 
+      id="adminSearchBar"
+      placeholder="🔍 Search resources..." 
+      class="w-full px-6 py-4 rounded-2xl glass-card text-gray-700 placeholder-gray-600 border-purple-200"
+    />
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="flex flex-wrap gap-4 mb-8 animate-fade-in-up" style="animation-delay: 0.2s;">
+    <button class="admin-tab-button active stat-card px-6 py-3 rounded-full text-gray-800 font-medium transition-all" data-category="all">
+      ✨ All Resources
+    </button>
+    <button class="admin-tab-button stat-card px-6 py-3 rounded-full text-gray-800 font-medium transition-all" data-category="articles">
+      📘 Articles
+    </button>
+    <button class="admin-tab-button stat-card px-6 py-3 rounded-full text-gray-800 font-medium transition-all" data-category="meditation">
+      🧘 Meditation
+    </button>
+    <button class="admin-tab-button stat-card px-6 py-3 rounded-full text-gray-800 font-medium transition-all" data-category="relaxation">
+      🎧 Relaxation
+    </button>
+  </div>
+
+  <!-- Resources Grid -->
+  <div id="adminResourcesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    
+    <!-- Article Cards -->
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="articles" style="animation-delay: 0.3s;">
+      <div class="text-5xl mb-4">📘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Understanding Anxiety</h3>
+      <p class="text-gray-700 mb-4">A comprehensive guide to recognizing anxiety patterns and developing healthy coping strategies for daily life.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Understanding Anxiety" data-content="article">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="articles" style="animation-delay: 0.4s;">
+      <div class="text-5xl mb-4">📘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Sleep Wellness Guide</h3>
+      <p class="text-gray-700 mb-4">Discover evidence-based techniques to improve your sleep quality and establish healthy bedtime routines.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Sleep Wellness Guide" data-content="article">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="articles" style="animation-delay: 0.5s;">
+      <div class="text-5xl mb-4">📘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Building Resilience</h3>
+      <p class="text-gray-700 mb-4">Learn practical methods to strengthen your mental resilience and bounce back from life's challenges.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Building Resilience" data-content="article">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <!-- Meditation Cards -->
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="meditation" style="animation-delay: 0.6s;">
+      <div class="text-5xl mb-4">🧘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">5-Minute Mindfulness</h3>
+      <p class="text-gray-700 mb-4">A quick guided meditation perfect for busy students. Reset your mind and find your center in just five minutes.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="5-Minute Mindfulness" data-content="meditation">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="meditation" style="animation-delay: 0.7s;">
+      <div class="text-5xl mb-4">💨</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Box Breathing Exercise</h3>
+      <p class="text-gray-700 mb-4">Follow this simple breathing technique used by athletes and professionals to reduce stress instantly.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Box Breathing Exercise" data-content="breathing">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="meditation" style="animation-delay: 0.8s;">
+      <div class="text-5xl mb-4">🧘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Body Scan Meditation</h3>
+      <p class="text-gray-700 mb-4">Release tension and connect with your body through this calming 10-minute guided meditation practice.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Body Scan Meditation" data-content="meditation">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <!-- Relaxation Cards -->
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="relaxation" style="animation-delay: 0.9s;">
+      <div class="text-5xl mb-4">🌊</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Ocean Waves Soundscape</h3>
+      <p class="text-gray-700 mb-4">Immerse yourself in the gentle rhythm of ocean waves. Perfect for studying, sleeping, or unwinding.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Ocean Waves Soundscape" data-content="audio">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="relaxation" style="animation-delay: 1s;">
+      <div class="text-5xl mb-4">🌧️</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Rainfall & Thunder</h3>
+      <p class="text-gray-700 mb-4">Cozy rain sounds with distant thunder. Create a peaceful atmosphere for relaxation and focus.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Rainfall & Thunder" data-content="audio">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="relaxation" style="animation-delay: 1.1s;">
+      <div class="text-5xl mb-4">🎧</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Motivational Wellness Talk</h3>
+      <p class="text-gray-700 mb-4">An inspiring 15-minute video about maintaining mental wellness during challenging academic periods.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Motivational Wellness Talk" data-content="video">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="meditation" style="animation-delay: 1.2s;">
+      <div class="text-5xl mb-4">💨</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">4-7-8 Sleep Breathing</h3>
+      <p class="text-gray-700 mb-4">A powerful breathing technique to help you fall asleep faster and improve sleep quality naturally.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="4-7-8 Sleep Breathing" data-content="breathing">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="relaxation" style="animation-delay: 1.3s;">
+      <div class="text-5xl mb-4">🌲</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Forest Ambience</h3>
+      <p class="text-gray-700 mb-4">Birds chirping, leaves rustling, and gentle forest sounds to transport you to nature's tranquility.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Forest Ambience" data-content="audio">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+    <div class="stat-card rounded-2xl p-6 animate-fade-in-up resource-card" data-category="articles" style="animation-delay: 1.4s;">
+      <div class="text-5xl mb-4">📘</div>
+      <h3 class="text-2xl font-bold text-gray-800 mb-2">Stress Management Tips</h3>
+      <p class="text-gray-700 mb-4">Practical, science-backed strategies to manage academic stress and maintain a healthy study-life balance.</p>
+      <div class="flex space-x-2">
+        <button class="admin-view-resource bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-4 py-2 rounded-lg transition-all" data-title="Stress Management Tips" data-content="article">
+          View
+        </button>
+        <button class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-4 py-2 rounded-lg transition-all">
+          Delete
+        </button>
+          <button class="add-resource-card bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg transition-all">
+    Add Resource
+  </button>
+      </div>
+    </div>
+    
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- PASTE THIS SECTION INSIDE <main> TAG -->
+<!-- Right after the existing sections in your admin dashboard -->
+<!-- ========================================== -->
+
+<section id="studentsSection" class="hidden animate-fade-in-up">
+  <!-- Top Control Bar -->
+  <div class="stat-card p-6 rounded-2xl mb-6">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <!-- Title -->
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">Student Management</h2>
+        <p class="text-sm text-gray-500 mt-1">Secure access to student activity monitoring</p>
+      </div>
+      
+      <!-- Controls -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <!-- Search by ID -->
+        <div class="relative">
+          <input 
+            type="text" 
+            id="studentSearch" 
+            placeholder="Search by Student ID..." 
+            class="px-4 py-2 w-full sm:w-64 rounded-lg border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm"
+          />
+          <svg class="absolute right-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+
+        <!-- Risk Filter -->
+        <select id="riskFilter" class="px-4 py-2 rounded-lg border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm">
+          <option value="all">All Risk Levels</option>
+          <option value="Low">Low Risk</option>
+          <option value="Moderate">Moderate Risk</option>
+          <option value="High">High Risk</option>
+        </select>
+
+        <!-- Sort Options -->
+        <select id="sortOption" class="px-4 py-2 rounded-lg border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm">
+          <option value="lastLogin">Sort by Last Login</option>
+          <option value="activityScore">Sort by Activity Score</option>
+          <option value="studentId">Sort by Student ID</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <div class="stat-card p-5 rounded-xl">
+      <p class="text-gray-500 text-sm font-medium">Total Students</p>
+      <p class="text-3xl font-bold text-gray-800 mt-1" id="totalStudents">0</p>
+    </div>
+    <div class="stat-card p-5 rounded-xl">
+      <p class="text-gray-500 text-sm font-medium">Active Now</p>
+      <p class="text-3xl font-bold text-green-600 mt-1" id="activeStudents">0</p>
+    </div>
+    <div class="stat-card p-5 rounded-xl">
+      <p class="text-gray-500 text-sm font-medium">High Risk</p>
+      <p class="text-3xl font-bold text-red-600 mt-1" id="highRiskCount">0</p>
+    </div>
+    <div class="stat-card p-5 rounded-xl">
+      <p class="text-gray-500 text-sm font-medium">Verified</p>
+      <p class="text-3xl font-bold text-purple-600 mt-1" id="verifiedCount">0</p>
+    </div>
+  </div>
+
+  <!-- Student Cards Grid -->
+  <div id="studentGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Cards will be dynamically generated here -->
+  </div>
+
+  <!-- Empty State -->
+  <div id="emptyState" class="hidden stat-card p-12 rounded-2xl text-center">
+    <div class="text-6xl mb-4">🔍</div>
+    <p class="text-gray-500 text-lg">No students found matching your criteria</p>
+  </div>
+</section>
+
+<!-- ------------------ Crisis Alerts Page ------------------ -->
+<section id="crisisPage" class="hidden animate-fade-in-up">
+  <!-- Header / Summary -->
+  <div class="mb-6 flex flex-col lg:flex-row justify-between items-start gap-4">
+    <div>
+      <h2 class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-1">
+        ⚠️ Crisis Alerts
+      </h2>
+      <p class="text-gray-600">Live incidents flagged by assessments, AI-chat, appointments and peer support.</p>
+    </div>
+
+    <div class="flex gap-4 items-center w-full lg:w-auto">
+      <div class="stat-card p-4 rounded-2xl flex items-center gap-3">
+        <div class="text-xl font-semibold">Total</div>
+        <div id="summaryTotal" class="text-2xl font-bold text-gray-800">0</div>
+      </div>
+
+      <div class="stat-card p-4 rounded-2xl flex items-center gap-3">
+        <div class="text-sm">High</div>
+        <div id="summaryHigh" class="text-xl font-bold text-red-600">0</div>
+      </div>
+
+      <div class="stat-card p-4 rounded-2xl flex items-center gap-3">
+        <div class="text-sm">Moderate</div>
+        <div id="summaryMod" class="text-xl font-bold text-yellow-600">0</div>
+      </div>
+
+      <div class="stat-card p-4 rounded-2xl flex items-center gap-3">
+        <div class="text-sm">Low</div>
+        <div id="summaryLow" class="text-xl font-bold text-green-600">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters / Search -->
+  <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+    <input id="crisisSearch" type="text" placeholder="Search student name or ID..." class="px-4 py-3 rounded-2xl search-bar w-full" />
+
+    <div class="flex gap-3">
+      <select id="filterRisk" class="px-4 py-3 rounded-2xl w-full">
+        <option value="">All Risk Levels</option>
+        <option value="high">High Risk</option>
+        <option value="moderate">Moderate</option>
+        <option value="low">Low / Watchlist</option>
+      </select>
+
+      <select id="filterType" class="px-4 py-3 rounded-2xl w-full">
+        <option value="">All Alert Types</option>
+        <option value="assessment">Assessment</option>
+        <option value="chat">Chatbot</option>
+        <option value="appointment">Appointment</option>
+        <option value="peer">Peer Support</option>
+      </select>
+    </div>
+
+    <div class="flex gap-3">
+      <select id="sortBy" class="px-4 py-3 rounded-2xl w-full">
+        <option value="recent">Sort: Most Recent</option>
+        <option value="risk">Sort: High → Low Risk</option>
+        <option value="unresolved">Sort: Unresolved First</option>
+      </select>
+      <button id="resetFilters" class="px-4 py-3 rounded-2xl glass-card">Reset</button>
+    </div>
+  </div>
+
+  <!-- Alerts list -->
+  <div id="alertsContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
+    <!-- alert cards will be injected here by JS -->
+  </div>
+
+  <!-- load more / empty state -->
+  <div id="crisisEmpty" class="hidden p-8 text-center glass-card rounded-2xl">
+    <p class="text-gray-600">No alerts found. All clear ✅</p>
+  </div>
+
+  <!-- Modals (View / Contact) -->
+  <div id="modalOverlay" class="fixed inset-0 z-50 hidden items-center justify-center modal-bg">
+    <div id="modalContent" class="modal-content glass-card rounded-2xl p-6 max-w-xl w-full">
+      <!-- JS will populate -->
+    </div>
+  </div>
+</section>
+<section id="appointmentsPage" class="hidden">
+  <div class="p-6">
+    <!-- Page Header -->
+    <div class="mb-8 animate-fade-in-up">
+      <h2 class="text-3xl font-bold text-gray-800 mb-2">📅 Appointments Management</h2>
+      <p class="text-gray-600">Manage counsellor schedules, student bookings, and session tracking</p>
+    </div>
+
+    <!-- Summary Statistics -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in-up">
+      <div class="stat-card p-6 rounded-2xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Upcoming Appointments</p>
+            <p class="text-3xl font-bold text-gray-800 mt-1">24</p>
+            <p class="text-blue-600 text-sm font-medium mt-1">↗ Next 7 days</p>
+          </div>
+          <div class="text-4xl animate-pulse-soft">📆</div>
+        </div>
+      </div>
+
+      <div class="stat-card p-6 rounded-2xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Pending Requests</p>
+            <p class="text-3xl font-bold text-gray-800 mt-1">12</p>
+            <p class="text-orange-600 text-sm font-medium mt-1">⏳ Awaiting approval</p>
+          </div>
+          <div class="text-4xl animate-pulse-soft">⏰</div>
+        </div>
+      </div>
+
+      <div class="stat-card p-6 rounded-2xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Completed This Week</p>
+            <p class="text-3xl font-bold text-gray-800 mt-1">18</p>
+            <p class="text-green-600 text-sm font-medium mt-1">✓ Success rate: 94%</p>
+          </div>
+          <div class="text-4xl animate-pulse-soft">✅</div>
+        </div>
+      </div>
+    </section>
+
+
+
+<!-- ==================== Appointments Management Page ==================== -->
+
+
+    <!-- New content added-->
+  <!-- View Toggle + Filters -->
+<!-- <section class="glass-card p-6 rounded-2xl mb-6 animate-fade-in-up">
+  <div class="flex items-center justify-between">
+    <span class="text-gray-800 font-medium">List View</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="viewToggle">
+      <span class="toggle-slider"></span>
+    </label>
+    <span class="text-gray-800 font-medium">Calendar View</span>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <input type="text" id="filterSearch" placeholder="Search student..." class="px-4 py-3 rounded-2xl w-full glass-card">
+    <select id="filterStatus" class="px-4 py-3 rounded-2xl w-full">
+      <option value="">All Status</option>
+      <option value="pending">Pending</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="completed">Completed</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+    <input type="date" id="filterDateFrom" class="px-4 py-3 rounded-2xl w-full">
+    <input type="date" id="filterDateTo" class="px-4 py-3 rounded-2xl w-full">
+  </div>
+</section>
+
+ -- LIST VIEW 
+<section id="listViewSection" class="animate-fade-in-up">
+  -- Counsellor Cards Grid 
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    -- (paste ALL counsellor cards here EXACTLY like in original file) 
+  </div>
+</section>
+
+-- CALENDAR VIEW 
+<section id="calendarViewSection" class="hidden animate-fade-in-up">
+  <div class="glass-card p-6 rounded-2xl">
+    <div class="flex justify-between items-center mb-6">
+      <button id="prevMonth" class="p-2 hover:bg-purple-100 rounded-lg transition-colors">◀</button>
+      <h3 class="text-2xl font-bold text-gray-800" id="currentMonth"></h3>
+      <button id="nextMonth" class="p-2 hover:bg-purple-100 rounded-lg transition-colors">▶</button>
+    </div>
+
+    <div class="grid grid-cols-7 gap-2">
+      <div class="text-center font-semibold text-gray-600">Sun</div>
+      <div class="text-center font-semibold text-gray-600">Mon</div>
+      <div class="text-center font-semibold text-gray-600">Tue</div>
+      <div class="text-center font-semibold text-gray-600">Wed</div>
+      <div class="text-center font-semibold text-gray-600">Thu</div>
+      <div class="text-center font-semibold text-gray-600">Fri</div>
+      <div class="text-center font-semibold text-gray-600">Sat</div>
+      <div id="calendarGrid"></div>
+    </div>
+  </div>
+</section>
+ -->
+
+
+    <!-- View Toggle and Filters -->
+    <section class="glass-card p-6 rounded-2xl mb-8 animate-fade-in-up">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0 mb-6">
+        <!-- View Toggle -->
+        <div class="flex items-center space-x-4">
+          <span class="text-sm font-medium text-gray-700">View Mode:</span>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm" id="listViewLabel">List View</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="viewToggle">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="text-sm" id="calendarViewLabel">Calendar View</span>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="flex-1 lg:mx-6">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="🔍 Search by student name..." 
+            class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/80 backdrop-blur-sm"
+          >
+        </div>
+      </div>
+
+      <!-- Advanced Filters -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <select id="filterCounsellor" class="px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/80 backdrop-blur-sm">
+          <option value="">All Counsellors</option>
+          <option value="dr-mehta">Dr. Priya Mehta</option>
+          <option value="ms-singh">Ms. Anjali Singh</option>
+          <option value="dr-gupta">Dr. Rajesh Gupta</option>
+          <option value="dr-sharma">Dr. Neha Sharma</option>
+        </select>
+
+        <select id="filterStatus" class="px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/80 backdrop-blur-sm">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="upcoming">Upcoming</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+
+        <input 
+          type="date" 
+          id="filterDateFrom" 
+          class="px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/80 backdrop-blur-sm"
+        >
+
+        <input 
+          type="date" 
+          id="filterDateTo" 
+          class="px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/80 backdrop-blur-sm"
+        >
+      </div>
+    </section>
+
+    <!-- List View Section -->
+    <section id="listViewSection" class="animate-fade-in-up">
+      <!-- Counsellor Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Counsellor Card 1 -->
+        <div class="counsellor-card p-6 rounded-2xl cursor-pointer" data-counsellor="dr-mehta">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              PM
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">Dr. Priya Mehta</h3>
+              <p class="text-xs text-gray-500">Clinical Psychologist</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Pending:</span>
+              <span class="font-bold text-orange-600">4</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Upcoming:</span>
+              <span class="font-bold text-blue-600">8</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Completed:</span>
+              <span class="font-bold text-green-600">6</span>
+            </div>
+          </div>
+          <button class="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all font-medium text-sm">
+            View Details
+          </button>
+        </div>
+
+        <!-- Counsellor Card 2 -->
+        <div class="counsellor-card p-6 rounded-2xl cursor-pointer" data-counsellor="ms-singh">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              AS
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">Ms. Anjali Singh</h3>
+              <p class="text-xs text-gray-500">Counseling Therapist</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Pending:</span>
+              <span class="font-bold text-orange-600">3</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Upcoming:</span>
+              <span class="font-bold text-blue-600">6</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Completed:</span>
+              <span class="font-bold text-green-600">5</span>
+            </div>
+          </div>
+          <button class="w-full py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all font-medium text-sm">
+            View Details
+          </button>
+        </div>
+
+        <!-- Counsellor Card 3 -->
+        <div class="counsellor-card p-6 rounded-2xl cursor-pointer" data-counsellor="dr-gupta">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              RG
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">Dr. Rajesh Gupta</h3>
+              <p class="text-xs text-gray-500">Psychiatrist</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Pending:</span>
+              <span class="font-bold text-orange-600">2</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Upcoming:</span>
+              <span class="font-bold text-blue-600">5</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Completed:</span>
+              <span class="font-bold text-green-600">4</span>
+            </div>
+          </div>
+          <button class="w-full py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all font-medium text-sm">
+            View Details
+          </button>
+        </div>
+
+        <!-- Counsellor Card 4 -->
+        <div class="counsellor-card p-6 rounded-2xl cursor-pointer" data-counsellor="dr-sharma">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              NS
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">Dr. Neha Sharma</h3>
+              <p class="text-xs text-gray-500">Child Psychologist</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Pending:</span>
+              <span class="font-bold text-orange-600">3</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Upcoming:</span>
+              <span class="font-bold text-blue-600">5</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Completed:</span>
+              <span class="font-bold text-green-600">3</span>
+            </div>
+          </div>
+          <button class="w-full py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all font-medium text-sm">
+            View Details
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calendar View Section -->
+    <section id="calendarViewSection" class="hidden animate-fade-in-up">
+      <div class="glass-card p-6 rounded-2xl">
+        <!-- Calendar Header -->
+        <div class="flex justify-between items-center mb-6">
+          <button id="prevMonth" class="p-2 hover:bg-purple-100 rounded-lg transition-colors">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <h3 class="text-2xl font-bold text-gray-800" id="currentMonth">November 2025</h3>
+          <button id="nextMonth" class="p-2 hover:bg-purple-100 rounded-lg transition-colors">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="grid grid-cols-7 gap-2">
+          <!-- Day Headers -->
+          <div class="text-center font-semibold text-gray-600 py-2">Sun</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Mon</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Tue</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Wed</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Thu</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Fri</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Sat</div>
+          
+          <!-- Calendar Days (will be generated by JavaScript) -->
+          <div id="calendarGrid"></div>
+        </div>
+
+        <!-- Calendar Legend -->
+        <div class="mt-6 flex flex-wrap gap-4 justify-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-4 h-4 bg-purple-400 rounded"></div>
+            <span class="text-sm text-gray-600">Dr. Mehta</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-4 h-4 bg-indigo-400 rounded"></div>
+            <span class="text-sm text-gray-600">Ms. Singh</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-4 h-4 bg-blue-400 rounded"></div>
+            <span class="text-sm text-gray-600">Dr. Gupta</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-4 h-4 bg-pink-400 rounded"></div>
+            <span class="text-sm text-gray-600">Dr. Sharma</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Counsellor Details Modal -->
+  <div id="counsellorDetailsModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+    <div class="modal-content rounded-2xl w-full max-w-6xl p-8 custom-scrollbar animate-slide-in">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center space-x-4">
+          <div id="modalCounsellorAvatar" class="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-2xl">
+            PM
+          </div>
+          <div>
+            <h2 id="modalCounsellorName" class="text-2xl font-bold text-gray-800">Dr. Priya Mehta</h2>
+            <p id="modalCounsellorTitle" class="text-gray-600">Clinical Psychologist</p>
+          </div>
+        </div>
+        <button id="appointmentsCloseModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Collapsible Sections -->
+      <div class="space-y-4">
+        <!-- Pending Appointments Section -->
+        <div class="glass-card rounded-xl overflow-hidden">
+          <button class="collapsible-header w-full px-6 py-4 flex justify-between items-center hover:bg-purple-50 transition-colors" data-target="pendingSection">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">⏳</span>
+              <span class="font-bold text-gray-800 text-lg">Pending Appointments</span>
+              <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold">4</span>
+            </div>
+            <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="pendingSection" class="collapsible-content">
+            <div class="p-6 space-y-3">
+              <!-- Pending Appointment 1 -->
+              <div class="appointment-card p-4 rounded-xl delayed">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-delayed"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Aisha Rahman')">Aisha Rahman</h4>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Requested: Nov 18, 2025 - 2:00 PM</p>
+                      <p>💻 Mode: Online (Google Meet)</p>
+                      <p>📝 Reason: Academic stress and anxiety</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium">
+                      ✓ Accept
+                    </button>
+                    <button class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                      ✗ Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pending Appointment 2 -->
+              <div class="appointment-card p-4 rounded-xl on-time">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-on-time"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Kabir Malhotra')">Kabir Malhotra</h4>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Requested: Nov 20, 2025 - 11:00 AM</p>
+                      <p>🏢 Mode: Offline (Room 204)</p>
+                      <p>📝 Reason: Career counseling</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium">
+                      ✓ Accept
+                    </button>
+                    <button class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                      ✗ Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Appointments Section -->
+        <div class="glass-card rounded-xl overflow-hidden">
+          <button class="collapsible-header w-full px-6 py-4 flex justify-between items-center hover:bg-purple-50 transition-colors" data-target="upcomingSection">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">📆</span>
+              <span class="font-bold text-gray-800 text-lg">Upcoming Appointments</span>
+              <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">8</span>
+            </div>
+            <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="upcomingSection" class="collapsible-content">
+            <div class="p-6 space-y-3">
+              <!-- Upcoming Appointment 1 -->
+              <div class="appointment-card p-4 rounded-xl on-time">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-on-time"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Sanya Patel')">Sanya Patel</h4>
+                      <span class="status-badge bg-blue-100 text-blue-800">Confirmed</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Nov 16, 2025 - 10:00 AM</p>
+                      <p>💻 Mode: Online (Zoom)</p>
+                      <p>📝 Topic: Follow-up session for anxiety management</p>
+                      <p>🔔 Reminder sent: ✓</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium">
+                      📝 Reschedule
+                    </button>
+                    <button class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm font-medium">
+                      🚫 Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Upcoming Appointment 2 -->
+              <div class="appointment-card p-4 rounded-xl on-time">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-on-time"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Rohan Verma')">Rohan Verma</h4>
+                      <span class="status-badge bg-blue-100 text-blue-800">Confirmed</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Nov 17, 2025 - 3:00 PM</p>
+                      <p>🏢 Mode: Offline (Room 204)</p>
+                      <p>📝 Topic: Depression screening and support</p>
+                      <p>🔔 Reminder sent: ✓</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium">
+                      📝 Reschedule
+                    </button>
+                    <button class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm font-medium">
+                      🚫 Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Upcoming Appointment 3 -->
+              <div class="appointment-card p-4 rounded-xl delayed">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-delayed"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Meera Nair')">Meera Nair</h4>
+                      <span class="status-badge bg-yellow-100 text-yellow-800">Waiting Confirmation</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Nov 19, 2025 - 1:00 PM</p>
+                      <p>💻 Mode: Online (Google Meet)</p>
+                      <p>📝 Topic: Relationship counseling</p>
+                      <p>🔔 Reminder: Pending</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium">
+                      ✓ Confirm
+                    </button>
+                    <button class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium">
+                      📝 Reschedule
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed Appointments Section -->
+        <div class="glass-card rounded-xl overflow-hidden">
+          <button class="collapsible-header w-full px-6 py-4 flex justify-between items-center hover:bg-purple-50 transition-colors" data-target="completedSection">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">✅</span>
+              <span class="font-bold text-gray-800 text-lg">Completed Appointments</span>
+              <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">6</span>
+            </div>
+            <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="completedSection" class="collapsible-content">
+            <div class="p-6 space-y-3">
+              <!-- Completed Appointment 1 -->
+              <div class="appointment-card p-4 rounded-xl on-time bg-green-50">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-on-time"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Arjun Bose')">Arjun Bose</h4>
+                      <span class="status-badge bg-green-100 text-green-800">Completed</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Nov 10, 2025 - 2:00 PM</p>
+                      <p>💻 Mode: Online</p>
+                      <p>📝 Topic: Stress management techniques</p>
+                      <p>⭐ Student Rating: ⭐⭐⭐⭐⭐</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium">
+                      📄 View Notes
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Completed Appointment 2 -->
+              <div class="appointment-card p-4 rounded-xl on-time bg-green-50">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-on-time"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Priya Desai')">Priya Desai</h4>
+                      <span class="status-badge bg-green-100 text-green-800">Completed</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Nov 12, 2025 - 11:00 AM</p>
+                      <p>🏢 Mode: Offline</p>
+                      <p>📝 Topic: Academic pressure counseling</p>
+                      <p>⭐ Student Rating: ⭐⭐⭐⭐⭐</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium">
+                      📄 View Notes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Counsellor Reviews & Remarks Section -->
+        <div class="glass-card rounded-xl overflow-hidden">
+          <button class="collapsible-header w-full px-6 py-4 flex justify-between items-center hover:bg-purple-50 transition-colors" data-target="reviewsSection">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">⭐</span>
+              <span class="font-bold text-gray-800 text-lg">Reviews & Performance Remarks</span>
+            </div>
+            <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="reviewsSection" class="collapsible-content">
+            <div class="p-6">
+              <!-- Add Admin Remark -->
+              <div class="mb-6 glass-card p-4 rounded-xl">
+                <h4 class="font-bold text-gray-800 mb-3">Add Admin Remark</h4>
+                <textarea 
+                  id="adminRemarkInput" 
+                  placeholder="Enter performance notes, observations, or admin remarks..." 
+                  class="w-full px-4 py-3 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 mb-3 resize-none"
+                  rows="3"
+                ></textarea>
+                <button class="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all font-medium">
+                  💾 Save Remark
+                </button>
+              </div>
+
+              <!-- Performance Overview -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="stat-card p-4 rounded-xl">
+                  <p class="text-sm text-gray-600">Average Rating</p>
+                  <div class="flex items-center space-x-2 mt-2">
+                    <span class="text-2xl font-bold text-gray-800">4.8</span>
+                    <span class="star-rating text-lg">⭐⭐⭐⭐⭐</span>
+                  </div>
+                </div>
+                <div class="stat-card p-4 rounded-xl">
+                  <p class="text-sm text-gray-600">Total Reviews</p>
+                  <p class="text-2xl font-bold text-gray-800 mt-2">42</p>
+                </div>
+                <div class="stat-card p-4 rounded-xl">
+                  <p class="text-sm text-gray-600">Response Rate</p>
+                  <p class="text-2xl font-bold text-green-600 mt-2">98%</p>
+                </div>
+              </div>
+
+              <!-- Student Reviews -->
+              <div class="space-y-3">
+                <h4 class="font-bold text-gray-800 mb-3">Recent Student Feedback</h4>
+                
+                <!-- Review 1 -->
+                <div class="bg-white p-4 rounded-xl border border-purple-100">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <p class="font-semibold text-gray-800">Sanya Patel</p>
+                      <div class="star-rating text-sm">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <span class="text-xs text-gray-500">Nov 10, 2025</span>
+                  </div>
+                  <p class="text-sm text-gray-600">"Dr. Mehta is extremely empathetic and helped me develop practical coping strategies. The session was very beneficial."</p>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="bg-white p-4 rounded-xl border border-purple-100">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <p class="font-semibold text-gray-800">Arjun Bose</p>
+                      <div class="star-rating text-sm">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <span class="text-xs text-gray-500">Nov 8, 2025</span>
+                  </div>
+                  <p class="text-sm text-gray-600">"Very professional and understanding. I felt comfortable sharing my concerns and received excellent guidance."</p>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="bg-white p-4 rounded-xl border border-purple-100">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <p class="font-semibold text-gray-800">Priya Desai</p>
+                      <div class="star-rating text-sm">⭐⭐⭐⭐</div>
+                    </div>
+                    <span class="text-xs text-gray-500">Nov 5, 2025</span>
+                  </div>
+                  <p class="text-sm text-gray-600">"Great session! Would have appreciated more time, but the counselling techniques shared were very helpful."</p>
+                </div>
+              </div>
+
+              <!-- Admin Remarks History -->
+              <div class="mt-6">
+                <h4 class="font-bold text-gray-800 mb-3">Admin Remarks History</h4>
+                <div class="space-y-3">
+                  <div class="bg-purple-50 p-4 rounded-xl border-l-4 border-purple-500">
+                    <div class="flex justify-between items-start mb-2">
+                      <p class="font-semibold text-gray-800">Dr. Roodraksh Bisen (Admin)</p>
+                      <span class="text-xs text-gray-500">Nov 1, 2025</span>
+                    </div>
+                    <p class="text-sm text-gray-700">Excellent performance this month. Student satisfaction scores consistently high. Recommend for advanced training program.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Profile Modal -->
+  <div id="studentProfileModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+    <div class="modal-content rounded-2xl w-full max-w-4xl p-8 custom-scrollbar animate-slide-in">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center space-x-4">
+          <div id="studentAvatar" class="w-16 h-16 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold text-2xl">
+            SP
+          </div>
+          <div>
+            <h2 id="studentName" class="text-2xl font-bold text-gray-800">Sanya Patel</h2>
+            <p id="studentId" class="text-gray-600">Student ID: STU2025-1248</p>
+          </div>
+        </div>
+        <button id="closeStudentModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Student Info Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="stat-card p-4 rounded-xl">
+          <p class="text-sm text-gray-600">Risk Level</p>
+          <div class="flex items-center space-x-2 mt-2">
+            <span class="health-indicator health-delayed"></span>
+            <span class="font-bold text-yellow-600">Moderate</span>
+          </div>
+        </div>
+        <div class="stat-card p-4 rounded-xl">
+          <p class="text-sm text-gray-600">Total Sessions</p>
+          <p class="text-2xl font-bold text-gray-800 mt-2">8</p>
+        </div>
+        <div class="stat-card p-4 rounded-xl">
+          <p class="text-sm text-gray-600">Last Session</p>
+          <p class="text-sm font-semibold text-gray-800 mt-2">Nov 10, 2025</p>
+        </div>
+      </div>
+
+      <!-- Past Appointments -->
+      <div class="glass-card rounded-xl p-6 mb-6">
+        <h3 class="font-bold text-gray-800 mb-4 text-lg">📋 Appointment History</h3>
+        <div class="space-y-3">
+          <div class="bg-white p-4 rounded-lg border border-purple-100">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-semibold text-gray-800">Nov 10, 2025 - 2:00 PM</p>
+                <p class="text-sm text-gray-600">Counsellor: Dr. Priya Mehta</p>
+                <p class="text-sm text-gray-600">Topic: Anxiety management</p>
+                <p class="text-sm text-green-600 mt-1">✓ Completed</p>
+              </div>
+              <span class="star-rating text-sm">⭐⭐⭐⭐⭐</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-lg border border-purple-100">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-semibold text-gray-800">Oct 28, 2025 - 11:00 AM</p>
+                <p class="text-sm text-gray-600">Counsellor: Dr. Priya Mehta</p>
+                <p class="text-sm text-gray-600">Topic: Academic stress</p>
+                <p class="text-sm text-green-600 mt-1">✓ Completed</p>
+              </div>
+              <span class="star-rating text-sm">⭐⭐⭐⭐⭐</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-lg border border-purple-100">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-semibold text-gray-800">Oct 15, 2025 - 3:00 PM</p>
+                <p class="text-sm text-gray-600">Counsellor: Ms. Anjali Singh</p>
+                <p class="text-sm text-gray-600">Topic: Initial screening</p>
+                <p class="text-sm text-green-600 mt-1">✓ Completed</p>
+              </div>
+              <span class="star-rating text-sm">⭐⭐⭐⭐</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Counsellor Notes -->
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-bold text-gray-800 mb-4 text-lg">📝 Counsellor Notes</h3>
+        <div class="space-y-4">
+          <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+            <div class="flex justify-between items-start mb-2">
+              <p class="font-semibold text-gray-800">Dr. Priya Mehta</p>
+              <span class="text-xs text-gray-500">Nov 10, 2025</span>
+            </div>
+            <p class="text-sm text-gray-700">Student shows significant improvement in managing anxiety symptoms. Continuing with CBT techniques. Recommend follow-up in 2 weeks.</p>
+          </div>
+
+          <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+            <div class="flex justify-between items-start mb-2">
+              <p class="font-semibold text-gray-800">Dr. Priya Mehta</p>
+              <span class="text-xs text-gray-500">Oct 28, 2025</span>
+            </div>
+            <p class="text-sm text-gray-700">Discussed stress management strategies and time management techniques. Student is receptive and actively participating in exercises.</p>
+          </div>
+
+          <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+            <div class="flex justify-between items-start mb-2">
+              <p class="font-semibold text-gray-800">Ms. Anjali Singh</p>
+              <span class="text-xs text-gray-500">Oct 15, 2025</span>
+            </div>
+            <p class="text-sm text-gray-700">Initial assessment completed. Student presenting with moderate anxiety related to academic performance. Referred to Dr. Mehta for specialized counseling.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointment Event Details Modal (for Calendar) -->
+  <div id="eventDetailsModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+    <div class="modal-content rounded-2xl w-full max-w-md p-6 animate-slide-in">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-gray-800">Appointment Details</h3>
+        <button id="closeEventModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div id="eventDetailsContent" class="space-y-3">
+        <!-- Content will be dynamically populated -->
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-purple-100 to-pink-100 text-center py-6 mt-12">
+    <div class="text-gray-700">
+      <p class="font-medium">© 2025 MindEase Analytics • Designed for calm, clarity, and action</p>
+      <p class="text-sm text-gray-500 mt-1">Empowering mental health through intelligent insights</p>
+    </div>
+  </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    // ========================================
+    // SIDEBAR TOGGLE
+    // ========================================
+    document.getElementById('sidebarToggle').addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('w-64'); 
+      sidebar.classList.toggle('w-10');
+      sidebar.classList.toggle('collapsed');
+      sidebar.style.transition = 'width 0.3s ease';
+    });
+
+    // ========================================
+    // UPLOAD MODAL (Original functionality)
+    // ========================================
+    const uploadModal = document.getElementById('uploadModal');
+    const closeModal = document.getElementById('closeModal');
+    const uploadForm = document.getElementById('uploadForm');    
+
+
+    // Open modal from Resources page button
+document.querySelectorAll('.add-resource-card').forEach(button => {
+  button.addEventListener('click', () => {
+    uploadModal.classList.remove('hidden');
+    uploadModal.classList.add('flex');
+  });
+});
+
+
+    
+    closeModal.addEventListener('click', () => {
+      uploadModal.classList.add('hidden');
+      uploadModal.classList.remove('flex');
+    });
+    
+    uploadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const file = document.getElementById('resourceFile').files[0];
+      if (file) {
+        alert(`File uploaded: ${file.name}`);
+        // Send to backend here
+      }
+      uploadModal.classList.add('hidden');
+      uploadModal.classList.remove('flex');
+    });
+
+    // ========================================
+    // RESOURCES PAGE: TAB FILTERING
+    // ========================================
+    const adminTabs = document.querySelectorAll('.admin-tab-button');
+    const resourceCards = document.querySelectorAll('.resource-card');
+    
+    adminTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const category = tab.dataset.category;
+        
+        // Update active tab
+        adminTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Filter cards
+        resourceCards.forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+    
+    // ========================================
+    // RESOURCES PAGE: SEARCH
+    // ========================================
+    const adminSearchBar = document.getElementById('adminSearchBar');
+    adminSearchBar.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      resourceCards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const description = card.querySelector('p').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+    
+    // ========================================
+    // RESOURCE PREVIEW MODAL
+    // ========================================
+    const previewModal = document.getElementById('resourcePreviewModal');
+    const closePreviewModal = document.getElementById('closePreviewModal');
+    const previewModalContent = document.getElementById('previewModalContent');
+    const viewButtons = document.querySelectorAll('.admin-view-resource');
+    
+    viewButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const title = button.dataset.title;
+        const contentType = button.dataset.content;
+        
+        let content = '';
+        
+        if (contentType === 'article') {
+          content = `
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+            <div class="prose prose-lg text-gray-700">
+              <p class="mb-4">Welcome to this comprehensive guide on mental wellness. This resource is designed to help you understand and navigate your mental health journey.</p>
+              <h3 class="text-xl font-bold mt-6 mb-3">Key Takeaways:</h3>
+              <ul class="list-disc pl-6 mb-4">
+                <li>Understanding your emotions is the first step toward wellness</li>
+                <li>Small daily practices can lead to significant improvements</li>
+                <li>Seeking support is a sign of strength, not weakness</li>
+                <li>Everyone's journey is unique and valid</li>
+              </ul>
+              <p class="mb-4">Remember, mental wellness is a continuous journey, not a destination. Be patient and kind to yourself as you explore these strategies.</p>
+              <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded mt-6">
+                <p class="text-sm text-gray-700">💡 <strong>Pro Tip:</strong> Start with just one small change and build from there. Consistency matters more than intensity.</p>
+              </div>
+            </div>
+          `;
+        } else if (contentType === 'meditation' || contentType === 'breathing') {
+          content = `
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+            <div class="mb-6">
+              <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 text-center">
+                <p class="text-6xl mb-4">🧘‍♀️</p>
+                <p class="text-gray-700 mb-4">Find a quiet, comfortable space where you won't be disturbed.</p>
+                <button class="stat-card text-gray-800 font-semibold px-8 py-3 rounded-full transition-all hover:shadow-xl">
+                  ▶️ Begin Practice
+                </button>
+              </div>
+            </div>
+            <div class="prose text-gray-700">
+              <h3 class="text-xl font-bold mb-3">How to Practice:</h3>
+              <ol class="list-decimal pl-6 mb-4">
+                <li class="mb-2">Sit or lie down in a comfortable position</li>
+                <li class="mb-2">Close your eyes and take a deep breath</li>
+                <li class="mb-2">Follow the gentle guidance to center yourself</li>
+                <li class="mb-2">Allow thoughts to pass without judgment</li>
+                <li class="mb-2">Return your focus to your breath whenever you drift</li>
+              </ol>
+              <p class="mt-4 text-sm italic">Duration: 5-10 minutes • Difficulty: Beginner-friendly</p>
+            </div>
+          `;
+        } else if (contentType === 'audio') {
+          content = `
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+            <div class="mb-6">
+              <div class="bg-gradient-to-r from-blue-100 to-cyan-100 rounded-2xl p-8 text-center">
+                <p class="text-6xl mb-4">🌊</p>
+                <p class="text-gray-700 mb-6">Immerse yourself in calming nature sounds designed to help you relax, focus, or sleep.</p>
+                <div class="flex justify-center gap-4">
+                  <button class="stat-card text-gray-800 font-semibold px-8 py-3 rounded-full transition-all hover:shadow-xl">
+                    ▶️ Play
+                  </button>
+                  <button class="stat-card text-gray-800 font-semibold px-8 py-3 rounded-full transition-all hover:shadow-xl">
+                    ⏸️ Pause
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="prose text-gray-700">
+              <h3 class="text-xl font-bold mb-3">Benefits:</h3>
+              <ul class="list-disc pl-6">
+                <li>Reduces stress and anxiety</li>
+                <li>Improves focus and concentration</li>
+                <li>Promotes better sleep quality</li>
+                <li>Creates a peaceful environment</li>
+              </ul>
+            </div>
+          `;
+        } else if (contentType === 'video') {
+          content = `
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">${title}</h2>
+            <div class="mb-6">
+              <div class="bg-gray-200 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+                <div class="text-center">
+                  <p class="text-6xl mb-4">🎥</p>
+                  <p class="text-gray-600 mb-4">Video Player Placeholder</p>
+                  <button class="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold px-8 py-3 rounded-full transition-all">
+                    ▶️ Watch Video
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="prose text-gray-700">
+              <p class="mb-4">This inspiring video explores practical strategies for maintaining mental wellness during challenging times. Perfect for students navigating academic pressures.</p>
+              <p class="text-sm italic">Duration: 15 minutes • Language: English</p>
+            </div>
+          `;
+        }
+        
+        previewModalContent.innerHTML = content;
+        previewModal.classList.remove('hidden');
+        previewModal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    
+    closePreviewModal.addEventListener('click', () => {
+      previewModal.classList.add('hidden');
+      previewModal.classList.remove('flex');
+      document.body.style.overflow = 'auto';
+    });
+    
+    previewModal.addEventListener('click', (e) => {
+      if (e.target === previewModal) {
+        previewModal.classList.add('hidden');
+        previewModal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // ========================================
+    // CHARTS (Keep your existing chart code)
+    // ========================================
+    const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+    new Chart(trendsCtx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+        datasets: [
+          {
+            label: 'Stress',
+            data: [42, 45, 39, 48, 51, 47, 44, 46],
+            borderColor: '#8B5CF6',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#8B5CF6',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 4
+          },
+          {
+            label: 'Anxiety',
+            data: [38, 41, 36, 44, 49, 43, 40, 42],
+            borderColor: '#EC4899',
+            backgroundColor: 'rgba(236, 72, 153, 0.1)',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#EC4899',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 15,
+              font: { size: 12, weight: 500 }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(167, 139, 250, 0.1)' }
+          },
+          x: {
+            grid: { color: 'rgba(167, 139, 250, 0.1)' }
+          }
+        }
+      }
+    });
+
+    const riskCtx = document.getElementById('riskChart').getContext('2d');
+    new Chart(riskCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Low', 'Moderate', 'High'],
+        datasets: [{
+          data: [62, 28, 10],
+          backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
+          borderColor: ['#ffffff', '#ffffff', '#ffffff'],
+          borderWidth: 3,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        cutout: '60%'
+      }
+    });
+
+    const resourceCtx = document.getElementById('resourceChart').getContext('2d');
+    new Chart(resourceCtx, {
+      type: 'bar',
+      data: {
+        labels: ['CBT Guides', 'Mindfulness', 'Self-Help Videos', 'Crisis Contacts'],
+        datasets: [{
+          label: 'Uses',
+          data: [432, 387, 298, 154],
+          backgroundColor: ['#8B5CF6', '#EC4899', '#F59E0B', '#EF4444'],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: { color: 'rgba(167, 139, 250, 0.1)' }
+          },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+
+    const chatbotCtx = document.getElementById('chatbotChart').getContext('2d');
+    new Chart(chatbotCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Resolved', 'Escalations'],
+        datasets: [{
+          label: 'Count',
+          data: [4300, 930],
+          backgroundColor: ['#10B981', '#EF4444'],
+          borderRadius: 12
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(167, 139, 250, 0.1)' }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  });
+</script>
+
+
+<!-- Upload Modal -->
+<div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-xl p-8 w-96 shadow-xl">
+    <h2 class="text-xl font-bold mb-4 text-gray-800">Upload Learning Resources</h2>
+    <form id="uploadForm">
+      <input type="file" id="resourceFile" class="mb-4 w-full border rounded p-2" />
+      <div class="flex justify-end space-x-3">
+        <button type="button" id="closeModal" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+        <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Upload</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Resource Preview Modal -->
+<div id="resourcePreviewModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 backdrop-blur-sm">
+  <div class="stat-card rounded-3xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto mx-4 relative">
+    <button id="closePreviewModal" class="absolute top-6 right-6 text-gray-600 hover:text-gray-800 text-3xl font-bold">&times;</button>
+    <div id="previewModalContent"></div>
+  </div>
+</div>
+
+<script>
+
+// Student Data (Encrypted - No Personal Info)
+const studentData = [
+  { id: "STU001", status: "Active", risk: "Low", lastLogin: "2025-11-15 09:23", verified: true, activity: 87 },
+  { id: "STU002", status: "Active", risk: "Moderate", lastLogin: "2025-11-15 08:15", verified: true, activity: 72 },
+  { id: "STU003", status: "Inactive", risk: "High", lastLogin: "2025-11-10 14:32", verified: true, activity: 45 },
+  { id: "STU004", status: "Active", risk: "Low", lastLogin: "2025-11-15 10:05", verified: true, activity: 91 },
+  { id: "STU005", status: "Active", risk: "Moderate", lastLogin: "2025-11-14 16:48", verified: false, activity: 68 },
+  { id: "STU006", status: "Active", risk: "High", lastLogin: "2025-11-12 11:20", verified: true, activity: 38 },
+  { id: "STU007", status: "Active", risk: "Low", lastLogin: "2025-11-15 07:55", verified: true, activity: 94 },
+  { id: "STU008", status: "Inactive", risk: "Moderate", lastLogin: "2025-11-08 13:40", verified: true, activity: 62 },
+  { id: "STU009", status: "Active", risk: "Low", lastLogin: "2025-11-15 09:10", verified: true, activity: 85 },
+  { id: "STU010", status: "Active", risk: "High", lastLogin: "2025-11-13 15:25", verified: false, activity: 41 },
+  { id: "STU011", status: "Active", risk: "Moderate", lastLogin: "2025-11-15 08:30", verified: true, activity: 76 },
+  { id: "STU012", status: "Active", risk: "Low", lastLogin: "2025-11-15 10:15", verified: true, activity: 89 },
+  { id: "STU013", status: "Inactive", risk: "Low", lastLogin: "2025-11-05 12:10", verified: true, activity: 55 },
+  { id: "STU014", status: "Active", risk: "Moderate", lastLogin: "2025-11-14 17:20", verified: true, activity: 70 },
+  { id: "STU015", status: "Active", risk: "High", lastLogin: "2025-11-11 09:45", verified: true, activity: 35 }
+];
+
+let filteredData = [...studentData];
+
+// Risk Badge Colors
+const riskColors = {
+  "Low": "bg-green-100 text-green-800",
+  "Moderate": "bg-yellow-100 text-yellow-800",
+  "High": "bg-red-100 text-red-800"
+};
+
+const statusColors = {
+  "Active": "bg-blue-100 text-blue-800",
+  "Inactive": "bg-gray-100 text-gray-800"
+};
+
+// Update Statistics
+function updateStats() {
+  document.getElementById('totalStudents').textContent = filteredData.length;
+  document.getElementById('activeStudents').textContent = filteredData.filter(s => s.status === "Active").length;
+  document.getElementById('highRiskCount').textContent = filteredData.filter(s => s.risk === "High").length;
+  document.getElementById('verifiedCount').textContent = filteredData.filter(s => s.verified).length;
+}
+
+// Render Student Cards
+function renderStudents() {
+  const grid = document.getElementById('studentGrid');
+  const emptyState = document.getElementById('emptyState');
+  
+  if (filteredData.length === 0) {
+    grid.classList.add('hidden');
+    emptyState.classList.remove('hidden');
+    return;
+  }
+
+  grid.classList.remove('hidden');
+  emptyState.classList.add('hidden');
+  
+  grid.innerHTML = filteredData.map((student, index) => `
+    <div class="stat-card p-6 rounded-xl hover:shadow-xl transition-all duration-300" style="animation-delay: ${index * 0.05}s">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            ${student.id.slice(-2)}
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-800">${student.id}</h3>
+            <span class="${statusColors[student.status]} text-xs px-2 py-1 rounded-full font-medium">
+              ${student.status}
+            </span>
+          </div>
+        </div>
+        <span class="${riskColors[student.risk]} text-xs px-3 py-1 rounded-full font-semibold">
+          ${student.risk} Risk
+        </span>
+      </div>
+
+      <!-- Details -->
+      <div class="space-y-3 mb-4">
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-gray-500">Last Login:</span>
+          <span class="text-gray-800 font-medium">${student.lastLogin}</span>
+        </div>
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-gray-500">Verification:</span>
+          <span class="text-gray-800 font-medium">
+            ${student.verified ? '✓ Verified' : '✗ Unverified'}
+          </span>
+        </div>
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-gray-500">Activity Score:</span>
+          <span class="text-gray-800 font-bold text-lg">${student.activity}</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="pt-4 border-t border-gray-200">
+        <button 
+          onclick="viewStudentLogs('${student.id}')"
+          class="w-full px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all font-medium text-sm"
+        >
+          View Activity Logs
+        </button>
+      </div>
+    </div>
+  `).join('');
+  
+  updateStats();
+}
+
+// Filter and Sort Functions
+function applyFilters() {
+  const searchTerm = document.getElementById('studentSearch').value.toUpperCase();
+  const riskFilter = document.getElementById('riskFilter').value;
+  const sortOption = document.getElementById('sortOption').value;
+
+  // Filter
+  filteredData = studentData.filter(student => {
+    const matchesSearch = student.id.includes(searchTerm);
+    const matchesRisk = riskFilter === 'all' || student.risk === riskFilter;
+    return matchesSearch && matchesRisk;
+  });
+
+  // Sort
+  filteredData.sort((a, b) => {
+    if (sortOption === 'lastLogin') {
+      return new Date(b.lastLogin) - new Date(a.lastLogin);
+    } else if (sortOption === 'activityScore') {
+      return b.activity - a.activity;
+    } else {
+      return a.id.localeCompare(b.id);
+    }
+  });
+
+  renderStudents();
+}
+
+// View Logs Function
+function viewStudentLogs(studentId) {
+  alert(`Viewing encrypted activity logs for ${studentId}\n\nThis would open a secure modal with anonymized activity data.`);
+}
+
+// Event Listeners for Student Section
+document.getElementById('studentSearch').addEventListener('input', applyFilters);
+document.getElementById('riskFilter').addEventListener('change', applyFilters);
+document.getElementById('sortOption').addEventListener('change', applyFilters);
+
+// Sidebar Navigation - Students Section
+
+
+// Clean Navigation + Page Switching
+const mainContent = document.querySelector('main');
+
+// Only top-level sections inside <main> (not nested ones)
+const allSections = Array.from(mainContent.children)
+  .filter(el => el.tagName.toLowerCase() === 'section');
+
+const studentsSection = document.getElementById('studentsSection');
+const resourcesPage = document.getElementById('resourcesPage');
+const crisisPage = document.getElementById('crisisPage');
+const appointmentsPage = document.getElementById('appointmentsPage');
+
+document.querySelectorAll('.sidebar-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const page = item.dataset.page;
+
+    document.querySelectorAll('.sidebar-item')
+      .forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+
+    allSections.forEach(sec => sec.classList.add('hidden'));
+
+    if (page === 'students') {
+      studentsSection.classList.remove('hidden');
+      filteredData = [...studentData];
+      renderStudents();
+    } else if (page === 'resources') {
+      resourcesPage.classList.remove('hidden');
+    } else if (page === 'crisis') {
+      crisisPage.classList.remove('hidden');
+      if (window.refreshCrisisPage) window.refreshCrisisPage();
+    } else if (page === 'appointments') {
+      appointmentsPage.classList.remove('hidden');
+    } else {
+      allSections.forEach(sec => {
+        if (
+          sec.id !== 'studentsSection' &&
+          sec.id !== 'resourcesPage' &&
+          sec.id !== 'crisisPage' &&
+          sec.id !== 'appointmentsPage'
+        ) {
+          sec.classList.remove('hidden');
+        }
+      });
+    }
+  });
+});// <!-- ------------------ Crisis Alerts JS ------------------ -->
+
+  (function() {
+    // ---------- Sample placeholder data ----------
+    // Replace this with API data: fetch('/api/crisis-alerts')...
+    const sampleAlerts = [
+      {
+        id: 'A001',
+        name: 'Sanya P.',
+        studentId: 'S-1023',
+        risk: 'high',
+        type: 'assessment',
+        desc: 'High anxiety score (GAD-7: 17). Rapid increase from last test.',
+        timestamp: '2025-11-15T08:23:00Z',
+        counsellor: 'Dr. Mehta',
+        status: 'contacted' // pending / contacted / escalated / resolved
+      },
+      {
+        id: 'A002',
+        name: 'Arjun B.',
+        studentId: 'S-1178',
+        risk: 'moderate',
+        type: 'appointment',
+        desc: 'Missed 2 sessions in last week; not responding to messages.',
+        timestamp: '2025-11-14T11:10:00Z',
+        counsellor: '',
+        status: 'pending'
+      },
+      {
+        id: 'A003',
+        name: 'Lina M.',
+        studentId: 'S-1210',
+        risk: 'high',
+        type: 'chat',
+        desc: 'Chatbot detected self-harm ideation; recommended immediate escalation.',
+        timestamp: '2025-11-15T09:05:00Z',
+        counsellor: 'Dr. Gupta',
+        status: 'escalated'
+      },
+      {
+        id: 'A004',
+        name: 'Kiran R.',
+        studentId: 'S-1133',
+        risk: 'low',
+        type: 'peer',
+        desc: 'Negative sentiment in peer posts; recommended check-in.',
+        timestamp: '2025-11-13T15:30:00Z',
+        counsellor: '',
+        status: 'pending'
+      }
+    ];
+
+    // ---------- Utility helpers ----------
+    const riskOrder = { 'high': 3, 'moderate': 2, 'low': 1 };
+
+    function formatTime(iso) {
+      try {
+        const d = new Date(iso);
+        return d.toLocaleString();
+      } catch (e) {
+        return iso;
+      }
+    }
+
+    // ---------- DOM references ----------
+    const alertsContainer = document.getElementById('alertsContainer');
+    const searchInput = document.getElementById('crisisSearch');
+    const filterRisk = document.getElementById('filterRisk');
+    const filterType = document.getElementById('filterType');
+    const sortBy = document.getElementById('sortBy');
+    const resetFilters = document.getElementById('resetFilters');
+
+    const summaryTotal = document.getElementById('summaryTotal');
+    const summaryHigh = document.getElementById('summaryHigh');
+    const summaryMod = document.getElementById('summaryMod');
+    const summaryLow = document.getElementById('summaryLow');
+    const crisisEmpty = document.getElementById('crisisEmpty');
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalContent = document.getElementById('modalContent');
+
+    // Use this dataset (could be replaced by fetch)
+    let alerts = sampleAlerts.slice();
+
+    // ---------- Rendering ----------
+    function renderSummary(list) {
+      summaryTotal.textContent = list.length;
+      summaryHigh.textContent = list.filter(a => a.risk === 'high').length;
+      summaryMod.textContent = list.filter(a => a.risk === 'moderate').length;
+      summaryLow.textContent = list.filter(a => a.risk === 'low').length;
+    }
+
+    function createBadge(risk) {
+      if (risk === 'high') return '<span class="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-semibold">High</span>';
+      if (risk === 'moderate') return '<span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">Moderate</span>';
+      return '<span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 font-semibold">Low</span>';
+    }
+
+    function createStatusTag(status) {
+      if (!status) return '';
+      const map = {
+        pending: 'bg-gray-100 text-gray-800',
+        contacted: 'bg-green-100 text-green-800',
+        escalated: 'bg-red-100 text-red-800',
+        resolved: 'bg-blue-100 text-blue-800'
+      };
+      return `<span class="text-xs px-2 py-1 rounded-full font-semibold ${map[status] || map.pending}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
+    }
+
+    function renderAlertCard(a) {
+      return `
+        <div class="glass-card p-4 rounded-2xl border ${a.risk === 'high' ? 'alert-high' : a.risk === 'moderate' ? 'alert-medium' : 'alert-low'}">
+          <div class="flex justify-between items-start gap-3">
+            <div>
+              <div class="flex items-center gap-3">
+                <h4 class="font-semibold text-lg text-gray-800">${a.name}</h4>
+                ${createBadge(a.risk)}
+                <div class="ml-2">${createStatusTag(a.status)}</div>
+              </div>
+              <div class="text-sm text-gray-500 mt-1">${a.type.charAt(0).toUpperCase()+a.type.slice(1)} • ${a.studentId} • ${formatTime(a.timestamp)}</div>
+              <p class="text-gray-700 mt-3">${a.desc}</p>
+            </div>
+
+            <div class="flex flex-col gap-2 items-end">
+              <div class="text-sm text-gray-500">Counsellor</div>
+              <div class="font-medium text-gray-800">${a.counsellor || 'Unassigned'}</div>
+
+              <div class="mt-4 flex flex-col gap-2 w-full">
+                <button data-action="view" data-id="${a.id}" class="px-3 py-2 rounded-full calm-button text-white text-sm w-full">View</button>
+                <button data-action="contact" data-id="${a.id}" class="px-3 py-2 rounded-full glass-card text-sm w-full">Contact</button>
+                <button data-action="escalate" data-id="${a.id}" class="px-3 py-2 rounded-full border text-sm w-full">Escalate</button>
+                <button data-action="resolve" data-id="${a.id}" class="px-3 py-2 rounded-full bg-white/70 text-purple-700 font-semibold text-sm w-full">Mark Resolved</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderList(list) {
+      alertsContainer.innerHTML = '';
+      if (!list.length) {
+        crisisEmpty.classList.remove('hidden');
+        return;
+      } else {
+        crisisEmpty.classList.add('hidden');
+      }
+
+      const html = list.map(renderAlertCard).join('');
+      alertsContainer.innerHTML = html;
+
+      // wire actions
+      document.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const action = btn.getAttribute('data-action');
+          const id = btn.getAttribute('data-id');
+          handleAction(action, id);
+        });
+      });
+    }
+
+    // ---------- Filtering / Sorting ----------
+    function applyFilters() {
+      const q = searchInput.value.trim().toLowerCase();
+      const r = filterRisk.value;
+      const t = filterType.value;
+      const s = sortBy.value;
+
+      let filtered = alerts.filter(a => {
+        const matchesQuery = !q || (a.name.toLowerCase().includes(q) || a.studentId.toLowerCase().includes(q) || a.id.toLowerCase().includes(q));
+        const matchesRisk = !r || a.risk === r;
+        const matchesType = !t || a.type === t;
+        return matchesQuery && matchesRisk && matchesType;
+      });
+
+      if (s === 'risk') {
+        filtered.sort((a,b) => (riskOrder[b.risk] - riskOrder[a.risk]) || new Date(b.timestamp) - new Date(a.timestamp));
+      } else if (s === 'unresolved') {
+        filtered.sort((a,b) => {
+          const scoreA = a.status === 'resolved' ? 0 : 1;
+          const scoreB = b.status === 'resolved' ? 0 : 1;
+          return scoreB - scoreA || (riskOrder[b.risk] - riskOrder[a.risk]);
+        });
+      } else {
+        filtered.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+      }
+
+      renderSummary(filtered);
+      renderList(filtered);
+    }
+
+    // ---------- Actions (View / Contact / Escalate / Resolve) ----------
+    function handleAction(action, id) {
+      const alert = alerts.find(x => x.id === id);
+      if (!alert) return;
+
+      if (action === 'view') return openModal(renderView(alert));
+      if (action === 'contact') return openModal(renderContactForm(alert));
+      if (action === 'escalate') {
+        if (confirm(`Escalate ${alert.name} to emergency?`)) {
+          alert.status = 'escalated';
+          applyFilters();
+        }
+        return;
+      }
+      if (action === 'resolve') {
+        if (confirm(`Mark alert for ${alert.name} resolved?`)) {
+          alert.status = 'resolved';
+          applyFilters();
+        }
+        return;
+      }
+    }
+
+    // Modal renderers
+    function renderView(a) {
+      return `
+        <div>
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">${a.name} <small class="text-sm text-gray-500">(${a.studentId})</small></h3>
+            <button id="modalClose" class="text-gray-500">✕</button>
+          </div>
+          <div class="space-y-3 text-sm text-gray-700">
+            <p><strong>Risk:</strong> ${a.risk}</p>
+            <p><strong>Type:</strong> ${a.type}</p>
+            <p><strong>Timestamp:</strong> ${formatTime(a.timestamp)}</p>
+            <p><strong>Counsellor:</strong> ${a.counsellor || 'Unassigned'}</p>
+            <p><strong>Description:</strong> ${a.desc}</p>
+          </div>
+          <div class="mt-6 flex gap-2">
+            <button id="modalEscalate" class="px-4 py-2 rounded-full border">Escalate</button>
+            <button id="modalResolve" class="px-4 py-2 rounded-full bg-white/70 text-purple-700">Resolve</button>
+            <button id="modalContact" class="px-4 py-2 rounded-full calm-button text-white">Contact Student</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderContactForm(a) {
+      return `
+        <div>
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Contact ${a.name}</h3>
+            <button id="modalClose2" class="text-gray-500">✕</button>
+          </div>
+          <div class="space-y-3">
+            <label class="text-sm text-gray-600">Message</label>
+            <textarea id="contactMsg" rows="5" class="w-full p-3 rounded-lg border" placeholder="Write a short message / support note..."></textarea>
+            <div class="flex gap-2">
+              <button id="sendContact" class="px-4 py-2 rounded-full calm-button text-white">Send</button>
+              <button id="assignCounsellor" class="px-4 py-2 rounded-full glass-card">Assign Counsellor</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function openModal(html) {
+      modalContent.innerHTML = html;
+      modalOverlay.classList.remove('hidden');
+      modalOverlay.classList.add('flex');
+
+      // wire modal controls
+      const closeButtons = modalContent.querySelectorAll('#modalClose, #modalClose2');
+      closeButtons.forEach(b => b && b.addEventListener('click', () => closeModal()));
+
+      // modal buttons (delegated)
+      const mEsc = document.getElementById('modalEscalate');
+      if (mEsc) mEsc.addEventListener('click', () => {
+        const id = getModalAlertId(); // not strictly necessary here
+        if (confirm('Confirm escalate?')) {
+          // locate and escalate
+          // naive: escalate first alert in sample (for real app pass id)
+          const firstId = (alerts[0] || {}).id;
+          if (firstId) {
+            const o = alerts.find(x => x.id === firstId);
+            if (o) o.status = 'escalated';
+            applyFilters();
+            closeModal();
+          }
+        }
+      });
+
+      const mRes = document.getElementById('modalResolve');
+      if (mRes) mRes.addEventListener('click', () => {
+        if (confirm('Resolve this alert?')) {
+          const firstId = (alerts[0] || {}).id;
+          if (firstId) {
+            const o = alerts.find(x => x.id === firstId);
+            if (o) o.status = 'resolved';
+            applyFilters();
+            closeModal();
+          }
+        }
+      });
+
+      const mContact = document.getElementById('modalContact');
+      if (mContact) {
+        mContact.addEventListener('click', () => {
+          alert('Contact action triggered (implement real send via API).');
+        });
+      }
+
+      // contact modal send
+      const sendBtn = document.getElementById('sendContact');
+      if (sendBtn) {
+        sendBtn.addEventListener('click', () => {
+          const msg = document.getElementById('contactMsg').value;
+          if (!msg.trim()) { alert('Please add a message.'); return; }
+          alert('Message sent to student (replace alert with API call).');
+          closeModal();
+        });
+      }
+    }
+
+    function closeModal() {
+      modalOverlay.classList.add('hidden');
+      modalOverlay.classList.remove('flex');
+      modalContent.innerHTML = '';
+    }
+
+    function getModalAlertId() {
+      // if needed, store id in dataset; simplified here
+      return null;
+    }
+
+    // ---------- Events ----------
+    searchInput.addEventListener('input', debounce(applyFilters, 250));
+    filterRisk.addEventListener('change', applyFilters);
+    filterType.addEventListener('change', applyFilters);
+    sortBy.addEventListener('change', applyFilters);
+    resetFilters.addEventListener('click', () => {
+      searchInput.value = '';
+      filterRisk.value = '';
+      filterType.value = '';
+      sortBy.value = 'recent';
+      applyFilters();
+    });
+
+    // delegation to close modal on overlay click
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+    // bootstrap
+    function initCrisis() {
+      // load real data here (fetch)
+      // Example: fetch('/api/crisis-alerts').then(r => r.json()).then(data => { alerts = data; applyFilters(); });
+
+      alerts = sampleAlerts.slice(); // placeholder
+      applyFilters();
+    }
+
+    // Debounce helper
+    function debounce(fn, wait) {
+      let t;
+      return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+
+    // init on load
+    document.addEventListener('DOMContentLoaded', initCrisis);
+
+    // Expose applyFilters in case other nav code wants to refresh
+    window.refreshCrisisPage = initCrisis;
+
+    // Optional: If your sidebar code triggers section show by data-page,
+    // add a little helper: when crisis sidebar item clicked, ensure page is shown.
+    // If your existing sidebar already handles 'data-page="crisis"', ignore this.
+    const sidebarCrisis = document.querySelector('#sidebar .sidebar-item[data-page="crisis"]');
+    if (sidebarCrisis) {
+      sidebarCrisis.addEventListener('click', () => {
+        // hide other pages (if your app hides by .hidden)
+        document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+        document.getElementById('crisisPage').classList.remove('hidden');
+        // refresh data when opened
+        initCrisis();
+      });
+    }
+
+  })();
+
+// <!-- -------------------------------------------------------- -->
+
+</script>
+<script>
+
+// ===================== View Toggle (List <-> Calendar) =====================
+const viewToggle = document.getElementById("viewToggle");
+const listViewSection = document.getElementById("listViewSection");
+const calendarViewSection = document.getElementById("calendarViewSection");
+
+viewToggle.addEventListener("change", () => {
+    listViewSection.classList.toggle("hidden");
+    calendarViewSection.classList.toggle("hidden");
+});
+
+// ===================== Counsellor View Details Modal =====================
+const counsellorCards = document.querySelectorAll(".counsellor-card");
+const modal = document.getElementById("counsellorDetailsModal");
+const modalClose = document.getElementById("appointmentsCloseModal");
+const modalName = document.getElementById("modalCounsellorName");
+const modalTitle = document.getElementById("modalCounsellorTitle");
+const modalAvatar = document.getElementById("modalCounsellorAvatar");
+
+counsellorCards.forEach(card => {
+    card.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+
+        let name = card.querySelector("h3").innerText;
+        let field = card.querySelector("p").innerText;
+        let initials = name.split(" ").map(a => a[0]).join("");
+
+        modalName.innerText = name;
+        modalTitle.innerText = field;
+        modalAvatar.innerText = initials;
+    })
+});
+
+modalClose.addEventListener("click", () => modal.classList.add("hidden"));
+
+
+// ===================== Calendar Generator =====================
+
+const calendarGrid = document.getElementById("calendarGrid");
+const currentMonthLabel = document.getElementById("currentMonth");
+const prevMonthBtn = document.getElementById("prevMonth");
+const nextMonthBtn = document.getElementById("nextMonth");
+
+let date = new Date();
+
+function loadCalendar() {
+    // clear previous days
+    calendarGrid.innerHTML = "";
+
+    // make calendarGrid itself the 7-column grid
+    calendarGrid.className = "col-span-7 grid grid-cols-7 gap-2";
+
+    let month = date.getMonth();
+    let year = date.getFullYear();
+
+    currentMonthLabel.innerText = date.toLocaleString("default", { month: "long" }) + " " + year;
+
+    let firstDay = new Date(year, month, 1).getDay();
+    let numDays = new Date(year, month + 1, 0).getDate();
+
+    // empty cells before day 1
+    for (let i = 0; i < firstDay; i++) {
+        calendarGrid.innerHTML += `<div class="calendar-day bg-gray-50 rounded-lg"></div>`;
+    }
+
+    // actual days
+    for (let day = 1; day <= numDays; day++) {
+        calendarGrid.innerHTML += `
+        <div class="calendar-day flex flex-col p-2 items-center justify-start cursor-pointer hover:bg-purple-100 rounded-lg transition-all">
+            <span class="font-bold text-gray-700">${day}</span>
+            <div class="calendar-event bg-purple-500 text-white px-2 py-1 mt-1 text-xs rounded">Session</div>
+        </div>`;
+    }
+}
+
+loadCalendar();
+
+prevMonthBtn.onclick = () => { date.setMonth(date.getMonth() - 1); loadCalendar(); }
+nextMonthBtn.onclick = () => { date.setMonth(date.getMonth() + 1); loadCalendar(); }
+
+// ================== Collapsible inside counsellor modal ==================
+document.querySelectorAll(".collapsible-header").forEach(header => {
+    header.addEventListener("click", () => {
+        const targetId = header.getAttribute("data-target");
+        const content = document.getElementById(targetId);
+        const arrow = header.querySelector("svg");
+
+        content.classList.toggle("active");
+        if (arrow) {
+            arrow.classList.toggle("rotate-180");
+        }
+    });
+});
+
+
+</script>
+
+</main>
+</body>
+</html>
+

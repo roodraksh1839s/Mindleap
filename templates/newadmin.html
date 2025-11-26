@@ -95,6 +95,32 @@
         transform: translateX(-100%);
       }
     }
+    /* When sidebar is collapsed */
+#sidebar.collapsed .sidebar-item {
+  background: transparent !important;
+  border-left: none !important;
+  padding: 0 !important;
+}
+
+/* Hide text when collapsed */
+#sidebar.collapsed .sidebar-item span {
+  display: none !important;
+}
+
+/* Reduce padding */
+#sidebar.collapsed .sidebar-item {
+  padding-left: 0;
+  padding-right: 0;
+}
+/* Remove hover animation */
+#sidebar.collapsed .sidebar-item:hover {
+  transform: none !important;
+  background: transparent !important;
+}
+#sidebar.collapsed {
+  overflow: hidden !important;
+  width: 29px !important;  /* thin collapsed width */
+}
   </style>
 </head>
 
@@ -442,21 +468,8 @@
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('w-64'); 
       sidebar.classList.toggle('w-10');
-      sidebar.classList.toggle('overflow-hidden');
-      // sidebaritems = sidebar.querySelectorAll('.sidebar-item');
-      
-      // if(sidebar.classList.contains('w-10')){
-      //   sidebaritems.forEach(item => {
-      //     item.style.backgroundColor = 'transparent';
-      //     item.style.borderLeft = '0px';
-      //   })
-      // }else{
-      //   sidebaritems.forEach(item => {
-      //     item.style.backgroundColor = 'rgba(167, 139, 250, 0.2)';
-      //     item.style.borderLeft = '4px solid #667eea';
-      //   }
-      // )}
-      // Add smooth transition
+      sidebar.classList.toggle('collapsed');
+     // Add smooth transition
       sidebar.style.transition = 'width 0.3s ease';
       });
 
