@@ -121,6 +121,177 @@
   overflow: hidden !important;
   width: 29px !important;  /* thin collapsed width */
 }
+
+.counsellor-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(167, 139, 250, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .counsellor-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 35px rgba(167, 139, 250, 0.25);
+    }
+
+    /* Appointment Cards */
+    .appointment-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-left: 4px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .appointment-card:hover {
+      background: rgba(255, 255, 255, 0.95);
+      transform: translateX(5px);
+    }
+
+    .appointment-card.on-time { border-left-color: #10B981; }
+    .appointment-card.delayed { border-left-color: #F59E0B; }
+    .appointment-card.missed { border-left-color: #EF4444; }
+
+    /* Modal Styles */
+    .modal-backdrop {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(167, 139, 250, 0.2);
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    /* Calendar Styles */
+    .calendar-day {
+      min-height: 100px;
+      border: 1px solid rgba(167, 139, 250, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .calendar-day:hover {
+      background: rgba(167, 139, 250, 0.05);
+    }
+
+    .calendar-event {
+      font-size: 0.7rem;
+      padding: 2px 4px;
+      margin: 2px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .calendar-event:hover {
+      transform: scale(1.05);
+    }
+
+    /* Collapsible Sections */
+    .collapsible-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .collapsible-content.active {
+      max-height: 2000px;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* Health Indicators */
+    .health-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .health-on-time { background-color: #10B981; }
+    .health-delayed { background-color: #F59E0B; }
+    .health-missed { background-color: #EF4444; }
+
+    /* Star Rating */
+    .star-rating {
+      color: #F59E0B;
+    }
+
+    /* Scrollbar Styling */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(167, 139, 250, 0.1);
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(167, 139, 250, 0.3);
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(167, 139, 250, 0.5);
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: 0.4s;
+      border-radius: 28px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #8B5CF6;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+    }
   </style>
 </head>
 
@@ -158,7 +329,7 @@
            <a href="{{ url_for('home') }}"><button>Log out</button></a>
 
             <div class="text-sm text-gray-500">Admin</div>
-            <div class="font-semibold text-gray-800">Dr.Roodraksh Bisen</div>
+            <div class="font-semibold text-gray-800">Dr.Avinash Arora</div>
           </div>
           <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold">
           </div>
@@ -857,9 +1028,848 @@
     </div>
   </div>
 </section>
+<section id="appointmentsPage" class="hidden">
+  <div class="p-6">
+    <!-- Page Header -->
+    <div class="mb-8 animate-fade-in-up">
+      <h2 class="text-3xl font-bold text-gray-800 mb-2">📅 Appointments Management</h2>
+      <p class="text-gray-600">Manage counsellor schedules, student bookings, and session tracking</p>
+    </div>
+
+    <!-- Summary Statistics -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in-up">
+      <div class="stat-card p-6 rounded-2xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Upcoming Appointments</p>
+            <p class="text-3xl font-bold text-gray-800 mt-1">24</p>
+            <p class="text-blue-600 text-sm font-medium mt-1">↗ Next 7 days</p>
+          </div>
+          <div class="text-4xl animate-pulse-soft">📆</div>
+        </div>
+      </div>
+
+      <div class="stat-card p-6 rounded-2xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Pending Requests</p>
+            <p class="text-3xl font-bold text-gray-800 mt-1">12</p>
+            <p class="text-orange-600 text-sm font-medium mt-1">⏳ Awaiting approval</p>
+          </div>
+          <div class="text-4xl animate-pulse-soft">⏰</div>
+        </div>
+      </div>
+
+      <div class="stat-card p-6 rounded-2xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Completed This Week</p>
+            <p class="text-3xl font-bold text-gray-800 mt-1">18</p>
+            <p class="text-green-600 text-sm font-medium mt-1">✓ Success rate: 94%</p>
+          </div>
+          <div class="text-4xl animate-pulse-soft">✅</div>
+        </div>
+      </div>
+    </section>
 
 
-    </main>
+
+<!-- ==================== Appointments Management Page ==================== -->
+
+
+    <!-- New content added-->
+  <!-- View Toggle + Filters -->
+<!-- <section class="glass-card p-6 rounded-2xl mb-6 animate-fade-in-up">
+  <div class="flex items-center justify-between">
+    <span class="text-gray-800 font-medium">List View</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="viewToggle">
+      <span class="toggle-slider"></span>
+    </label>
+    <span class="text-gray-800 font-medium">Calendar View</span>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <input type="text" id="filterSearch" placeholder="Search student..." class="px-4 py-3 rounded-2xl w-full glass-card">
+    <select id="filterStatus" class="px-4 py-3 rounded-2xl w-full">
+      <option value="">All Status</option>
+      <option value="pending">Pending</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="completed">Completed</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+    <input type="date" id="filterDateFrom" class="px-4 py-3 rounded-2xl w-full">
+    <input type="date" id="filterDateTo" class="px-4 py-3 rounded-2xl w-full">
+  </div>
+</section>
+
+ -- LIST VIEW 
+<section id="listViewSection" class="animate-fade-in-up">
+  -- Counsellor Cards Grid 
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    -- (paste ALL counsellor cards here EXACTLY like in original file) 
+  </div>
+</section>
+
+-- CALENDAR VIEW 
+<section id="calendarViewSection" class="hidden animate-fade-in-up">
+  <div class="glass-card p-6 rounded-2xl">
+    <div class="flex justify-between items-center mb-6">
+      <button id="prevMonth" class="p-2 hover:bg-purple-100 rounded-lg transition-colors">◀</button>
+      <h3 class="text-2xl font-bold text-gray-800" id="currentMonth"></h3>
+      <button id="nextMonth" class="p-2 hover:bg-purple-100 rounded-lg transition-colors">▶</button>
+    </div>
+
+    <div class="grid grid-cols-7 gap-2">
+      <div class="text-center font-semibold text-gray-600">Sun</div>
+      <div class="text-center font-semibold text-gray-600">Mon</div>
+      <div class="text-center font-semibold text-gray-600">Tue</div>
+      <div class="text-center font-semibold text-gray-600">Wed</div>
+      <div class="text-center font-semibold text-gray-600">Thu</div>
+      <div class="text-center font-semibold text-gray-600">Fri</div>
+      <div class="text-center font-semibold text-gray-600">Sat</div>
+      <div id="calendarGrid"></div>
+    </div>
+  </div>
+</section>
+ -->
+
+
+    <!-- View Toggle and Filters -->
+    <section class="glass-card p-6 rounded-2xl mb-8 animate-fade-in-up">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0 mb-6">
+        <!-- View Toggle -->
+        <div class="flex items-center space-x-4">
+          <span class="text-sm font-medium text-gray-700">View Mode:</span>
+          <div class="flex items-center space-x-2">
+            <span class="text-sm" id="listViewLabel">List View</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="viewToggle">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="text-sm" id="calendarViewLabel">Calendar View</span>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="flex-1 lg:mx-6">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="🔍 Search by student name..." 
+            class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/80 backdrop-blur-sm"
+          >
+        </div>
+      </div>
+
+      <!-- Advanced Filters -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <select id="filterCounsellor" class="px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/80 backdrop-blur-sm">
+          <option value="">All Counsellors</option>
+          <option value="dr-mehta">Dr. Priya Mehta</option>
+          <option value="ms-singh">Ms. Anjali Singh</option>
+          <option value="dr-gupta">Dr. Rajesh Gupta</option>
+          <option value="dr-sharma">Dr. Neha Sharma</option>
+        </select>
+
+        <select id="filterStatus" class="px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/80 backdrop-blur-sm">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="upcoming">Upcoming</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+
+        <input 
+          type="date" 
+          id="filterDateFrom" 
+          class="px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/80 backdrop-blur-sm"
+        >
+
+        <input 
+          type="date" 
+          id="filterDateTo" 
+          class="px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/80 backdrop-blur-sm"
+        >
+      </div>
+    </section>
+
+    <!-- List View Section -->
+    <section id="listViewSection" class="animate-fade-in-up">
+      <!-- Counsellor Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Counsellor Card 1 -->
+        <div class="counsellor-card p-6 rounded-2xl cursor-pointer" data-counsellor="dr-mehta">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              PM
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">Dr. Priya Mehta</h3>
+              <p class="text-xs text-gray-500">Clinical Psychologist</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Pending:</span>
+              <span class="font-bold text-orange-600">4</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Upcoming:</span>
+              <span class="font-bold text-blue-600">8</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Completed:</span>
+              <span class="font-bold text-green-600">6</span>
+            </div>
+          </div>
+          <button class="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all font-medium text-sm">
+            View Details
+          </button>
+        </div>
+
+        <!-- Counsellor Card 2 -->
+        <div class="counsellor-card p-6 rounded-2xl cursor-pointer" data-counsellor="ms-singh">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              AS
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">Ms. Anjali Singh</h3>
+              <p class="text-xs text-gray-500">Counseling Therapist</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Pending:</span>
+              <span class="font-bold text-orange-600">3</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Upcoming:</span>
+              <span class="font-bold text-blue-600">6</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Completed:</span>
+              <span class="font-bold text-green-600">5</span>
+            </div>
+          </div>
+          <button class="w-full py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all font-medium text-sm">
+            View Details
+          </button>
+        </div>
+
+        <!-- Counsellor Card 3 -->
+        <div class="counsellor-card p-6 rounded-2xl cursor-pointer" data-counsellor="dr-gupta">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              RG
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">Dr. Rajesh Gupta</h3>
+              <p class="text-xs text-gray-500">Psychiatrist</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Pending:</span>
+              <span class="font-bold text-orange-600">2</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Upcoming:</span>
+              <span class="font-bold text-blue-600">5</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Completed:</span>
+              <span class="font-bold text-green-600">4</span>
+            </div>
+          </div>
+          <button class="w-full py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all font-medium text-sm">
+            View Details
+          </button>
+        </div>
+
+        <!-- Counsellor Card 4 -->
+        <div class="counsellor-card p-6 rounded-2xl cursor-pointer" data-counsellor="dr-sharma">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              NS
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">Dr. Neha Sharma</h3>
+              <p class="text-xs text-gray-500">Child Psychologist</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Pending:</span>
+              <span class="font-bold text-orange-600">3</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Upcoming:</span>
+              <span class="font-bold text-blue-600">5</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Completed:</span>
+              <span class="font-bold text-green-600">3</span>
+            </div>
+          </div>
+          <button class="w-full py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all font-medium text-sm">
+            View Details
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calendar View Section -->
+    <section id="calendarViewSection" class="hidden animate-fade-in-up">
+      <div class="glass-card p-6 rounded-2xl">
+        <!-- Calendar Header -->
+        <div class="flex justify-between items-center mb-6">
+          <button id="prevMonth" class="p-2 hover:bg-purple-100 rounded-lg transition-colors">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <h3 class="text-2xl font-bold text-gray-800" id="currentMonth">November 2025</h3>
+          <button id="nextMonth" class="p-2 hover:bg-purple-100 rounded-lg transition-colors">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="grid grid-cols-7 gap-2">
+          <!-- Day Headers -->
+          <div class="text-center font-semibold text-gray-600 py-2">Sun</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Mon</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Tue</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Wed</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Thu</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Fri</div>
+          <div class="text-center font-semibold text-gray-600 py-2">Sat</div>
+          
+          <!-- Calendar Days (will be generated by JavaScript) -->
+          <div id="calendarGrid"></div>
+        </div>
+
+        <!-- Calendar Legend -->
+        <div class="mt-6 flex flex-wrap gap-4 justify-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-4 h-4 bg-purple-400 rounded"></div>
+            <span class="text-sm text-gray-600">Dr. Mehta</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-4 h-4 bg-indigo-400 rounded"></div>
+            <span class="text-sm text-gray-600">Ms. Singh</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-4 h-4 bg-blue-400 rounded"></div>
+            <span class="text-sm text-gray-600">Dr. Gupta</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-4 h-4 bg-pink-400 rounded"></div>
+            <span class="text-sm text-gray-600">Dr. Sharma</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Counsellor Details Modal -->
+  <div id="counsellorDetailsModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+    <div class="modal-content rounded-2xl w-full max-w-6xl p-8 custom-scrollbar animate-slide-in">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center space-x-4">
+          <div id="modalCounsellorAvatar" class="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-2xl">
+            PM
+          </div>
+          <div>
+            <h2 id="modalCounsellorName" class="text-2xl font-bold text-gray-800">Dr. Priya Mehta</h2>
+            <p id="modalCounsellorTitle" class="text-gray-600">Clinical Psychologist</p>
+          </div>
+        </div>
+        <button id="appointmentsCloseModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Collapsible Sections -->
+      <div class="space-y-4">
+        <!-- Pending Appointments Section -->
+        <div class="glass-card rounded-xl overflow-hidden">
+          <button class="collapsible-header w-full px-6 py-4 flex justify-between items-center hover:bg-purple-50 transition-colors" data-target="pendingSection">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">⏳</span>
+              <span class="font-bold text-gray-800 text-lg">Pending Appointments</span>
+              <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold">4</span>
+            </div>
+            <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="pendingSection" class="collapsible-content">
+            <div class="p-6 space-y-3">
+              <!-- Pending Appointment 1 -->
+              <div class="appointment-card p-4 rounded-xl delayed">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-delayed"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Aisha Rahman')">Aisha Rahman</h4>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Requested: Nov 18, 2025 - 2:00 PM</p>
+                      <p>💻 Mode: Online (Google Meet)</p>
+                      <p>📝 Reason: Academic stress and anxiety</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium">
+                      ✓ Accept
+                    </button>
+                    <button class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                      ✗ Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pending Appointment 2 -->
+              <div class="appointment-card p-4 rounded-xl on-time">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-on-time"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Kabir Malhotra')">Kabir Malhotra</h4>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Requested: Nov 20, 2025 - 11:00 AM</p>
+                      <p>🏢 Mode: Offline (Room 204)</p>
+                      <p>📝 Reason: Career counseling</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium">
+                      ✓ Accept
+                    </button>
+                    <button class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                      ✗ Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Appointments Section -->
+        <div class="glass-card rounded-xl overflow-hidden">
+          <button class="collapsible-header w-full px-6 py-4 flex justify-between items-center hover:bg-purple-50 transition-colors" data-target="upcomingSection">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">📆</span>
+              <span class="font-bold text-gray-800 text-lg">Upcoming Appointments</span>
+              <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">8</span>
+            </div>
+            <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="upcomingSection" class="collapsible-content">
+            <div class="p-6 space-y-3">
+              <!-- Upcoming Appointment 1 -->
+              <div class="appointment-card p-4 rounded-xl on-time">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-on-time"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Sanya Patel')">Sanya Patel</h4>
+                      <span class="status-badge bg-blue-100 text-blue-800">Confirmed</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Nov 16, 2025 - 10:00 AM</p>
+                      <p>💻 Mode: Online (Zoom)</p>
+                      <p>📝 Topic: Follow-up session for anxiety management</p>
+                      <p>🔔 Reminder sent: ✓</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium">
+                      📝 Reschedule
+                    </button>
+                    <button class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm font-medium">
+                      🚫 Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Upcoming Appointment 2 -->
+              <div class="appointment-card p-4 rounded-xl on-time">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-on-time"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Rohan Verma')">Rohan Verma</h4>
+                      <span class="status-badge bg-blue-100 text-blue-800">Confirmed</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Nov 17, 2025 - 3:00 PM</p>
+                      <p>🏢 Mode: Offline (Room 204)</p>
+                      <p>📝 Topic: Depression screening and support</p>
+                      <p>🔔 Reminder sent: ✓</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium">
+                      📝 Reschedule
+                    </button>
+                    <button class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm font-medium">
+                      🚫 Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Upcoming Appointment 3 -->
+              <div class="appointment-card p-4 rounded-xl delayed">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-delayed"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Meera Nair')">Meera Nair</h4>
+                      <span class="status-badge bg-yellow-100 text-yellow-800">Waiting Confirmation</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Nov 19, 2025 - 1:00 PM</p>
+                      <p>💻 Mode: Online (Google Meet)</p>
+                      <p>📝 Topic: Relationship counseling</p>
+                      <p>🔔 Reminder: Pending</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium">
+                      ✓ Confirm
+                    </button>
+                    <button class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium">
+                      📝 Reschedule
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed Appointments Section -->
+        <div class="glass-card rounded-xl overflow-hidden">
+          <button class="collapsible-header w-full px-6 py-4 flex justify-between items-center hover:bg-purple-50 transition-colors" data-target="completedSection">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">✅</span>
+              <span class="font-bold text-gray-800 text-lg">Completed Appointments</span>
+              <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">6</span>
+            </div>
+            <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="completedSection" class="collapsible-content">
+            <div class="p-6 space-y-3">
+              <!-- Completed Appointment 1 -->
+              <div class="appointment-card p-4 rounded-xl on-time bg-green-50">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-on-time"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Arjun Bose')">Arjun Bose</h4>
+                      <span class="status-badge bg-green-100 text-green-800">Completed</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Nov 10, 2025 - 2:00 PM</p>
+                      <p>💻 Mode: Online</p>
+                      <p>📝 Topic: Stress management techniques</p>
+                      <p>⭐ Student Rating: ⭐⭐⭐⭐⭐</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium">
+                      📄 View Notes
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Completed Appointment 2 -->
+              <div class="appointment-card p-4 rounded-xl on-time bg-green-50">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="health-indicator health-on-time"></span>
+                      <h4 class="font-bold text-gray-800 cursor-pointer hover:text-purple-600" onclick="openStudentProfile('Priya Desai')">Priya Desai</h4>
+                      <span class="status-badge bg-green-100 text-green-800">Completed</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                      <p>📅 Nov 12, 2025 - 11:00 AM</p>
+                      <p>🏢 Mode: Offline</p>
+                      <p>📝 Topic: Academic pressure counseling</p>
+                      <p>⭐ Student Rating: ⭐⭐⭐⭐⭐</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-col space-y-2">
+                    <button class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium">
+                      📄 View Notes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Counsellor Reviews & Remarks Section -->
+        <div class="glass-card rounded-xl overflow-hidden">
+          <button class="collapsible-header w-full px-6 py-4 flex justify-between items-center hover:bg-purple-50 transition-colors" data-target="reviewsSection">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">⭐</span>
+              <span class="font-bold text-gray-800 text-lg">Reviews & Performance Remarks</span>
+            </div>
+            <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="reviewsSection" class="collapsible-content">
+            <div class="p-6">
+              <!-- Add Admin Remark -->
+              <div class="mb-6 glass-card p-4 rounded-xl">
+                <h4 class="font-bold text-gray-800 mb-3">Add Admin Remark</h4>
+                <textarea 
+                  id="adminRemarkInput" 
+                  placeholder="Enter performance notes, observations, or admin remarks..." 
+                  class="w-full px-4 py-3 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 mb-3 resize-none"
+                  rows="3"
+                ></textarea>
+                <button class="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all font-medium">
+                  💾 Save Remark
+                </button>
+              </div>
+
+              <!-- Performance Overview -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="stat-card p-4 rounded-xl">
+                  <p class="text-sm text-gray-600">Average Rating</p>
+                  <div class="flex items-center space-x-2 mt-2">
+                    <span class="text-2xl font-bold text-gray-800">4.8</span>
+                    <span class="star-rating text-lg">⭐⭐⭐⭐⭐</span>
+                  </div>
+                </div>
+                <div class="stat-card p-4 rounded-xl">
+                  <p class="text-sm text-gray-600">Total Reviews</p>
+                  <p class="text-2xl font-bold text-gray-800 mt-2">42</p>
+                </div>
+                <div class="stat-card p-4 rounded-xl">
+                  <p class="text-sm text-gray-600">Response Rate</p>
+                  <p class="text-2xl font-bold text-green-600 mt-2">98%</p>
+                </div>
+              </div>
+
+              <!-- Student Reviews -->
+              <div class="space-y-3">
+                <h4 class="font-bold text-gray-800 mb-3">Recent Student Feedback</h4>
+                
+                <!-- Review 1 -->
+                <div class="bg-white p-4 rounded-xl border border-purple-100">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <p class="font-semibold text-gray-800">Sanya Patel</p>
+                      <div class="star-rating text-sm">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <span class="text-xs text-gray-500">Nov 10, 2025</span>
+                  </div>
+                  <p class="text-sm text-gray-600">"Dr. Mehta is extremely empathetic and helped me develop practical coping strategies. The session was very beneficial."</p>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="bg-white p-4 rounded-xl border border-purple-100">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <p class="font-semibold text-gray-800">Arjun Bose</p>
+                      <div class="star-rating text-sm">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <span class="text-xs text-gray-500">Nov 8, 2025</span>
+                  </div>
+                  <p class="text-sm text-gray-600">"Very professional and understanding. I felt comfortable sharing my concerns and received excellent guidance."</p>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="bg-white p-4 rounded-xl border border-purple-100">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <p class="font-semibold text-gray-800">Priya Desai</p>
+                      <div class="star-rating text-sm">⭐⭐⭐⭐</div>
+                    </div>
+                    <span class="text-xs text-gray-500">Nov 5, 2025</span>
+                  </div>
+                  <p class="text-sm text-gray-600">"Great session! Would have appreciated more time, but the counselling techniques shared were very helpful."</p>
+                </div>
+              </div>
+
+              <!-- Admin Remarks History -->
+              <div class="mt-6">
+                <h4 class="font-bold text-gray-800 mb-3">Admin Remarks History</h4>
+                <div class="space-y-3">
+                  <div class="bg-purple-50 p-4 rounded-xl border-l-4 border-purple-500">
+                    <div class="flex justify-between items-start mb-2">
+                      <p class="font-semibold text-gray-800">Dr. Roodraksh Bisen (Admin)</p>
+                      <span class="text-xs text-gray-500">Nov 1, 2025</span>
+                    </div>
+                    <p class="text-sm text-gray-700">Excellent performance this month. Student satisfaction scores consistently high. Recommend for advanced training program.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Profile Modal -->
+  <div id="studentProfileModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+    <div class="modal-content rounded-2xl w-full max-w-4xl p-8 custom-scrollbar animate-slide-in">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center space-x-4">
+          <div id="studentAvatar" class="w-16 h-16 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold text-2xl">
+            SP
+          </div>
+          <div>
+            <h2 id="studentName" class="text-2xl font-bold text-gray-800">Sanya Patel</h2>
+            <p id="studentId" class="text-gray-600">Student ID: STU2025-1248</p>
+          </div>
+        </div>
+        <button id="closeStudentModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Student Info Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="stat-card p-4 rounded-xl">
+          <p class="text-sm text-gray-600">Risk Level</p>
+          <div class="flex items-center space-x-2 mt-2">
+            <span class="health-indicator health-delayed"></span>
+            <span class="font-bold text-yellow-600">Moderate</span>
+          </div>
+        </div>
+        <div class="stat-card p-4 rounded-xl">
+          <p class="text-sm text-gray-600">Total Sessions</p>
+          <p class="text-2xl font-bold text-gray-800 mt-2">8</p>
+        </div>
+        <div class="stat-card p-4 rounded-xl">
+          <p class="text-sm text-gray-600">Last Session</p>
+          <p class="text-sm font-semibold text-gray-800 mt-2">Nov 10, 2025</p>
+        </div>
+      </div>
+
+      <!-- Past Appointments -->
+      <div class="glass-card rounded-xl p-6 mb-6">
+        <h3 class="font-bold text-gray-800 mb-4 text-lg">📋 Appointment History</h3>
+        <div class="space-y-3">
+          <div class="bg-white p-4 rounded-lg border border-purple-100">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-semibold text-gray-800">Nov 10, 2025 - 2:00 PM</p>
+                <p class="text-sm text-gray-600">Counsellor: Dr. Priya Mehta</p>
+                <p class="text-sm text-gray-600">Topic: Anxiety management</p>
+                <p class="text-sm text-green-600 mt-1">✓ Completed</p>
+              </div>
+              <span class="star-rating text-sm">⭐⭐⭐⭐⭐</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-lg border border-purple-100">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-semibold text-gray-800">Oct 28, 2025 - 11:00 AM</p>
+                <p class="text-sm text-gray-600">Counsellor: Dr. Priya Mehta</p>
+                <p class="text-sm text-gray-600">Topic: Academic stress</p>
+                <p class="text-sm text-green-600 mt-1">✓ Completed</p>
+              </div>
+              <span class="star-rating text-sm">⭐⭐⭐⭐⭐</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-lg border border-purple-100">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-semibold text-gray-800">Oct 15, 2025 - 3:00 PM</p>
+                <p class="text-sm text-gray-600">Counsellor: Ms. Anjali Singh</p>
+                <p class="text-sm text-gray-600">Topic: Initial screening</p>
+                <p class="text-sm text-green-600 mt-1">✓ Completed</p>
+              </div>
+              <span class="star-rating text-sm">⭐⭐⭐⭐</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Counsellor Notes -->
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-bold text-gray-800 mb-4 text-lg">📝 Counsellor Notes</h3>
+        <div class="space-y-4">
+          <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+            <div class="flex justify-between items-start mb-2">
+              <p class="font-semibold text-gray-800">Dr. Priya Mehta</p>
+              <span class="text-xs text-gray-500">Nov 10, 2025</span>
+            </div>
+            <p class="text-sm text-gray-700">Student shows significant improvement in managing anxiety symptoms. Continuing with CBT techniques. Recommend follow-up in 2 weeks.</p>
+          </div>
+
+          <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+            <div class="flex justify-between items-start mb-2">
+              <p class="font-semibold text-gray-800">Dr. Priya Mehta</p>
+              <span class="text-xs text-gray-500">Oct 28, 2025</span>
+            </div>
+            <p class="text-sm text-gray-700">Discussed stress management strategies and time management techniques. Student is receptive and actively participating in exercises.</p>
+          </div>
+
+          <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+            <div class="flex justify-between items-start mb-2">
+              <p class="font-semibold text-gray-800">Ms. Anjali Singh</p>
+              <span class="text-xs text-gray-500">Oct 15, 2025</span>
+            </div>
+            <p class="text-sm text-gray-700">Initial assessment completed. Student presenting with moderate anxiety related to academic performance. Referred to Dr. Mehta for specialized counseling.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointment Event Details Modal (for Calendar) -->
+  <div id="eventDetailsModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+    <div class="modal-content rounded-2xl w-full max-w-md p-6 animate-slide-in">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-gray-800">Appointment Details</h3>
+        <button id="closeEventModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div id="eventDetailsContent" class="space-y-3">
+        <!-- Content will be dynamically populated -->
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    
   </div>
 
   <!-- Footer -->
@@ -1397,54 +2407,53 @@ document.getElementById('sortOption').addEventListener('change', applyFilters);
 // Sidebar Navigation - Students Section
 
 
-// Clean Navigation Logic
+// Clean Navigation + Page Switching
 const mainContent = document.querySelector('main');
-const allSections = mainContent.querySelectorAll('section');
+
+// Only top-level sections inside <main> (not nested ones)
+const allSections = Array.from(mainContent.children)
+  .filter(el => el.tagName.toLowerCase() === 'section');
+
 const studentsSection = document.getElementById('studentsSection');
 const resourcesPage = document.getElementById('resourcesPage');
+const crisisPage = document.getElementById('crisisPage');
+const appointmentsPage = document.getElementById('appointmentsPage');
 
 document.querySelectorAll('.sidebar-item').forEach(item => {
-    item.addEventListener('click', () => {
-        const page = item.dataset.page;
+  item.addEventListener('click', () => {
+    const page = item.dataset.page;
 
-        // Activate the clicked item
-        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
+    document.querySelectorAll('.sidebar-item')
+      .forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
 
-        // Always hide both special sections first
-        studentsSection.classList.add('hidden');
-        resourcesPage.classList.add('hidden');
+    allSections.forEach(sec => sec.classList.add('hidden'));
 
-        if (page === "students") {
-            // Hide ALL overview items
-            allSections.forEach(sec => sec.classList.add('hidden'));
-            studentsSection.classList.remove('hidden');
-            filteredData = [...studentData];
-            renderStudents();
+    if (page === 'students') {
+      studentsSection.classList.remove('hidden');
+      filteredData = [...studentData];
+      renderStudents();
+    } else if (page === 'resources') {
+      resourcesPage.classList.remove('hidden');
+    } else if (page === 'crisis') {
+      crisisPage.classList.remove('hidden');
+      if (window.refreshCrisisPage) window.refreshCrisisPage();
+    } else if (page === 'appointments') {
+      appointmentsPage.classList.remove('hidden');
+    } else {
+      allSections.forEach(sec => {
+        if (
+          sec.id !== 'studentsSection' &&
+          sec.id !== 'resourcesPage' &&
+          sec.id !== 'crisisPage' &&
+          sec.id !== 'appointmentsPage'
+        ) {
+          sec.classList.remove('hidden');
         }
-        else if (page === "crisis") {
-            document.getElementById("crisisPage").classList.remove('hidden');
-        }
-        else if (page === "resources") {
-            allSections.forEach(sec => sec.classList.add('hidden'));
-            resourcesPage.classList.remove('hidden');
-        }
-        else {
-            // Overview selected → show ONLY overview sections
-            allSections.forEach(sec => {
-                if (
-                    sec.id !== "studentsSection" &&
-                    sec.id !== "resourcesPage"&&
-                    sec.id !== "crisisPage"
-                ) {
-                    sec.classList.remove('hidden'); 
-                }
-            });
-        }
-    });
-});
-
-// <!-- ------------------ Crisis Alerts JS ------------------ -->
+      });
+    }
+  });
+});// <!-- ------------------ Crisis Alerts JS ------------------ -->
 
   (function() {
     // ---------- Sample placeholder data ----------
@@ -1831,6 +2840,106 @@ document.querySelectorAll('.sidebar-item').forEach(item => {
 // <!-- -------------------------------------------------------- -->
 
 </script>
+<script>
 
+// ===================== View Toggle (List <-> Calendar) =====================
+const viewToggle = document.getElementById("viewToggle");
+const listViewSection = document.getElementById("listViewSection");
+const calendarViewSection = document.getElementById("calendarViewSection");
+
+viewToggle.addEventListener("change", () => {
+    listViewSection.classList.toggle("hidden");
+    calendarViewSection.classList.toggle("hidden");
+});
+
+// ===================== Counsellor View Details Modal =====================
+const counsellorCards = document.querySelectorAll(".counsellor-card");
+const modal = document.getElementById("counsellorDetailsModal");
+const modalClose = document.getElementById("appointmentsCloseModal");
+const modalName = document.getElementById("modalCounsellorName");
+const modalTitle = document.getElementById("modalCounsellorTitle");
+const modalAvatar = document.getElementById("modalCounsellorAvatar");
+
+counsellorCards.forEach(card => {
+    card.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+
+        let name = card.querySelector("h3").innerText;
+        let field = card.querySelector("p").innerText;
+        let initials = name.split(" ").map(a => a[0]).join("");
+
+        modalName.innerText = name;
+        modalTitle.innerText = field;
+        modalAvatar.innerText = initials;
+    })
+});
+
+modalClose.addEventListener("click", () => modal.classList.add("hidden"));
+
+
+// ===================== Calendar Generator =====================
+
+const calendarGrid = document.getElementById("calendarGrid");
+const currentMonthLabel = document.getElementById("currentMonth");
+const prevMonthBtn = document.getElementById("prevMonth");
+const nextMonthBtn = document.getElementById("nextMonth");
+
+let date = new Date();
+
+function loadCalendar() {
+    // clear previous days
+    calendarGrid.innerHTML = "";
+
+    // make calendarGrid itself the 7-column grid
+    calendarGrid.className = "col-span-7 grid grid-cols-7 gap-2";
+
+    let month = date.getMonth();
+    let year = date.getFullYear();
+
+    currentMonthLabel.innerText = date.toLocaleString("default", { month: "long" }) + " " + year;
+
+    let firstDay = new Date(year, month, 1).getDay();
+    let numDays = new Date(year, month + 1, 0).getDate();
+
+    // empty cells before day 1
+    for (let i = 0; i < firstDay; i++) {
+        calendarGrid.innerHTML += `<div class="calendar-day bg-gray-50 rounded-lg"></div>`;
+    }
+
+    // actual days
+    for (let day = 1; day <= numDays; day++) {
+        calendarGrid.innerHTML += `
+        <div class="calendar-day flex flex-col p-2 items-center justify-start cursor-pointer hover:bg-purple-100 rounded-lg transition-all">
+            <span class="font-bold text-gray-700">${day}</span>
+            <div class="calendar-event bg-purple-500 text-white px-2 py-1 mt-1 text-xs rounded">Session</div>
+        </div>`;
+    }
+}
+
+loadCalendar();
+
+prevMonthBtn.onclick = () => { date.setMonth(date.getMonth() - 1); loadCalendar(); }
+nextMonthBtn.onclick = () => { date.setMonth(date.getMonth() + 1); loadCalendar(); }
+
+// ================== Collapsible inside counsellor modal ==================
+document.querySelectorAll(".collapsible-header").forEach(header => {
+    header.addEventListener("click", () => {
+        const targetId = header.getAttribute("data-target");
+        const content = document.getElementById(targetId);
+        const arrow = header.querySelector("svg");
+
+        content.classList.toggle("active");
+        if (arrow) {
+            arrow.classList.toggle("rotate-180");
+        }
+    });
+});
+
+
+</script>
+
+</main>
 </body>
 </html>
+

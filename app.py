@@ -230,7 +230,7 @@ def admin():
         if prediction in counts:
             counts[prediction] += 1
 
-    return render_template("newadmin.html", rows=rows, counts=counts)
+    return render_template("Admin.html", rows=rows, counts=counts)
 
 
 
@@ -238,7 +238,7 @@ def admin():
 def form():
     return render_template('quesions.html')
 
-# @app.route('/submit', methods=['POST'])
+
 @app.route('/submit', methods=['POST'])
 def submit():
     global model  # make sure we use the model defined at the top
@@ -295,23 +295,7 @@ def submit():
     conn.commit()
     cursor.close()
     conn.close()
-
-
-    # conn = get_db_connection()
-    # cursor = conn.cursor()
-    
-    # query = """
-    #     INSERT INTO ASSESSMENTS
-    #     (Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,PREDICTION)
-    #     VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-        
-    # cursor.execute(query, (*responses, risk_label))
-    # conn.commit()
-    # cursor.close()
-    # conn.close()
-    
-    
-    
+     
     return render_template("result.html", score=total_score, risk=risk_label)
 
 
