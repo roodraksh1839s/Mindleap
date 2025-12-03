@@ -16,7 +16,7 @@ answers = df['answers'].tolist()
 '''FOR-OPENAI'''
 # def generate_response(user_input):
 #     """Send prompt to GPT-4o with context"""
-#     top_matches = search_best_match(user_input)
+#     top_33matches = search_best_match(user_input)
 #     context = "\n".join([f"Q: {q}\nA: {a}" for q,a in top_matches])
 
 #     completion = client.chat.completions.create(
