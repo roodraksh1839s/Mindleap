@@ -1,9 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>MindLeap - Peer Support Community</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="MindLeap Peer Support - Connect with your community for mental wellness.">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="icon" type="image/png" href="/static/icons/icon-96x96.png">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    <link rel="stylesheet" href="/static/pwa.css">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes fadeInUp {
@@ -11,73 +22,77 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes pulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 1;
             }
+
             50% {
                 opacity: 0.5;
             }
         }
-        
+
         .fade-in-up {
             animation: fadeInUp 0.6s ease-out forwards;
         }
-        
+
         .glass-card {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             transition: all 0.3s ease;
         }
-        
+
         .glass-card:hover {
             background: rgba(255, 255, 255, 0.35);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(168, 237, 234, 0.3);
         }
-        
+
         .glass-navbar {
             background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.4);
         }
-        
+
         .glass-sidebar {
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             border-right: 1px solid rgba(255, 255, 255, 0.3);
         }
-        
+
         .glass-input {
             background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
-        
+
         .glass-input:focus {
             background: rgba(255, 255, 255, 0.4);
             outline: none;
             border: 1px solid rgba(168, 237, 234, 0.6);
             box-shadow: 0 0 0 3px rgba(168, 237, 234, 0.1);
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #667eea, #764ba2);
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
-        
+
         .online-dot {
             width: 10px;
             height: 10px;
@@ -85,67 +100,67 @@
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
-        
+
         .scrollbar-custom::-webkit-scrollbar {
             width: 6px;
         }
-        
+
         .scrollbar-custom::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
         }
-        
+
         .scrollbar-custom::-webkit-scrollbar-thumb {
             background: rgba(168, 237, 234, 0.5);
             border-radius: 10px;
         }
-        
+
         .scrollbar-custom::-webkit-scrollbar-thumb:hover {
             background: rgba(168, 237, 234, 0.7);
         }
-        
+
         .post-card {
             background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             transition: all 0.3s ease;
         }
-        
+
         .post-card:hover {
             background: rgba(255, 255, 255, 0.4);
             box-shadow: 0 8px 25px rgba(168, 237, 234, 0.2);
         }
-        
+
         .chat-window {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
-        
+
         .member-card {
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
         }
-        
+
         .member-card:hover {
             background: rgba(255, 255, 255, 0.35);
             transform: translateX(5px);
         }
-        
+
         .support-button {
             transition: all 0.3s ease;
         }
-        
+
         .support-button:hover {
             transform: scale(1.1);
         }
-        
+
         .support-button.supported {
             color: #e91e63;
         }
-        
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -153,43 +168,48 @@
                 z-index: 40;
                 height: 100vh;
             }
-            
+
             .sidebar.open {
                 transform: translateX(0);
             }
         }
     </style>
 </head>
+
 <body class="min-h-screen font-sans" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
-    
+
     <!-- Navigation Bar -->
     <nav class="glass-navbar sticky top-0 z-50 px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <button id="menuToggle" class="md:hidden text-gray-800 text-2xl">☰</button>
-                <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <h1
+                    class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                     🧠 Peer Support
                 </h1>
             </div>
             <div class="flex gap-3">
-                <button href={{url_for('student_ui')}} class="glass-card px-6 py-2 rounded-full text-gray-800 font-medium hover:scale-105 transition-all">
+                <button href={{url_for('student_ui')}}
+                    class="glass-card px-6 py-2 rounded-full text-gray-800 font-medium hover:scale-105 transition-all">
                     🏠 Home
-                </button >
+                </button>
                 <button class="btn-primary text-white px-6 py-2 rounded-full font-medium" href={{url_for('home')}}>
                     Logout
-                </button >
+                </button>
             </div>
         </div>
     </nav>
-    
+
     <div class="flex max-w-7xl mx-auto">
         <!-- Left Sidebar -->
-        <aside id="sidebar" class="sidebar glass-sidebar w-64 p-6 overflow-y-auto scrollbar-custom transition-all duration-300" style="max-height: calc(100vh - 80px);">
+        <aside id="sidebar"
+            class="sidebar glass-sidebar w-64 p-6 overflow-y-auto scrollbar-custom transition-all duration-300"
+            style="max-height: calc(100vh - 80px);">
             <div class="mb-8">
                 <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                     👥 Community
                 </h2>
-                
+
                 <!-- Friends List -->
                 <div class="mb-6">
                     <h3 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Friends</h3>
@@ -197,7 +217,8 @@
                         <div class="member-card p-3 rounded-xl cursor-pointer">
                             <div class="flex items-center gap-3">
                                 <div class="relative">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold">
                                         S
                                     </div>
                                     <div class="absolute bottom-0 right-0 online-dot border-2 border-white"></div>
@@ -208,11 +229,12 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="member-card p-3 rounded-xl cursor-pointer">
                             <div class="flex items-center gap-3">
                                 <div class="relative">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white font-bold">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white font-bold">
                                         A
                                     </div>
                                     <div class="absolute bottom-0 right-0 online-dot border-2 border-white"></div>
@@ -223,10 +245,11 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="member-card p-3 rounded-xl cursor-pointer">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-teal-400 flex items-center justify-center text-white font-bold">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-teal-400 flex items-center justify-center text-white font-bold">
                                     M
                                 </div>
                                 <div class="flex-1">
@@ -237,7 +260,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- All Members -->
                 <div>
                     <h3 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">All Members</h3>
@@ -245,7 +268,8 @@
                         <div class="member-card p-3 rounded-xl cursor-pointer">
                             <div class="flex items-center gap-3">
                                 <div class="relative">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-400 flex items-center justify-center text-white font-bold">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-400 flex items-center justify-center text-white font-bold">
                                         R
                                     </div>
                                     <div class="absolute bottom-0 right-0 online-dot border-2 border-white"></div>
@@ -256,10 +280,11 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="member-card p-3 rounded-xl cursor-pointer">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex items-center justify-center text-white font-bold">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex items-center justify-center text-white font-bold">
                                     P
                                 </div>
                                 <div class="flex-1">
@@ -268,11 +293,12 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="member-card p-3 rounded-xl cursor-pointer">
                             <div class="flex items-center gap-3">
                                 <div class="relative">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center text-white font-bold">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center text-white font-bold">
                                         K
                                     </div>
                                     <div class="absolute bottom-0 right-0 online-dot border-2 border-white"></div>
@@ -283,10 +309,11 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="member-card p-3 rounded-xl cursor-pointer">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center text-white font-bold">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center text-white font-bold">
                                     N
                                 </div>
                                 <div class="flex-1">
@@ -299,7 +326,7 @@
                 </div>
             </div>
         </aside>
-        
+
         <!-- Main Content Area - Chat System -->
         <main class="flex-1 p-6 overflow-y-auto scrollbar-custom" style="max-height: calc(100vh - 80px);">
             <!-- Chat Header -->
@@ -307,13 +334,16 @@
                 <h2 class="text-xl font-bold text-gray-800 mb-2">💬 Chat with Friends</h2>
                 <p class="text-sm text-gray-600">Select a friend from the left sidebar to start chatting</p>
             </div>
-            
+
             <!-- Chat Window -->
-            <div class="glass-card rounded-3xl overflow-hidden fade-in-up" style="animation-delay: 0.1s; height: calc(100vh - 280px);">
+            <div class="glass-card rounded-3xl overflow-hidden fade-in-up"
+                style="animation-delay: 0.1s; height: calc(100vh - 280px);">
                 <!-- Active Chat Header -->
-                 <!-- background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%); -->
-                <div style="background: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);" class="px-6 py-4 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-white/30 flex items-center justify-center text-black font-bold">
+                <!-- background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%); -->
+                <div style="background: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);"
+                    class="px-6 py-4 flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-white/30 flex items-center justify-center text-black font-bold">
                         S
                     </div>
                     <div>
@@ -321,9 +351,10 @@
                         <p class="text-green-600/80 text-xs">Online</p>
                     </div>
                 </div>
-                
+
                 <!-- Messages Area -->
-                <div id="chatMessagesArea" class="p-6 overflow-y-auto scrollbar-custom bg-white/20" style="height: calc(100% - 140px);">
+                <div id="chatMessagesArea" class="p-6 overflow-y-auto scrollbar-custom bg-white/20"
+                    style="height: calc(100% - 140px);">
                     <!-- Received Message -->
                     <div class="mb-4">
                         <div class="glass-input px-4 py-3 rounded-2xl rounded-bl-none inline-block max-w-[70%]">
@@ -331,7 +362,7 @@
                             <p class="text-xs text-gray-500 mt-1">10:30 AM</p>
                         </div>
                     </div>
-                    
+
                     <!-- Sent Message -->
                     <div class="mb-4 text-right">
                         <div class="glass-card px-4 py-3 rounded-2xl rounded-br-none inline-block max-w-[70%]">
@@ -339,15 +370,16 @@
                             <p class="text-xs text-black/80 mt-1">10:32 AM</p>
                         </div>
                     </div>
-                    
+
                     <!-- Received Message -->
                     <div class="mb-4">
                         <div class="glass-input px-4 py-3 rounded-2xl rounded-bl-none inline-block max-w-[70%]">
-                            <p class="text-sm text-gray-800">That's great to hear! Remember, I'm here if you need to talk.</p>
+                            <p class="text-sm text-gray-800">That's great to hear! Remember, I'm here if you need to
+                                talk.</p>
                             <p class="text-xs text-gray-500 mt-1">10:33 AM</p>
                         </div>
                     </div>
-                    
+
                     <!-- Sent Message -->
                     <div class="mb-4 text-right">
                         <div class="glass-card px-4 py-3 rounded-2xl rounded-br-none inline-block max-w-[70%]">
@@ -356,26 +388,24 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Message Input -->
                 <div class="p-4 border-t border-white/30 bg-white/10">
                     <div class="flex gap-2">
-                        <input 
-                            id="messageInput"
-                            type="text" 
-                            placeholder="Type your message..."
-                            class="flex-1 glass-input px-4 py-3 rounded-full text-gray-800 placeholder-gray-600"
-                        />
-                        <button id="sendMessageButton" class="btn-primary text-white px-6 py-3 rounded-full font-medium">
+                        <input id="messageInput" type="text" placeholder="Type your message..."
+                            class="flex-1 glass-input px-4 py-3 rounded-full text-gray-800 placeholder-gray-600" />
+                        <button id="sendMessageButton"
+                            class="btn-primary text-white px-6 py-3 rounded-full font-medium">
                             Send 📤
                         </button>
                     </div>
                 </div>
             </div>
         </main>
-        
+
         <!-- Right Sidebar -->
-        <aside class="hidden lg:block w-72 p-6 overflow-y-auto scrollbar-custom" style="max-height: calc(100vh - 80px);">
+        <aside class="hidden lg:block w-72 p-6 overflow-y-auto scrollbar-custom"
+            style="max-height: calc(100vh - 80px);">
             <!-- Community Guidelines -->
             <div class="glass-card rounded-2xl p-6 fade-in-up">
                 <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -417,21 +447,24 @@
                 </ul>
                 <div class="mt-6 p-4 bg-purple-100/50 rounded-xl">
                     <p class="text-xs text-gray-700">
-                        <strong>💜 Remember:</strong> This is a safe space for peer support. For professional mental health support, please contact our counseling services.
+                        <strong>💜 Remember:</strong> This is a safe space for peer support. For professional mental
+                        health support, please contact our counseling services.
                     </p>
                 </div>
             </div>
         </aside>
     </div>
-    
+
     <!-- Floating Chat Button -->
-    <button id="chatButton" class="fixed bottom-6 right-6 w-14 h-14 btn-primary rounded-full shadow-2xl flex items-center justify-center text-2xl z-50">
+    <button id="chatButton"
+        class="fixed bottom-6 right-6 w-14 h-14 btn-primary rounded-full shadow-2xl flex items-center justify-center text-2xl z-50">
         💬
     </button>
-    
+
     <!-- Chat Window -->
     <div id="chatWindow" class="hidden fixed bottom-24 right-6 w-80 h-96 chat-window rounded-3xl z-50 flex flex-col">
-        <div class="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4 rounded-t-3xl flex justify-between items-center">
+        <div
+            class="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4 rounded-t-3xl flex justify-between items-center">
             <h3 class="text-white font-bold">💬 Quick Chat</h3>
             <button id="closeChatButton" class="text-white text-2xl hover:text-gray-200">&times;</button>
         </div>
@@ -445,40 +478,36 @@
         </div>
         <div class="p-4 border-t border-gray-200">
             <div class="flex gap-2">
-                <input 
-                    id="chatInput"
-                    type="text" 
-                    placeholder="Type a message..."
-                    class="flex-1 glass-input px-4 py-2 rounded-full text-sm text-gray-700"
-                />
+                <input id="chatInput" type="text" placeholder="Type a message..."
+                    class="flex-1 glass-input px-4 py-2 rounded-full text-sm text-gray-700" />
                 <button id="sendChatButton" class="btn-primary text-white px-4 py-2 rounded-full text-sm font-medium">
                     Send
                 </button>
             </div>
         </div>
     </div>
-    
+
     <script>
         // Sidebar toggle for mobile
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
-        
+
         menuToggle.addEventListener('click', () => {
             sidebar.classList.toggle('open');
         });
-        
+
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', (e) => {
             if (window.innerWidth < 768 && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
                 sidebar.classList.remove('open');
             }
         });
-        
+
         // Message sending functionality
         const sendMessageButton = document.getElementById('sendMessageButton');
         const messageInput = document.getElementById('messageInput');
         const chatMessagesArea = document.getElementById('chatMessagesArea');
-        
+
         // Function to get current time
         function getCurrentTime() {
             const now = new Date();
@@ -490,23 +519,23 @@
             minutes = minutes < 10 ? '0' + minutes : minutes;
             return hours + ':' + minutes + ' ' + ampm;
         }
-        
+
         // Send message on button click
         sendMessageButton.addEventListener('click', sendMessage);
-        
+
         // Send message on Enter key
         messageInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 sendMessage();
             }
         });
-        
+
         function sendMessage() {
             const message = messageInput.value.trim();
             if (!message) return;
-            
+
             const time = getCurrentTime();
-            
+
             // Create sent message HTML
             const messageHTML = `
                 <div class="mb-4 text-right">
@@ -516,13 +545,13 @@
                     </div>
                 </div>
             `;
-            
+
             chatMessagesArea.insertAdjacentHTML('beforeend', messageHTML);
             messageInput.value = '';
-            
+
             // Auto scroll to bottom
             chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
-            
+
             // Simulate response after 2 seconds
             setTimeout(() => {
                 const responses = [
@@ -534,10 +563,10 @@
                     "Take your time, there's no rush",
                     "Your feelings are completely valid"
                 ];
-                
+
                 const randomResponse = responses[Math.floor(Math.random() * responses.length)];
                 const responseTime = getCurrentTime();
-                
+
                 const responseHTML = `
                     <div class="mb-4">
                         <div class="glass-input px-4 py-3 rounded-2xl rounded-bl-none inline-block max-w-[70%]">
@@ -546,19 +575,19 @@
                         </div>
                     </div>
                 `;
-                
+
                 chatMessagesArea.insertAdjacentHTML('beforeend', responseHTML);
                 chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
             }, 2000);
         }
-        
+
         // Member click to change active chat
         document.querySelectorAll('.member-card').forEach(card => {
-            card.addEventListener('click', function() {
+            card.addEventListener('click', function () {
                 const name = this.querySelector('.font-semibold').textContent;
                 const initial = name.charAt(0);
                 const status = this.querySelector('.text-xs').textContent;
-                
+
                 // Update chat header
                 const chatHeader = document.querySelector('.bg-gradient-to-r.from-purple-500');
                 chatHeader.innerHTML = `
@@ -570,7 +599,7 @@
                         <p class="text-white/80 text-xs">${status}</p>
                     </div>
                 `;
-                
+
                 // Clear messages and show new conversation
                 chatMessagesArea.innerHTML = `
                     <div class="mb-4">
@@ -580,14 +609,14 @@
                         </div>
                     </div>
                 `;
-                
+
                 // Close sidebar on mobile after selection
                 if (window.innerWidth < 768) {
                     sidebar.classList.remove('open');
                 }
             });
         });
-        
+
         // Chat window toggle
         const chatButton = document.getElementById('chatButton');
         const chatWindow = document.getElementById('chatWindow');
@@ -595,15 +624,15 @@
         const chatInput = document.getElementById('chatInput');
         const sendChatButton = document.getElementById('sendChatButton');
         const quickChatMessages = document.getElementById('chatMessages');
-        
+
         chatButton.addEventListener('click', () => {
             chatWindow.classList.toggle('hidden');
         });
-        
+
         closeChatButton.addEventListener('click', () => {
             chatWindow.classList.add('hidden');
         });
-        
+
         // Quick chat send message
         sendChatButton.addEventListener('click', sendQuickMessage);
         chatInput.addEventListener('keypress', (e) => {
@@ -611,11 +640,11 @@
                 sendQuickMessage();
             }
         });
-        
+
         function sendQuickMessage() {
             const message = chatInput.value.trim();
             if (!message) return;
-            
+
             const messageHTML = `
                 <div class="mb-3 text-right">
                     <div class="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-2xl rounded-br-none inline-block max-w-[80%]">
@@ -624,11 +653,11 @@
                     </div>
                 </div>
             `;
-            
+
             quickChatMessages.insertAdjacentHTML('beforeend', messageHTML);
             chatInput.value = '';
             quickChatMessages.scrollTop = quickChatMessages.scrollHeight;
-            
+
             // Simulate response
             setTimeout(() => {
                 const responseHTML = `

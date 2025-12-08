@@ -1,8 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Assessment Result</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="description" content="MindLeap Assessment Result - Your PHQ-9 mental health score.">
+  <meta name="theme-color" content="#667eea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/static/manifest.json">
+  <link rel="icon" type="image/png" href="/static/icons/icon-96x96.png">
+  <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+  <link rel="stylesheet" href="/static/pwa.css">
+
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -14,41 +26,75 @@
       align-items: center;
       animation: gradientShift 10s infinite alternate;
     }
+
     @keyframes gradientShift {
-      0% { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
-      100% { background: linear-gradient(135deg, #c2e9fb, #a1c4fd); }
+      0% {
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+      }
+
+      100% {
+        background: linear-gradient(135deg, #c2e9fb, #a1c4fd);
+      }
     }
+
     .container {
       background: white;
       padding: 2rem 3rem;
       border-radius: 15px;
       text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       animation: fadeIn 1s ease-in-out;
     }
+
     h1 {
       color: #2c3e50;
       margin-bottom: 1rem;
     }
+
     p {
       font-size: 1.2rem;
       margin: 0.5rem 0;
       color: #34495e;
     }
+
     .risk {
       font-weight: bold;
       font-size: 1.5rem;
       margin-top: 1rem;
     }
-    .minimal { color: #27ae60; }
-    .mild { color: #f1c40f; }
-    .moderate { color: #e67e22; }
-    .moderately_severe { color: #d35400; }
-    .severe { color: #c0392b; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .minimal {
+      color: #27ae60;
     }
+
+    .mild {
+      color: #f1c40f;
+    }
+
+    .moderate {
+      color: #e67e22;
+    }
+
+    .moderately_severe {
+      color: #d35400;
+    }
+
+    .severe {
+      color: #c0392b;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     a {
       display: inline-block;
       margin-top: 1.5rem;
@@ -59,11 +105,13 @@
       border-radius: 10px;
       transition: background 0.3s;
     }
+
     a:hover {
       background: #2980b9;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Assessment Result</h1>
@@ -71,8 +119,8 @@
     <p class="risk {{ risk|lower }}">Risk Level: {{ risk }}</p>
     <a href="{{ url_for('form') }}">Take Again</a>
     <a href="{{ url_for('student_ui') }}">Back to Home</a>
-    
+
   </div>
 </body>
-</html>
 
+</html>

@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Confidential Booking System - Mindleap</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="MindLeap Booking - Schedule confidential counseling sessions.">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="icon" type="image/png" href="/static/icons/icon-96x96.png">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    <link rel="stylesheet" href="/static/pwa.css">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -44,16 +56,28 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.4s;
+        }
 
         .modal {
             display: none;
@@ -62,9 +86,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #4CA1AF;  /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #C4E0E5, #94ebf9);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #C4E0E5, #96f1ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: #4CA1AF;
+            /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #C4E0E5, #94ebf9);
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #C4E0E5, #96f1ff);
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
             /* background: rgba(147, 144, 144, 0.7); */
             z-index: 1000;
             justify-content: center;
@@ -94,6 +121,7 @@
                 opacity: 0;
                 transform: scale(0.8);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -101,7 +129,7 @@
         }
 
         .btn-primary {
-            background: linear-gradient(to right, #77A1D3 0%, #79CBCA  51%, #77A1D3  100%);
+            background: linear-gradient(to right, #77A1D3 0%, #79CBCA 51%, #77A1D3 100%);
             color: black;
             padding: 0.75rem 1.5rem;
             border-radius: 12px;
@@ -154,11 +182,11 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider {
+        input:checked+.slider {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        input:checked + .slider:before {
+        input:checked+.slider:before {
             transform: translateX(26px);
         }
 
@@ -173,7 +201,8 @@
             transition: all 0.3s ease;
         }
 
-        .tag:hover, .tag.active {
+        .tag:hover,
+        .tag.active {
             background: rgba(102, 126, 234, 0.6);
             transform: scale(1.05);
         }
@@ -212,7 +241,8 @@
             transition: all 0.3s ease;
         }
 
-        .time-slot:hover, .time-slot.selected {
+        .time-slot:hover,
+        .time-slot.selected {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
@@ -262,7 +292,9 @@
             background: rgba(234, 102, 102, 0.3);
         }
 
-        input, select, textarea {
+        input,
+        select,
+        textarea {
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
@@ -272,11 +304,14 @@
             transition: all 0.3s ease;
         }
 
-        input::placeholder, textarea::placeholder {
+        input::placeholder,
+        textarea::placeholder {
             color: rgba(2, 2, 2, 0.6);
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus,
+        select:focus,
+        textarea:focus {
             outline: none;
             border-color: #667eea;
             background: rgba(255, 255, 255, 0.25);
@@ -308,6 +343,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar py-4 px-6">
@@ -325,7 +361,8 @@
         <!-- Hero Section -->
         <div class="text-center mb-12 fade-in-up">
             <h1 class="text-5xl font-bold text-black mb-4">Confidential Booking System</h1>
-            <p class="text-xl text-black opacity-90">Choose your preferred counselor type and schedule a confidential session that suits your needs.</p>
+            <p class="text-xl text-black opacity-90">Choose your preferred counselor type and schedule a confidential
+                session that suits your needs.</p>
         </div>
 
         <!-- Filters Section -->
@@ -394,7 +431,7 @@
         <!-- My Sessions -->
         <div class="glass-card p-8 text-black fade-in-up">
             <h3 class="text-3xl font-bold mb-6">📅 My Sessions</h3>
-            
+
             <div class="session-card">
                 <div class="flex justify-between items-start mb-2">
                     <div>
@@ -608,7 +645,7 @@
         function generateCalendar() {
             const calendar = document.getElementById('calendar');
             calendar.innerHTML = '';
-            
+
             const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
             days.forEach(day => {
                 calendar.innerHTML += `<div class="text-center text-black font-semibold">${day}</div>`;
@@ -621,7 +658,7 @@
                 const dayNum = date.getDate();
                 const isAvailable = Math.random() > 0.3;
                 const classes = isAvailable ? 'calendar-day available' : 'calendar-day booked';
-                
+
                 calendar.innerHTML += `
                     <div class="${classes}" onclick="selectDate(this, '${date.toDateString()}')" data-available="${isAvailable}">
                         ${dayNum}
@@ -642,12 +679,12 @@
         function generateTimeSlots() {
             const container = document.getElementById('timeSlots');
             container.innerHTML = '';
-            
+
             const times = ['9:00 AM', '10:00 AM', '11:00 AM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'];
             times.forEach(time => {
                 const isBooked = Math.random() > 0.7;
                 const classes = isBooked ? 'time-slot booked' : 'time-slot';
-                
+
                 container.innerHTML += `
                     <div class="${classes}" onclick="selectTime(this, '${time}')" data-booked="${isBooked}">
                         ${time}
@@ -668,10 +705,10 @@
             const isAnonymous = document.getElementById('anonymousToggle').checked;
             const userDetails = document.getElementById('userDetails');
             userDetails.style.display = isAnonymous ? 'none' : 'block';
-            
+
             const nameInput = document.getElementById('userName');
             const emailInput = document.getElementById('userEmail');
-            
+
             if (isAnonymous) {
                 nameInput.removeAttribute('required');
                 emailInput.removeAttribute('required');
@@ -681,16 +718,16 @@
             }
         }
 
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        document.getElementById('bookingForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             if (!selectedDate || !selectedTime) {
                 alert('Please select both date and time');
                 return;
             }
 
             document.getElementById('successAlert').style.display = 'block';
-            
+
             setTimeout(() => {
                 closeBookingModal();
             }, 3000);
@@ -714,10 +751,10 @@
             });
         }
 
-        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+        document.getElementById('feedbackForm').addEventListener('submit', function (e) {
             e.preventDefault();
             document.getElementById('feedbackSuccess').style.display = 'block';
-            
+
             setTimeout(() => {
                 closeFeedbackModal();
             }, 2000);
@@ -727,4 +764,5 @@
         setRating(5);
     </script>
 </body>
+
 </html>

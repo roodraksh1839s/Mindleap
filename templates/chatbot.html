@@ -1,9 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>MindLeap - AI-powered Mental Wellness System</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="MindLeap AI Chat - Your 24/7 mental wellness companion.">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MindLeap Chat">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- PWA Manifest & Icons -->
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="icon" type="image/png" href="/static/icons/icon-96x96.png">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+
+    <!-- PWA Responsive CSS -->
+    <link rel="stylesheet" href="/static/pwa.css">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes fadeInUp {
@@ -11,102 +29,105 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes slideInFromRight {
             from {
                 opacity: 0;
                 transform: translateX(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
-        
+
         @keyframes slideInFromLeft {
             from {
                 opacity: 0;
                 transform: translateX(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
-        
+
         .fade-in-up {
             animation: fadeInUp 0.6s ease-out forwards;
         }
-        
+
         .slide-in-right {
             animation: slideInFromRight 0.4s ease-out forwards;
         }
-        
+
         .slide-in-left {
             animation: slideInFromLeft 0.4s ease-out forwards;
         }
-        
+
         .glass-container {
             background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
-        
+
         .glass-header {
             background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         }
-        
+
         .message-user {
             background: rgba(168, 237, 234, 0.3);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(168, 237, 234, 0.4);
         }
-        
+
         .message-bot {
             background: linear-gradient(135deg, rgba(168, 237, 234, 0.4) 0%, rgba(254, 214, 227, 0.4) 100%);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
-        
+
         .chat-input-glass {
             background: rgba(255, 255, 255, 0.35);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
-        
+
         .chat-input-glass:focus {
             background: rgba(255, 255, 255, 0.5);
             outline: none;
             border: 1px solid rgba(168, 237, 234, 0.6);
         }
-        
+
         .send-button {
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
             transition: all 0.3s ease;
         }
-        
+
         .send-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(168, 237, 234, 0.4);
         }
-        
+
         .send-button:active {
             transform: translateY(0);
         }
-        
+
         .chat-messages-area {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(8px);
         }
-        
+
         .typing-indicator-dot {
             height: 8px;
             width: 8px;
@@ -116,51 +137,58 @@
             margin: 0 2px;
             animation: typing 1.4s infinite;
         }
-        
+
         .typing-indicator-dot:nth-child(2) {
             animation-delay: 0.2s;
         }
-        
+
         .typing-indicator-dot:nth-child(3) {
             animation-delay: 0.4s;
         }
-        
+
         @keyframes typing {
-            0%, 60%, 100% {
+
+            0%,
+            60%,
+            100% {
                 transform: translateY(0);
                 opacity: 0.7;
             }
+
             30% {
                 transform: translateY(-10px);
                 opacity: 1;
             }
         }
-        
+
         /* Custom scrollbar */
         .chat-messages-area::-webkit-scrollbar {
             width: 8px;
         }
-        
+
         .chat-messages-area::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
         }
-        
+
         .chat-messages-area::-webkit-scrollbar-thumb {
             background: rgba(168, 237, 234, 0.5);
             border-radius: 10px;
         }
-        
+
         .chat-messages-area::-webkit-scrollbar-thumb:hover {
             background: rgba(168, 237, 234, 0.7);
         }
     </style>
 </head>
-<body class="min-h-screen font-sans flex items-center justify-center p-4" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
-    
+
+<body class="min-h-screen font-sans flex items-center justify-center p-4"
+    style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+
     <!-- Main Chat Container -->
-    <div class="glass-container rounded-3xl w-full max-w-4xl h-[90vh] max-h-[900px] flex flex-col overflow-hidden fade-in-up">
-        
+    <div
+        class="glass-container rounded-3xl w-full max-w-4xl h-[90vh] max-h-[900px] flex flex-col overflow-hidden fade-in-up">
+
         <!-- Header Section -->
         <div class="glass-header px-8 py-6">
             <div class="text-center">
@@ -168,115 +196,112 @@
                 <p class="text-lg text-gray-700">AI-powered Mental Wellness System</p>
             </div>
         </div>
-        
+
         <!-- Chat Messages Area -->
         <div id="chatMessages" class="chat-messages-area flex-1 overflow-y-auto px-6 py-6 scroll-smooth">
             <!-- Messages will be dynamically added here -->
         </div>
-        
+
         <!-- Input Area -->
         <div class="px-6 py-6 bg-white/20 backdrop-blur-lg border-t border-white/30">
             <div class="flex gap-3">
-                <input 
-                    type="text" 
-                    id="userInput"
-                    placeholder="💬 Type your message here..." 
+                <input type="text" id="userInput" placeholder="💬 Type your message here..."
                     class="chat-input-glass flex-1 px-6 py-4 rounded-2xl text-gray-800 placeholder-gray-600"
-                    autocomplete="off"
-                />
+                    autocomplete="off" />
                 <button id="sendButton" class="send-button px-8 py-4 rounded-2xl text-gray-800 font-semibold">
                     Send ✈️
                 </button>
             </div>
         </div>
-        
+
     </div>
-<script>
-const chatMessages = document.getElementById('chatMessages');
-const userInput = document.getElementById('userInput');
-const sendButton = document.getElementById('sendButton');
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
 
-// Add message bubble
-function addMessage(text, isUser) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `flex mb-4 ${isUser ? 'justify-end slide-in-right' : 'justify-start slide-in-left'}`;
-    const bubbleDiv = document.createElement('div');
-    bubbleDiv.className = `${isUser ? 'message-user' : 'message-bot'} max-w-[75%] px-6 py-4 rounded-2xl ${isUser ? 'rounded-br-md' : 'rounded-bl-md'}`;
-    bubbleDiv.innerHTML = `<p class="text-gray-800 leading-relaxed">${text}</p>`;
-    messageDiv.appendChild(bubbleDiv);
-    chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
+        // Add message bubble
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex mb-4 ${isUser ? 'justify-end slide-in-right' : 'justify-start slide-in-left'}`;
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = `${isUser ? 'message-user' : 'message-bot'} max-w-[75%] px-6 py-4 rounded-2xl ${isUser ? 'rounded-br-md' : 'rounded-bl-md'}`;
+            bubbleDiv.innerHTML = `<p class="text-gray-800 leading-relaxed">${text}</p>`;
+            messageDiv.appendChild(bubbleDiv);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
 
-// Typing animation
-function showTypingIndicator() {
-    const typingDiv = document.createElement('div');
-    typingDiv.id = 'typingIndicator';
-    typingDiv.className = 'flex justify-start mb-4 slide-in-left';
-    typingDiv.innerHTML = `
+        // Typing animation
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'flex justify-start mb-4 slide-in-left';
+            typingDiv.innerHTML = `
         <div class="message-bot px-6 py-4 rounded-2xl rounded-bl-md">
             <span class="typing-indicator-dot"></span>
             <span class="typing-indicator-dot"></span>
             <span class="typing-indicator-dot"></span>
         </div>`;
-    chatMessages.appendChild(typingDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
 
-function hideTypingIndicator() {
-    const t = document.getElementById('typingIndicator');
-    if (t) t.remove();
-}
+        function hideTypingIndicator() {
+            const t = document.getElementById('typingIndicator');
+            if (t) t.remove();
+        }
 
-// Send message to Flask backend
-async function sendMessage() {
-    const message = userInput.value.trim();
-    if (!message) return;
+        // Send message to Flask backend
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
 
-    addMessage(message, true);
-    userInput.value = '';
-    showTypingIndicator();
+            addMessage(message, true);
+            userInput.value = '';
+            showTypingIndicator();
 
-    try {
-        const response = await fetch('/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+                hideTypingIndicator();
+
+                if (data.reply) {
+                    addMessage(data.reply, false);
+                } else {
+                    addMessage("⚠️ Sorry, I couldn't understand that.", false);
+                }
+            } catch (error) {
+                hideTypingIndicator();
+                console.error('Error:', error);
+                addMessage("⚠️ Something went wrong while connecting to the server.", false);
+            }
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            }
         });
 
-        const data = await response.json();
-        hideTypingIndicator();
+        // Greeting on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                addMessage("🌿 Hi, I'm MindLeap — your wellness companion. How are you feeling today?", false);
+                userInput.focus();
+            }, 500);
+        });
+    </script>
 
-        if (data.reply) {
-            addMessage(data.reply, false);
-        } else {
-            addMessage("⚠️ Sorry, I couldn't understand that.", false);
-        }
-    } catch (error) {
-        hideTypingIndicator();
-        console.error('Error:', error);
-        addMessage("⚠️ Something went wrong while connecting to the server.", false);
-    }
-}
 
-// Event listeners
-sendButton.addEventListener('click', sendMessage);
-userInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        sendMessage();
-    }
-});
-
-// Greeting on load
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        addMessage("🌿 Hi, I'm MindLeap — your wellness companion. How are you feeling today?", false);
-        userInput.focus();
-    }, 500);
-});
-</script>
-
-    
 </body>
+
 </html>

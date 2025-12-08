@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>MindEase - Digital Psychological Intervention System</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="description"
+    content="MindLeap - Your Digital Mental Wellness Portal. AI-powered psychological support for students.">
+  <meta name="theme-color" content="#667eea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MindLeap">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- PWA Manifest & Icons -->
+  <link rel="manifest" href="/static/manifest.json">
+  <link rel="icon" type="image/png" href="/static/icons/icon-96x96.png">
+  <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+
+  <!-- PWA Responsive CSS -->
+  <link rel="stylesheet" href="/static/pwa.css">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .scrollbar-hide {
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
     .scrollbar-hide::-webkit-scrollbar {
       display: none;
     }
@@ -18,36 +38,44 @@
     .hero-gradient {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     }
+
     .calming-gradient {
       background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
     }
+
     .soft-purple {
       background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
     }
+
     .modal-bg {
       background: rgba(167, 139, 250, 0.2);
       backdrop-filter: blur(12px);
     }
+
     .glass-card {
       background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.18);
       box-shadow: 0 8px 32px 0 rgba(167, 139, 250, 0.1);
     }
+
     .feature-card {
       background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(167, 139, 250, 0.2);
       transition: all 0.3s ease;
     }
+
     .feature-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 12px 40px rgba(167, 139, 250, 0.3);
     }
+
     .calm-button {
       background: linear-gradient(135deg, #667eea, #764ba2);
       transition: all 0.3s ease;
     }
+
     .calm-button:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
@@ -63,41 +91,41 @@
     /* Ensure content stays above the animation */
 
     /* I have changed the file checking 123 */
-    #hero-background > .max-w-4xl {
+    #hero-background>.max-w-4xl {
       position: relative;
       z-index: 10;
     }
 
     /* Enhance text readability over animation */
     #hero-background h1 {
-      text-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(167,139,250,0.9) 50%, rgba(219,39,119,0.9) 100%);
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(167, 139, 250, 0.9) 50%, rgba(219, 39, 119, 0.9) 100%);
       -webkit-background-clip: text;
       background-clip: text;
     }
 
     #hero-background p {
-      color: rgba(255,255,255,0.95);
-      text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
     }
 
     /* Enhance buttons for better visibility over animation */
     #hero-background .calm-button {
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
-      box-shadow: 0 8px 32px rgba(167,139,250,0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(167, 139, 250, 0.3);
     }
 
     #hero-background .bg-white\/70 {
-      background: rgba(255,255,255,0.85) !important;
+      background: rgba(255, 255, 255, 0.85) !important;
       backdrop-filter: blur(15px);
-      border: 1px solid rgba(167,139,250,0.3);
+      border: 1px solid rgba(167, 139, 250, 0.3);
     }
 
     /* Small text enhancement */
     #hero-background .text-gray-500 {
-      color: rgba(255,255,255,0.8) !important;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      color: rgba(255, 255, 255, 0.8) !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     /* Mobile responsiveness */
@@ -109,64 +137,326 @@
 
 
 
-  /* for your safe space for mental health */
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    /* for your safe space for mental health */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
 
-  .animate-fade-in {
-    animation: fadeIn 1s ease forwards;
-  }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 1s ease forwards;
+    }
 
 
-  /* new carousel’s styles */
-  * {margin:0;padding:0;box-sizing:border-box;}
-body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px 0;}
-.header-section{text-align:center;padding:40px 20px;color:white;max-width:800px;margin:0 auto;}
-.header-section h1{font-size:2.5rem;font-weight:700;margin-bottom:15px;text-shadow:0 2px 4px rgba(0,0,0,0.3);}
-.header-section p{font-size:1.2rem;line-height:1.6;opacity:0.95;font-weight:300;}
-.carousel-container{max-width:1200px;margin:0 auto;padding:0 20px;}
-.carousel{overflow-x:auto;overflow-y:hidden;position:relative;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.5) transparent;}
-.carousel::-webkit-scrollbar{height:8px;}
-.carousel::-webkit-scrollbar-track{background:rgba(255,255,255,0.1);border-radius:10px;}
-.carousel::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.3);border-radius:10px;}
-.carousel::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.5);}
-.carousel-track{display:flex;gap:25px;width:max-content;padding:20px 0;}
-.card{flex:0 0 350px;min-height:420px;height:auto;background:white;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.2);padding:30px;transition:all 0.4s cubic-bezier(0.25,0.8,0.25,1);display:flex;flex-direction:column;position:relative;overflow:hidden;}
-.card.popular::before{content:"Most Popular";position:absolute;top:15px;right:-30px;background:linear-gradient(45deg,#ff6b6b,#ee5a24);color:white;padding:5px 40px;font-size:12px;font-weight:bold;transform:rotate(45deg);box-shadow:0 2px 10px rgba(0,0,0,0.2);}
-.card:hover{transform:scale(1.05) translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,0.3);z-index:10;}
-.carousel:hover .card:not(:hover){transform:scale(0.95);opacity:0.8;}
-.card-icon{font-size:3rem;margin-bottom:20px;text-align:center;}
-.card h3{font-size:1.4rem;font-weight:700;color:#2c3e50;margin-bottom:15px;text-align:center;}
-.card-description{font-size:1rem;color:#5a6c7d;line-height:1.6;margin-bottom:20px;flex-grow:1;}
-.features{list-style:none;margin-bottom:25px;}
-.features li{padding:5px 0;color:#34495e;font-size:0.9rem;position:relative;padding-left:20px;}
-.features li::before{content:"✓";color:#27ae60;font-weight:bold;position:absolute;left:0;}
-.card-buttons{margin-top:auto;padding-bottom:10px;}
-.btn{display:inline-block;padding:12px 24px;margin:5px 5px 5px 0;border-radius:25px;color:white;font-weight:600;text-decoration:none;text-align:center;background:linear-gradient(135deg,#667eea,#764ba2);transition:all 0.3s ease;border:none;cursor:pointer;font-size:0.9rem;}
-.btn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.2);background:linear-gradient(135deg,#5a6fd8,#6a4190);}
-.btn-small{padding:8px 16px;font-size:0.8rem;margin:2px;}
-.card:nth-child(1) .btn{background:linear-gradient(135deg,#ff6b6b,#ee5a24);}
-.card:nth-child(2) .btn{background:linear-gradient(135deg,#feca57,#ff9ff3);}
-.card:nth-child(3) .btn{background:linear-gradient(135deg,#48dbfb,#0abde3);}
-.card:nth-child(4) .btn{background:linear-gradient(135deg,#1dd1a1,#10ac84);}
-.card:nth-child(5) .btn{background:linear-gradient(135deg,#a55eea,#8e44ad);}
-.card:nth-child(6) .btn{background:linear-gradient(135deg,#fd79a8,#e84393);}
-@keyframes smoothScroll{0%{transform:translateX(0);}16.66%{transform:translateX(-375px);}33.33%{transform:translateX(-750px);}50%{transform:translateX(-1125px);}66.66%{transform:translateX(-750px);}83.33%{transform:translateX(-375px);}100%{transform:translateX(0);}}
-@media(max-width:768px){.header-section h1{font-size:2rem;}.header-section p{font-size:1rem;}.card{flex:0 0 280px;min-height:400px;padding:20px;}.card-icon{font-size:2.5rem;}.card h3{font-size:1.2rem;}}
-@media(max-width:480px){.card{flex:0 0 250px;min-height:380px;padding:15px;}}
+    /* new carousel’s styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-#mental-carousel {
-   background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
-  padding: 40px 0;
-}
-  #peer-support {
-    width : 100%;
-    margin-top: 8%;
-  }
-  .card.upcoming::before{content:"Upcoming Features";position:absolute;top:15px;right:-30px;background:linear-gradient(45deg,#ff6b6b,#ee5a24);color:white;padding:5px 40px;font-size:12px;font-weight:bold;transform:rotate(26deg);box-shadow:0 2px 10px rgba(0,0,0,0.2);z-index: 10;}
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px 0;
+    }
 
+    .header-section {
+      text-align: center;
+      padding: 40px 20px;
+      color: white;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-section p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      opacity: 0.95;
+      font-weight: 300;
+    }
+
+    .carousel-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .carousel {
+      overflow-x: auto;
+      overflow-y: hidden;
+      position: relative;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+    }
+
+    .carousel::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .carousel::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .carousel::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+    }
+
+    .carousel::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 25px;
+      width: max-content;
+      padding: 20px 0;
+    }
+
+    .card {
+      flex: 0 0 350px;
+      min-height: 420px;
+      height: auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card.popular::before {
+      content: "Most Popular";
+      position: absolute;
+      top: 15px;
+      right: -30px;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      color: white;
+      padding: 5px 40px;
+      font-size: 12px;
+      font-weight: bold;
+      transform: rotate(45deg);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .card:hover {
+      transform: scale(1.05) translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      z-index: 10;
+    }
+
+    .carousel:hover .card:not(:hover) {
+      transform: scale(0.95);
+      opacity: 0.8;
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .card h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .card-description {
+      font-size: 1rem;
+      color: #5a6c7d;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .features {
+      list-style: none;
+      margin-bottom: 25px;
+    }
+
+    .features li {
+      padding: 5px 0;
+      color: #34495e;
+      font-size: 0.9rem;
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .features li::before {
+      content: "✓";
+      color: #27ae60;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+
+    .card-buttons {
+      margin-top: auto;
+      padding-bottom: 10px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      margin: 5px 5px 5px 0;
+      border-radius: 25px;
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(135deg, #5a6fd8, #6a4190);
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      margin: 2px;
+    }
+
+    .card:nth-child(1) .btn {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    }
+
+    .card:nth-child(2) .btn {
+      background: linear-gradient(135deg, #feca57, #ff9ff3);
+    }
+
+    .card:nth-child(3) .btn {
+      background: linear-gradient(135deg, #48dbfb, #0abde3);
+    }
+
+    .card:nth-child(4) .btn {
+      background: linear-gradient(135deg, #1dd1a1, #10ac84);
+    }
+
+    .card:nth-child(5) .btn {
+      background: linear-gradient(135deg, #a55eea, #8e44ad);
+    }
+
+    .card:nth-child(6) .btn {
+      background: linear-gradient(135deg, #fd79a8, #e84393);
+    }
+
+    @keyframes smoothScroll {
+      0% {
+        transform: translateX(0);
+      }
+
+      16.66% {
+        transform: translateX(-375px);
+      }
+
+      33.33% {
+        transform: translateX(-750px);
+      }
+
+      50% {
+        transform: translateX(-1125px);
+      }
+
+      66.66% {
+        transform: translateX(-750px);
+      }
+
+      83.33% {
+        transform: translateX(-375px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    @media(max-width:768px) {
+      .header-section h1 {
+        font-size: 2rem;
+      }
+
+      .header-section p {
+        font-size: 1rem;
+      }
+
+      .card {
+        flex: 0 0 280px;
+        min-height: 400px;
+        padding: 20px;
+      }
+
+      .card-icon {
+        font-size: 2.5rem;
+      }
+
+      .card h3 {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media(max-width:480px) {
+      .card {
+        flex: 0 0 250px;
+        min-height: 380px;
+        padding: 15px;
+      }
+    }
+
+    #mental-carousel {
+      background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
+      padding: 40px 0;
+    }
+
+    #peer-support {
+      width: 100%;
+      margin-top: 8%;
+    }
+
+    .card.upcoming::before {
+      content: "Upcoming Features";
+      position: absolute;
+      top: 15px;
+      right: -30px;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      color: white;
+      padding: 5px 40px;
+      font-size: 12px;
+      font-weight: bold;
+      transform: rotate(26deg);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    }
   </style>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
@@ -187,7 +477,30 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
       <li><a href="{{ url_for('home') }}" class="hover:text-purple-600 transition-colors">Log Out</a></li>
 
     </ul>
-    <!-- <button onclick="openModal()" class="calm-button text-white px-6 py-2 rounded-full font-medium">
+
+    <!-- Mobile Hamburger Menu Button -->
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="mobile-nav-overlay" onclick="toggleMobileMenu()"></div>
+
+  <!-- Mobile Navigation Menu -->
+  <div class="mobile-nav-menu">
+    <a href="#features" onclick="toggleMobileMenu()">🎯 Features</a>
+    <a href="{{url_for('resources_ui')}}">📚 Resources</a>
+    <a href="{{url_for('peer_support_ui')}}">👥 Peer Support</a>
+    <a href="{{url_for('chatbot_ui')}}">🤖 AI Chat</a>
+    <a href="{{url_for('therapy_ui')}}">🎵 Sound Therapy</a>
+    <a href="{{url_for('form')}}">📊 Assessment</a>
+    <a href="#contact" onclick="toggleMobileMenu()">📞 Contact</a>
+    <a href="{{ url_for('home') }}" style="color: #ef4444;">🚪 Log Out</a>
+  </div>
+  <!-- <button onclick="openModal()" class="calm-button text-white px-6 py-2 rounded-full font-medium">
       Login
     </button> -->
   </nav>
@@ -195,22 +508,25 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
   <!-- Hero Section with Vanta Background -->
   <section id="hero-background" class="text-center py-20 px-6 relative overflow-hidden min-h-screen">
     <div class="max-w-4xl mx-auto">
-      
-    <h1 class="text-5xl md:text-6xl font-bold text-white tracking-wide leading-snug drop-shadow-lg animate-fade-in mb-8">
-  Your Safe Space for Mental Wellness
-</h1>
 
-<br><br><br><br><br><br><br><br>
+      <h1
+        class="text-5xl md:text-6xl font-bold text-white tracking-wide leading-snug drop-shadow-lg animate-fade-in mb-8">
+        Your Safe Space for Mental Wellness
+      </h1>
+
+      <br><br><br><br><br><br><br><br>
 
       <p class="text-xl text-gray-600 mb-8 leading--snug drop-shadow-lg animate-fade-in">
         Confidential, culturally-aware psychological support designed specifically for students.<br>
         Breaking barriers, building resilience, one conversation at a time.
       </p>
       <div class="space-x-4 mb-8">
-        <a href="{{url_for('chatbot_ui')}}" class="calm-button text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl inline-block font-medium">
+        <a href="{{url_for('chatbot_ui')}}"
+          class="calm-button text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl inline-block font-medium">
           🤖 Start AI Chat Support
         </a>
-        <a href="{{ url_for('form') }}" class="bg-white/70 backdrop-blur-sm border border-purple-200 text-purple-700 px-8 py-4 rounded-full shadow-lg hover:shadow-xl inline-block font-medium hover:bg-white/90 transition-all">
+        <a href="{{ url_for('form') }}"
+          class="bg-white/70 backdrop-blur-sm border border-purple-200 text-purple-700 px-8 py-4 rounded-full shadow-lg hover:shadow-xl inline-block font-medium hover:bg-white/90 transition-all">
           📊 Take Mental Health Assessment
         </a>
       </div>
@@ -243,34 +559,98 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
   </section>
 
   <!-- Core Features Section -->
-   <section id="mental-carousel">
-  <div class="header-section">
-<h1 >Comprehensive Mental Health Support</h1>
-<p ></p>Our platform integrates AI technology, professional support, and peer connections to provide holistic mental health care.</p>
-</div>
-<div class="carousel-container">
-<div class="carousel">
-<div class="carousel-track">
-<div class="card"><div class="card-icon">🤖</div><h3>AI-Guided First Aid Support</h3><p class="card-description">24/7 intelligent chatbot offering coping strategies, crisis intervention, and professional referrals when needed.</p><ul class="features"><li>24/7 availability</li><li>Crisis intervention ready</li><li>Professional referrals</li></ul><div class="card-buttons"><a href="{{url_for('chatbot_ui')}}" class="btn">Start Chat</a></div></div>
-<div class="card popular"><div class="card-icon">📚</div><h3>Psychoeducational Hub</h3><p class="card-description">Curated videos, guided meditations, wellness content, and educational materials in regional languages.</p><ul class="features"><li>Multilingual resources</li><li>Evidence-based content</li><li>Guided meditations</li></ul><div class="card-buttons"><a href="{{url_for('resources_ui')}}" class="btn">Explore Resources</a></div></div>
-<div class="card"><div class="card-icon">📅</div><h3>Confidential Booking System</h3><p class="card-description">Secure appointment scheduling with on-campus counselors and mental health professionals.</p><ul class="features"><li>100% confidential</li><li>Professional counselors</li><li>Flexible scheduling</li></ul><div class="card-buttons"><a href="{{url_for('booking_ui')}}" class="btn">Book Appointment</a></div></div>
-<div class="card"><div class="card-icon">📊</div><h3>Mental Health Assessment</h3><p class="card-description">Standardized screening tools (PHQ-9, GAD-7, GHQ) for early detection and monitoring.</p><ul class="features"><li>Scientific validation</li><li>Progress tracking</li><li>Early detection</li></ul><div class="card-buttons"><a href="{{ url_for('form') }}" class="btn">Take Assessment</a></div></div>
-<div class="card upcoming"><div class="card-icon">📈</div><h3>Personal Progress Tracking</h3><p class="card-description">Monitor your mental health journey with mood tracking, goal setting, and progress visualization.</p><ul class="features"><li>Mood tracking</li><li>Goal setting</li><li>Visual insights</li></ul><div class="card-buttons"><a href="#" class="btn" id="Progress">View Progress</a></div></div>
-<div class="card"><div class="card-icon">🎵</div><h3>Sound Therapy</h3><p class="card-description">Relax with calming sounds like rain, ocean waves, and meditation bells to reduce stress.</p><div class="card-buttons"><a href="{{url_for('therapy_ui')}}" class="btn btn-small">Use therapy</a><a href="#" class="btn btn-small">🌊 Play Ocean</a><a href="#" class="btn btn-small">🔔 Play Bell</a><a href="#" class="btn btn-small">⏹️ Stop</a></div></div>
-</div>
-</div>
-</div>
-</section>
+  <section id="mental-carousel">
+    <div class="header-section">
+      <h1>Comprehensive Mental Health Support</h1>
+      <p></p>Our platform integrates AI technology, professional support, and peer connections to provide holistic
+      mental health care.</p>
+    </div>
+    <div class="carousel-container">
+      <div class="carousel">
+        <div class="carousel-track">
+          <div class="card">
+            <div class="card-icon">🤖</div>
+            <h3>AI-Guided First Aid Support</h3>
+            <p class="card-description">24/7 intelligent chatbot offering coping strategies, crisis intervention, and
+              professional referrals when needed.</p>
+            <ul class="features">
+              <li>24/7 availability</li>
+              <li>Crisis intervention ready</li>
+              <li>Professional referrals</li>
+            </ul>
+            <div class="card-buttons"><a href="{{url_for('chatbot_ui')}}" class="btn">Start Chat</a></div>
+          </div>
+          <div class="card popular">
+            <div class="card-icon">📚</div>
+            <h3>Psychoeducational Hub</h3>
+            <p class="card-description">Curated videos, guided meditations, wellness content, and educational materials
+              in regional languages.</p>
+            <ul class="features">
+              <li>Multilingual resources</li>
+              <li>Evidence-based content</li>
+              <li>Guided meditations</li>
+            </ul>
+            <div class="card-buttons"><a href="{{url_for('resources_ui')}}" class="btn">Explore Resources</a></div>
+          </div>
+          <div class="card">
+            <div class="card-icon">📅</div>
+            <h3>Confidential Booking System</h3>
+            <p class="card-description">Secure appointment scheduling with on-campus counselors and mental health
+              professionals.</p>
+            <ul class="features">
+              <li>100% confidential</li>
+              <li>Professional counselors</li>
+              <li>Flexible scheduling</li>
+            </ul>
+            <div class="card-buttons"><a href="{{url_for('booking_ui')}}" class="btn">Book Appointment</a></div>
+          </div>
+          <div class="card">
+            <div class="card-icon">📊</div>
+            <h3>Mental Health Assessment</h3>
+            <p class="card-description">Standardized screening tools (PHQ-9, GAD-7, GHQ) for early detection and
+              monitoring.</p>
+            <ul class="features">
+              <li>Scientific validation</li>
+              <li>Progress tracking</li>
+              <li>Early detection</li>
+            </ul>
+            <div class="card-buttons"><a href="{{ url_for('form') }}" class="btn">Take Assessment</a></div>
+          </div>
+          <div class="card upcoming">
+            <div class="card-icon">📈</div>
+            <h3>Personal Progress Tracking</h3>
+            <p class="card-description">Monitor your mental health journey with mood tracking, goal setting, and
+              progress visualization.</p>
+            <ul class="features">
+              <li>Mood tracking</li>
+              <li>Goal setting</li>
+              <li>Visual insights</li>
+            </ul>
+            <div class="card-buttons"><a href="#" class="btn" id="Progress">View Progress</a></div>
+          </div>
+          <div class="card">
+            <div class="card-icon">🎵</div>
+            <h3>Sound Therapy</h3>
+            <p class="card-description">Relax with calming sounds like rain, ocean waves, and meditation bells to reduce
+              stress.</p>
+            <div class="card-buttons"><a href="{{url_for('therapy_ui')}}" class="btn btn-small">Use therapy</a><a
+                href="#" class="btn btn-small">🌊 Play Ocean</a><a href="#" class="btn btn-small">🔔 Play Bell</a><a
+                href="#" class="btn btn-small">⏹️ Stop</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<script>
+  <script>
 
-  let progress = document.getElementById("Progress");
-  function progressAlert(){
-    alert("Upcoming Feature");
-  };
-  progress.addEventListener("click",progressAlert);
+    let progress = document.getElementById("Progress");
+    function progressAlert() {
+      alert("Upcoming Feature");
+    };
+    progress.addEventListener("click", progressAlert);
 
-</script>
+  </script>
 
 
 
@@ -280,14 +660,16 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
     <div class="max-w-6xl mx-auto text-center">
       <h2 class="text-4xl font-bold mb-4 text-gray-800">Peer Support Platform</h2>
       <p class="text-gray-700 mb-12 max-w-2xl mx-auto">
-        Connect with fellow students in a safe, moderated environment. Share experiences, find support, and build community with trained student volunteers.
+        Connect with fellow students in a safe, moderated environment. Share experiences, find support, and build
+        community with trained student volunteers.
       </p>
-      
+
       <div class="grid md:grid-cols-2 gap-8">
         <div class="feature-card p-8 rounded-3xl">
           <div class="text-4xl mb-4">👥</div>
           <h3 class="text-xl font-bold mb-3 text-gray-800">Moderated Support Groups</h3>
-          <p class="text-gray-600 mb-4">Join topic-specific support groups facilitated by trained student volunteers and mental health professionals</p>
+          <p class="text-gray-600 mb-4">Join topic-specific support groups facilitated by trained student volunteers and
+            mental health professionals</p>
           <ul class="text-sm text-gray-600 text-left space-y-2">
             <li>• Anxiety & Stress Management</li>
             <li>• Academic Pressure Support</li>
@@ -295,11 +677,12 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
             <li>• Crisis Support Network</li>
           </ul>
         </div>
-        
+
         <div class="feature-card p-8 rounded-3xl">
           <div class="text-4xl mb-4">💬</div>
           <h3 class="text-xl font-bold mb-3 text-gray-800">Anonymous Peer Chat</h3>
-          <p class="text-gray-600 mb-4">One-on-one or group conversations with fellow students who understand your challenges</p>
+          <p class="text-gray-600 mb-4">One-on-one or group conversations with fellow students who understand your
+            challenges</p>
           <ul class="text-sm text-gray-600 text-left space-y-2">
             <li>• 24/7 peer availability</li>
             <li>• Trained student mentors</li>
@@ -314,33 +697,33 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
   <!-- Offline Integration Section -->
   <section class="py-20 px-6">
     <div class="max-w-6xl mx-auto">
-      <h2 class="text-4xl font-bold text-center mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+      <h2
+        class="text-4xl font-bold text-center mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
         Offline Support Integration
       </h2>
       <p class="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
         Seamlessly connecting digital support with real-world resources and campus facilities
       </p>
-      
-      <div class="feature-card p-8 rounded-3xl text-center">
-  <div class="text-4xl mb-4">🏥</div>
-  <h3 class="text-xl font-bold mb-3 text-gray-800">Campus Counseling Center</h3>
-  <p class="text-gray-600 mb-4">Direct integration with your institution's counseling services, real-time availability, and appointment scheduling</p>
-  <button onclick="openCounselingModal()" 
-    class="calm-button text-white px-6 py-2 rounded-full font-medium">
-    Book Appointment
-  </button>
-</div>
 
-        
-        <div class="feature-card p-8 rounded-3xl text-center">
-          <div class="text-4xl mb-4">📞</div>
-          <h3 class="text-xl font-bold mb-3 text-gray-800">Emergency Helplines</h3>
-          <p class="text-gray-600">Quick access to local and national mental health helplines with one-click calling and crisis intervention</p>
-          <!-- Inline Emergency Helpline Expansion -->
-<div style="margin-top: 20px; text-align: center;">
-  <button 
-    onclick="toggleHelplinePanel()" 
-    style="
+      <div class="feature-card p-8 rounded-3xl text-center">
+        <div class="text-4xl mb-4">🏥</div>
+        <h3 class="text-xl font-bold mb-3 text-gray-800">Campus Counseling Center</h3>
+        <p class="text-gray-600 mb-4">Direct integration with your institution's counseling services, real-time
+          availability, and appointment scheduling</p>
+        <button onclick="openCounselingModal()" class="calm-button text-white px-6 py-2 rounded-full font-medium">
+          Book Appointment
+        </button>
+      </div>
+
+
+      <div class="feature-card p-8 rounded-3xl text-center">
+        <div class="text-4xl mb-4">📞</div>
+        <h3 class="text-xl font-bold mb-3 text-gray-800">Emergency Helplines</h3>
+        <p class="text-gray-600">Quick access to local and national mental health helplines with one-click calling and
+          crisis intervention</p>
+        <!-- Inline Emergency Helpline Expansion -->
+        <div style="margin-top: 20px; text-align: center;">
+          <button onclick="toggleHelplinePanel()" style="
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
       padding: 12px 28px;
@@ -349,16 +732,14 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
       border: none;
       cursor: pointer;
       transition: all 0.3s ease;
-    "
-    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(102,126,234,0.4)'"
-    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
-    View Helpline Numbers
-  </button>
-</div>
+    " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(102,126,234,0.4)'"
+            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
+            View Helpline Numbers
+          </button>
+        </div>
 
-<!-- Overlay -->
-<div id="overlayBg"
-     style="
+        <!-- Overlay -->
+        <div id="overlayBg" style="
       display: none;
       border-radius: 3xl;
       position: fixed;
@@ -371,13 +752,11 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
       z-index: 90;
       opacity: 0;
       transition: opacity 0.3s ease;
-     "
-     onclick="toggleHelplinePanel()">
-</div>
+     " onclick="toggleHelplinePanel()">
+        </div>
 
-<!-- Centered Helpline Panel -->
-<div id="helplinePanel" 
-     style="
+        <!-- Centered Helpline Panel -->
+        <div id="helplinePanel" style="
       display: none;
       position: fixed;
       top: 50%;
@@ -397,11 +776,9 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
       width: 90%;
       opacity: 0;
      ">
-  
-  <!-- Close Button -->
-  <button 
-    onclick="toggleHelplinePanel()" 
-    style="
+
+          <!-- Close Button -->
+          <button onclick="toggleHelplinePanel()" style="
       position: absolute;
       right: 20px;
       top: 20px;
@@ -412,13 +789,11 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
       color: #555;
       cursor: pointer;
       transition: color 0.3s ease;
-    "
-    onmouseover="this.style.color='red'"
-    onmouseout="this.style.color='#555'">
-    ✖
-  </button>
+    " onmouseover="this.style.color='red'" onmouseout="this.style.color='#555'">
+            ✖
+          </button>
 
-  <h3 style="
+          <h3 style="
       font-size: 24px;
       font-weight: 700;
       background: linear-gradient(135deg, #667eea, #a855f7);
@@ -426,53 +801,56 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
       -webkit-text-fill-color: transparent;
       margin-bottom: 25px;
     ">
-    Emergency Helplines
-  </h3>
+            Emergency Helplines
+          </h3>
 
-  <div style="font-size: 18px; font-weight: 500; line-height: 1.8;">
-    ☎️ <a href="tel:18005990019" style="color:#5b21b6; text-decoration:none;">Government Free Tele-Counseling: <b>1800-599-0019</b></a><br>
-    🧑‍⚕️ <a href="tel:07551234567" style="color:#5b21b6; text-decoration:none;">Institute Counseling Number: <b>0755-1234567</b></a>
-  </div>
-</div>
-
-<script>
-  function toggleHelplinePanel() {
-    const panel = document.getElementById("helplinePanel");
-    const overlay = document.getElementById("overlayBg");
-    const isHidden = panel.style.display === "none" || panel.style.display === "";
-
-    if (isHidden) {
-      // Show overlay
-      overlay.style.display = "block";
-      setTimeout(() => overlay.style.opacity = "1", 10);
-
-      // Show panel with animation
-      panel.style.display = "block";
-      setTimeout(() => {
-        panel.style.opacity = "1";
-        panel.style.transform = "translate(-50%, -50%) scale(1)";
-      }, 50);
-    } else {
-      // Hide with smooth fade
-      panel.style.opacity = "0";
-      panel.style.transform = "translate(-50%, -50%) scale(0.9)";
-      overlay.style.opacity = "0";
-      setTimeout(() => {
-        panel.style.display = "none";
-        overlay.style.display = "none";
-      }, 300);
-    }
-  }
-</script>
-
+          <div style="font-size: 18px; font-weight: 500; line-height: 1.8;">
+            ☎️ <a href="tel:18005990019" style="color:#5b21b6; text-decoration:none;">Government Free Tele-Counseling:
+              <b>1800-599-0019</b></a><br>
+            🧑‍⚕️ <a href="tel:07551234567" style="color:#5b21b6; text-decoration:none;">Institute Counseling Number:
+              <b>0755-1234567</b></a>
+          </div>
         </div>
-        
-        <div class="feature-card p-8 rounded-3xl text-center">
-          <div class="text-4xl mb-4">🗺️</div>
-          <h3 class="text-xl font-bold mb-3 text-gray-800">Local Resource Mapping</h3>
-          <p class="text-gray-600">Interactive map of nearby mental health facilities, support groups, and wellness centers</p>
-        </div>
+
+        <script>
+          function toggleHelplinePanel() {
+            const panel = document.getElementById("helplinePanel");
+            const overlay = document.getElementById("overlayBg");
+            const isHidden = panel.style.display === "none" || panel.style.display === "";
+
+            if (isHidden) {
+              // Show overlay
+              overlay.style.display = "block";
+              setTimeout(() => overlay.style.opacity = "1", 10);
+
+              // Show panel with animation
+              panel.style.display = "block";
+              setTimeout(() => {
+                panel.style.opacity = "1";
+                panel.style.transform = "translate(-50%, -50%) scale(1)";
+              }, 50);
+            } else {
+              // Hide with smooth fade
+              panel.style.opacity = "0";
+              panel.style.transform = "translate(-50%, -50%) scale(0.9)";
+              overlay.style.opacity = "0";
+              setTimeout(() => {
+                panel.style.display = "none";
+                overlay.style.display = "none";
+              }, 300);
+            }
+          }
+        </script>
+
       </div>
+
+      <div class="feature-card p-8 rounded-3xl text-center">
+        <div class="text-4xl mb-4">🗺️</div>
+        <h3 class="text-xl font-bold mb-3 text-gray-800">Local Resource Mapping</h3>
+        <p class="text-gray-600">Interactive map of nearby mental health facilities, support groups, and wellness
+          centers</p>
+      </div>
+    </div>
     </div>
   </section>
 
@@ -560,81 +938,81 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
   </div> -->
 
   <!-- Vanta.js Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>
 
-<!-- Scripts -->
-<script>
-  // Vanta Clouds Animation
-  let vantaEffect;
+  <!-- Scripts -->
+  <script>
+    // Vanta Clouds Animation
+    let vantaEffect;
 
-  function openModal() {
-    document.getElementById("loginModal").classList.remove("hidden");
-    document.getElementById("loginModal").classList.add("flex");
-  }
-  
-  function closeModal() {
-    document.getElementById("loginModal").classList.add("hidden");
-    document.getElementById("loginModal").classList.remove("flex");
-  }
+    function openModal() {
+      document.getElementById("loginModal").classList.remove("hidden");
+      document.getElementById("loginModal").classList.add("flex");
+    }
 
-  // Auto-open login modal after 2 seconds
-  window.addEventListener('load', () => {
-    setTimeout(openModal, 2000);
+    function closeModal() {
+      document.getElementById("loginModal").classList.add("hidden");
+      document.getElementById("loginModal").classList.remove("flex");
+    }
 
-    // Initialize Vanta Clouds after page load
-    setTimeout(() => {
-      if (typeof VANTA !== 'undefined' && VANTA.CLOUDS) {
-        vantaEffect = VANTA.CLOUDS({
-          el: "#hero-background",
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.00,
-          minWidth: 200.00,
-          skyColor: 0x68b8d7,
-          cloudColor: 0xadc1de,
-          cloudShadowColor: 0x183550,
-          sunColor: 0xff9919,
-          sunGlareColor: 0xff6633,
-          sunlightColor: 0xff9933,
-          speed: 1
-        });
+    // Auto-open login modal after 2 seconds
+    window.addEventListener('load', () => {
+      setTimeout(openModal, 2000);
 
-        // Mobile optimizations
+      // Initialize Vanta Clouds after page load
+      setTimeout(() => {
+        if (typeof VANTA !== 'undefined' && VANTA.CLOUDS) {
+          vantaEffect = VANTA.CLOUDS({
+            el: "#hero-background",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            skyColor: 0x68b8d7,
+            cloudColor: 0xadc1de,
+            cloudShadowColor: 0x183550,
+            sunColor: 0xff9919,
+            sunGlareColor: 0xff6633,
+            sunlightColor: 0xff9933,
+            speed: 1
+          });
+
+          // Mobile optimizations
+          if (window.innerWidth < 768) {
+            vantaEffect.setOptions({
+              speed: 0.5 // Slower on mobile
+            });
+          }
+        }
+      }, 500);
+    });
+
+    // Responsive adjustments for Clouds
+    window.addEventListener('resize', () => {
+      if (vantaEffect) {
         if (window.innerWidth < 768) {
           vantaEffect.setOptions({
-            speed: 0.5 // Slower on mobile
+            speed: 0.5
+          });
+        } else {
+          vantaEffect.setOptions({
+            speed: 1
           });
         }
       }
-    }, 500);
-  });
+    });
 
-  // Responsive adjustments for Clouds
-  window.addEventListener('resize', () => {
-    if (vantaEffect) {
-      if (window.innerWidth < 768) {
-        vantaEffect.setOptions({
-          speed: 0.5
-        });
-      } else {
-        vantaEffect.setOptions({
-          speed: 1
-        });
+    // Clean up when leaving page
+    window.addEventListener('beforeunload', () => {
+      if (vantaEffect) {
+        vantaEffect.destroy();
       }
-    }
-  });
+    });
+  </script>
 
-  // Clean up when leaving page
-  window.addEventListener('beforeunload', () => {
-    if (vantaEffect) {
-      vantaEffect.destroy();
-    }
-  });
-</script>
-
-    <script>
+  <script>
 
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -668,7 +1046,7 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
     window.addEventListener('load', () => {
       const featureCards = document.querySelectorAll('.animate-slide-in');
       const featuresSection = document.getElementById('features');
-      
+
       const featuresObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -698,133 +1076,140 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
   </script>
 
   <!-- Peer Support Chat Modal -->
-<div id="peerChatModal" class="fixed inset-0 hidden items-center justify-center modal-bg z-50">
-  <div class="relative w-full max-w-md rounded-3xl p-6 shadow-2xl glass-card flex flex-col h-[500px]">
-    
-    <!-- Close Button -->
-    <button onclick="closePeerChat()" 
-      class="absolute -top-3 -right-3 w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-red-400 to-red-500 text-white font-bold hover:from-red-500 hover:to-red-600 shadow-lg">
-      ✕
-    </button>
+  <div id="peerChatModal" class="fixed inset-0 hidden items-center justify-center modal-bg z-50">
+    <div class="relative w-full max-w-md rounded-3xl p-6 shadow-2xl glass-card flex flex-col h-[500px]">
 
-    <!-- Header -->
-    <div class="text-center mb-4">
-      <h2 class="text-xl font-bold text-gray-800">💬 Peer Support Chat</h2>
-      <p class="text-sm text-gray-600">Anonymous student-to-student conversation</p>
-    </div>
-
-    <!-- Chat Messages -->
-    <div id="chatMessages" class="flex-1 overflow-y-auto space-y-3 p-3 bg-white/70 rounded-xl scrollbar-hide">
-      <div class="p-3 bg-purple-100 text-gray-800 rounded-xl max-w-[75%]">👋 Welcome! You’re now connected to a peer volunteer.</div>
-    </div>
-
-    <!-- Input Box -->
-    <div class="mt-4 flex space-x-2">
-      <input id="chatInput" type="text" placeholder="Type your message..." 
-        class="flex-1 px-4 py-2 rounded-xl border border-purple-200 focus:ring-2 focus:ring-purple-300 focus:border-transparent bg-white/80 backdrop-blur-sm">
-      <button onclick="sendMessage()" 
-        class="calm-button text-white px-4 rounded-xl">Send</button>
-    </div>
-  </div>
-</div>
-
-<script>
-  // Open and Close Functions
-  function openPeerChat() {
-    document.getElementById("peerChatModal").classList.remove("hidden");
-    document.getElementById("peerChatModal").classList.add("flex");
-  }
-
-  function closePeerChat() {
-    document.getElementById("peerChatModal").classList.add("hidden");
-    document.getElementById("peerChatModal").classList.remove("flex");
-  }
-
-  // Send Message Function
-  function sendMessage() {
-    const input = document.getElementById("chatInput");
-    const message = input.value.trim();
-    if (!message) return;
-
-    const messagesDiv = document.getElementById("chatMessages");
-
-    // User message
-    const userMsg = document.createElement("div");
-    userMsg.className = "p-3 bg-indigo-500 text-white rounded-xl max-w-[75%] ml-auto";
-    userMsg.innerText = message;
-    messagesDiv.appendChild(userMsg);
-
-    // Scroll down
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-    input.value = "";
-
-    // Simulated peer reply
-    setTimeout(() => {
-      const reply = document.createElement("div");
-      reply.className = "p-3 bg-purple-100 text-gray-800 rounded-xl max-w-[75%]";
-      reply.innerText = "Thanks for sharing. I understand how you feel 💜";
-      messagesDiv.appendChild(reply);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }, 1000);
-  }
-
-  // Attach Peer Support button to modal
-  document.querySelector('a[href="#peer-support"]').addEventListener('click', (e) => {
-    e.preventDefault();
-    openPeerChat();
-  });
-</script>
-
-
-<!-- Counseling Booking Modal -->
-<div id="counselingModal" class="fixed inset-0 hidden items-center justify-center modal-bg z-50">
-  <div class="relative w-full max-w-md rounded-3xl p-6 shadow-2xl glass-card">
-    
-    <!-- Close Button -->
-    <button onclick="closeCounselingModal()" 
-      class="absolute -top-3 -right-3 w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-red-400 to-red-500 text-white font-bold hover:from-red-500 hover:to-red-600 shadow-lg">
-      ✕
-    </button>
-
-    <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">🧑‍⚕️ Book Counseling Session</h2>
-
-    <form id="counselingForm" class="space-y-4">
-      <div>
-        <label class="block font-semibold mb-1 text-gray-700">Select Date</label>
-        <input type="date" class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:ring-2 focus:ring-purple-300 bg-white/70" required>
-      </div>
-
-      <div>
-        <label class="block font-semibold mb-1 text-gray-700">Select Time</label>
-        <input type="time" class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:ring-2 focus:ring-purple-300 bg-white/70" required>
-      </div>
-
-      <div>
-        <label class="block font-semibold mb-1 text-gray-700">Choose Counselor</label>
-        <select class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:ring-2 focus:ring-purple-300 bg-white/70">
-          <option>Dr. Sharma (Stress Management)</option>
-          <option>Dr. Patel (Anxiety Specialist)</option>
-          <option>Dr. Rao (General Counseling)</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block font-semibold mb-1 text-gray-700">Reason</label>
-        <textarea rows="3" class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:ring-2 focus:ring-purple-300 bg-white/70" placeholder="Briefly describe your concern"></textarea>
-      </div>
-
-      <button type="submit" class="w-full calm-button text-white py-3 rounded-xl font-medium shadow-lg">
-        Confirm Appointment
+      <!-- Close Button -->
+      <button onclick="closePeerChat()"
+        class="absolute -top-3 -right-3 w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-red-400 to-red-500 text-white font-bold hover:from-red-500 hover:to-red-600 shadow-lg">
+        ✕
       </button>
-    </form>
 
-    <!-- Confirmation Message -->
-    <div id="confirmationMessage" class="hidden text-center mt-6 text-green-600 font-semibold">
-      ✅ Your appointment has been booked successfully!
+      <!-- Header -->
+      <div class="text-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800">💬 Peer Support Chat</h2>
+        <p class="text-sm text-gray-600">Anonymous student-to-student conversation</p>
+      </div>
+
+      <!-- Chat Messages -->
+      <div id="chatMessages" class="flex-1 overflow-y-auto space-y-3 p-3 bg-white/70 rounded-xl scrollbar-hide">
+        <div class="p-3 bg-purple-100 text-gray-800 rounded-xl max-w-[75%]">👋 Welcome! You’re now connected to a peer
+          volunteer.</div>
+      </div>
+
+      <!-- Input Box -->
+      <div class="mt-4 flex space-x-2">
+        <input id="chatInput" type="text" placeholder="Type your message..."
+          class="flex-1 px-4 py-2 rounded-xl border border-purple-200 focus:ring-2 focus:ring-purple-300 focus:border-transparent bg-white/80 backdrop-blur-sm">
+        <button onclick="sendMessage()" class="calm-button text-white px-4 rounded-xl">Send</button>
+      </div>
     </div>
   </div>
-</div>
+
+  <script>
+    // Open and Close Functions
+    function openPeerChat() {
+      document.getElementById("peerChatModal").classList.remove("hidden");
+      document.getElementById("peerChatModal").classList.add("flex");
+    }
+
+    function closePeerChat() {
+      document.getElementById("peerChatModal").classList.add("hidden");
+      document.getElementById("peerChatModal").classList.remove("flex");
+    }
+
+    // Send Message Function
+    function sendMessage() {
+      const input = document.getElementById("chatInput");
+      const message = input.value.trim();
+      if (!message) return;
+
+      const messagesDiv = document.getElementById("chatMessages");
+
+      // User message
+      const userMsg = document.createElement("div");
+      userMsg.className = "p-3 bg-indigo-500 text-white rounded-xl max-w-[75%] ml-auto";
+      userMsg.innerText = message;
+      messagesDiv.appendChild(userMsg);
+
+      // Scroll down
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      input.value = "";
+
+      // Simulated peer reply
+      setTimeout(() => {
+        const reply = document.createElement("div");
+        reply.className = "p-3 bg-purple-100 text-gray-800 rounded-xl max-w-[75%]";
+        reply.innerText = "Thanks for sharing. I understand how you feel 💜";
+        messagesDiv.appendChild(reply);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }, 1000);
+    }
+
+    // Attach Peer Support button to modal
+    document.querySelector('a[href="#peer-support"]').addEventListener('click', (e) => {
+      e.preventDefault();
+      openPeerChat();
+    });
+  </script>
+
+
+  <!-- Counseling Booking Modal -->
+  <div id="counselingModal" class="fixed inset-0 hidden items-center justify-center modal-bg z-50">
+    <div class="relative w-full max-w-md rounded-3xl p-6 shadow-2xl glass-card">
+
+      <!-- Close Button -->
+      <button onclick="closeCounselingModal()"
+        class="absolute -top-3 -right-3 w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-red-400 to-red-500 text-white font-bold hover:from-red-500 hover:to-red-600 shadow-lg">
+        ✕
+      </button>
+
+      <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">🧑‍⚕️ Book Counseling Session</h2>
+
+      <form id="counselingForm" class="space-y-4">
+        <div>
+          <label class="block font-semibold mb-1 text-gray-700">Select Date</label>
+          <input type="date"
+            class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:ring-2 focus:ring-purple-300 bg-white/70"
+            required>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1 text-gray-700">Select Time</label>
+          <input type="time"
+            class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:ring-2 focus:ring-purple-300 bg-white/70"
+            required>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1 text-gray-700">Choose Counselor</label>
+          <select
+            class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:ring-2 focus:ring-purple-300 bg-white/70">
+            <option>Dr. Sharma (Stress Management)</option>
+            <option>Dr. Patel (Anxiety Specialist)</option>
+            <option>Dr. Rao (General Counseling)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1 text-gray-700">Reason</label>
+          <textarea rows="3"
+            class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:ring-2 focus:ring-purple-300 bg-white/70"
+            placeholder="Briefly describe your concern"></textarea>
+        </div>
+
+        <button type="submit" class="w-full calm-button text-white py-3 rounded-xl font-medium shadow-lg">
+          Confirm Appointment
+        </button>
+      </form>
+
+      <!-- Confirmation Message -->
+      <div id="confirmationMessage" class="hidden text-center mt-6 text-green-600 font-semibold">
+        ✅ Your appointment has been booked successfully!
+      </div>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer id="contact" class="bg-gray-800 text-gray-300 py-12 px-6">
@@ -869,120 +1254,154 @@ body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-
 
   </footer>
 
-<script>
-  function openCounselingModal() {
-    document.getElementById("counselingModal").classList.remove("hidden");
-    document.getElementById("counselingModal").classList.add("flex");
-  }
-
-  function closeCounselingModal() {
-    document.getElementById("counselingModal").classList.add("hidden");
-    document.getElementById("counselingModal").classList.remove("flex");
-  }
-
-  document.getElementById("counselingForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    document.getElementById("confirmationMessage").classList.remove("hidden");
-    setTimeout(closeCounselingModal, 2000); // auto-close after 2s
-  });
-</script>
-
-<script>
-  let audio = null;
-
-  function playSound(type) {
-    if (audio) {
-      audio.pause();
+  <script>
+    function openCounselingModal() {
+      document.getElementById("counselingModal").classList.remove("hidden");
+      document.getElementById("counselingModal").classList.add("flex");
     }
 
-    if (type === 'rain') {
-      audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"); // demo rain-like track
-    } else if (type === 'ocean') {
-      audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"); // demo ocean-like track
-    } else if (type === 'bell') {
-      audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"); // demo meditation bell
+    function closeCounselingModal() {
+      document.getElementById("counselingModal").classList.add("hidden");
+      document.getElementById("counselingModal").classList.remove("flex");
     }
 
-    audio.loop = true;
-    audio.play();
-  }
+    document.getElementById("counselingForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      document.getElementById("confirmationMessage").classList.remove("hidden");
+      setTimeout(closeCounselingModal, 2000); // auto-close after 2s
+    });
+  </script>
 
-  function stopSound() {
-    if (audio) {
-      audio.pause();
-      audio = null;
+  <script>
+    let audio = null;
+
+    function playSound(type) {
+      if (audio) {
+        audio.pause();
+      }
+
+      if (type === 'rain') {
+        audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"); // demo rain-like track
+      } else if (type === 'ocean') {
+        audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"); // demo ocean-like track
+      } else if (type === 'bell') {
+        audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"); // demo meditation bell
+      }
+
+      audio.loop = true;
+      audio.play();
     }
-  }
 
-
-
-
-// === Improved Auto-Sliding Carousel ===
-document.addEventListener("DOMContentLoaded", function () {
-  const carousel = document.querySelector(".carousel");
-  if (!carousel) return;
-
-  let direction = 1; // 1 = right, -1 = left
-  let isHovered = false;
-  let userInteracting = false;
-  let lastInteractionTime = 0;
-  const baseSpeed = 0.6; // default scroll speed
-  let scrollTimer;
-
-  // Auto-slide using requestAnimationFrame
-  function autoSlide() {
-    const now = Date.now();
-
-    // Slow or pause for a bit after manual interaction
-    const isRecentlyInteracted = now - lastInteractionTime < 1500;
-    const speed = isRecentlyInteracted ? 0.1 : baseSpeed;
-
-    if (!isHovered && !userInteracting) {
-      carousel.scrollLeft += direction * speed;
-
-      // When reaching the end, reverse direction
-      if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 1) {
-        direction = -1;
-      } else if (carousel.scrollLeft <= 0) {
-        direction = 1;
+    function stopSound() {
+      if (audio) {
+        audio.pause();
+        audio = null;
       }
     }
 
-    requestAnimationFrame(autoSlide);
-  }
 
-  // Handle manual scroll interaction
-  let lastScrollLeft = carousel.scrollLeft;
-  carousel.addEventListener("scroll", () => {
-    const diff = Math.abs(carousel.scrollLeft - lastScrollLeft);
-    if (diff > 1) {
-      userInteracting = true;
-      lastInteractionTime = Date.now();
 
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        userInteracting = false; // resume smoothly
-      }, 1200);
+
+    // === Improved Auto-Sliding Carousel ===
+    document.addEventListener("DOMContentLoaded", function () {
+      const carousel = document.querySelector(".carousel");
+      if (!carousel) return;
+
+      let direction = 1; // 1 = right, -1 = left
+      let isHovered = false;
+      let userInteracting = false;
+      let lastInteractionTime = 0;
+      const baseSpeed = 0.6; // default scroll speed
+      let scrollTimer;
+
+      // Auto-slide using requestAnimationFrame
+      function autoSlide() {
+        const now = Date.now();
+
+        // Slow or pause for a bit after manual interaction
+        const isRecentlyInteracted = now - lastInteractionTime < 1500;
+        const speed = isRecentlyInteracted ? 0.1 : baseSpeed;
+
+        if (!isHovered && !userInteracting) {
+          carousel.scrollLeft += direction * speed;
+
+          // When reaching the end, reverse direction
+          if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 1) {
+            direction = -1;
+          } else if (carousel.scrollLeft <= 0) {
+            direction = 1;
+          }
+        }
+
+        requestAnimationFrame(autoSlide);
+      }
+
+      // Handle manual scroll interaction
+      let lastScrollLeft = carousel.scrollLeft;
+      carousel.addEventListener("scroll", () => {
+        const diff = Math.abs(carousel.scrollLeft - lastScrollLeft);
+        if (diff > 1) {
+          userInteracting = true;
+          lastInteractionTime = Date.now();
+
+          clearTimeout(scrollTimer);
+          scrollTimer = setTimeout(() => {
+            userInteracting = false; // resume smoothly
+          }, 1200);
+        }
+        lastScrollLeft = carousel.scrollLeft;
+      });
+
+      // Pause on hover or touch
+      carousel.addEventListener("mouseenter", () => (isHovered = true));
+      carousel.addEventListener("mouseleave", () => (isHovered = false));
+      carousel.addEventListener("touchstart", () => (isHovered = true));
+      carousel.addEventListener("touchend", () => (isHovered = false));
+
+      // Start the animation
+      autoSlide();
+    });
+
+
+
+  </script>
+
+  <!-- Mobile Menu Toggle Script -->
+  <script>
+    function toggleMobileMenu() {
+      const menuToggle = document.querySelector('.mobile-menu-toggle');
+      const overlay = document.querySelector('.mobile-nav-overlay');
+      const menu = document.querySelector('.mobile-nav-menu');
+
+      if (menuToggle && overlay && menu) {
+        menuToggle.classList.toggle('active');
+        overlay.classList.toggle('active');
+        menu.classList.toggle('active');
+      }
     }
-    lastScrollLeft = carousel.scrollLeft;
-  });
+  </script>
 
-  // Pause on hover or touch
-  carousel.addEventListener("mouseenter", () => (isHovered = true));
-  carousel.addEventListener("mouseleave", () => (isHovered = false));
-  carousel.addEventListener("touchstart", () => (isHovered = true));
-  carousel.addEventListener("touchend", () => (isHovered = false));
+  <!-- PWA Service Worker Registration -->
+  <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/static/service-worker.js')
+          .then((registration) => {
+            console.log('ServiceWorker registered:', registration.scope);
+          })
+          .catch((error) => {
+            console.log('ServiceWorker registration failed:', error);
+          });
+      });
+    }
+  </script>
 
-  // Start the animation
-  autoSlide();
-});
-
-
-
-</script>
+  <!-- Offline Indicator -->
+  <div class="offline-indicator">📡 You are currently offline</div>
 
 
 
 </body>
+
 </html>
-  

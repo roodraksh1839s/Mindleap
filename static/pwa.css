@@ -1,0 +1,657 @@
+/* ==========================================================================
+   MindLeap PWA - Responsive CSS
+   Enhances mobile responsiveness across all pages
+   ========================================================================== */
+
+/* ==========================================================================
+   CSS Custom Properties
+   ========================================================================== */
+:root {
+    --pwa-primary: #667eea;
+    --pwa-secondary: #764ba2;
+    --pwa-accent: #f093fb;
+    --pwa-bg-light: #f3e8ff;
+    --pwa-text: #1e293b;
+    --pwa-text-muted: #64748b;
+    --pwa-safe-area-top: env(safe-area-inset-top);
+    --pwa-safe-area-bottom: env(safe-area-inset-bottom);
+    --pwa-safe-area-left: env(safe-area-inset-left);
+    --pwa-safe-area-right: env(safe-area-inset-right);
+}
+
+/* ==========================================================================
+   Base PWA Styles
+   ========================================================================== */
+
+/* Ensure proper viewport handling */
+html {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    padding-top: var(--pwa-safe-area-top);
+    padding-bottom: var(--pwa-safe-area-bottom);
+    padding-left: var(--pwa-safe-area-left);
+    padding-right: var(--pwa-safe-area-right);
+}
+
+/* Touch-friendly tap targets */
+button, 
+a, 
+input[type="submit"], 
+input[type="button"],
+.btn,
+.calm-button,
+.radio-option,
+.tab-btn {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ==========================================================================
+   Mobile Navigation - Hamburger Menu
+   ========================================================================== */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 8px;
+    z-index: 100;
+}
+
+.mobile-menu-toggle span {
+    display: block;
+    width: 24px;
+    height: 3px;
+    background: linear-gradient(135deg, var(--pwa-primary), var(--pwa-secondary));
+    border-radius: 3px;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile nav overlay */
+.mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 90;
+}
+
+.mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Mobile nav menu */
+.mobile-nav-menu {
+    position: fixed;
+    top: 0;
+    right: -280px;
+    width: 280px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 80px 24px 24px;
+    transition: right 0.3s ease;
+    z-index: 95;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.mobile-nav-menu.active {
+    right: 0;
+}
+
+.mobile-nav-menu a {
+    display: block;
+    padding: 16px 12px;
+    color: var(--pwa-text);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    border-bottom: 1px solid rgba(167, 139, 250, 0.1);
+    transition: all 0.2s ease;
+}
+
+.mobile-nav-menu a:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--pwa-primary);
+    padding-left: 20px;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Extra Small devices (phones, 320px and up) */
+@media (max-width: 480px) {
+    /* Typography scaling */
+    h1 {
+        font-size: 1.75rem !important;
+        line-height: 1.3;
+    }
+    
+    h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    h3 {
+        font-size: 1.25rem !important;
+    }
+    
+    p {
+        font-size: 0.95rem;
+    }
+    
+    /* Container padding */
+    .max-w-4xl, .max-w-6xl, .max-w-3xl {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+    
+    /* Card adjustments */
+    .glass-card, .feature-card, .question-card {
+        padding: 16px !important;
+        border-radius: 16px !important;
+    }
+    
+    /* Buttons full width */
+    .calm-button, .btn {
+        width: 100%;
+        text-align: center;
+        padding: 14px 20px !important;
+    }
+    
+    /* Hero section */
+    #hero-background .max-w-4xl {
+        padding: 16px;
+    }
+    
+    #hero-background h1 {
+        font-size: 1.75rem !important;
+    }
+    
+    /* Navbar */
+    nav {
+        padding: 12px 16px !important;
+    }
+    
+    nav .text-2xl {
+        font-size: 1.25rem !important;
+    }
+}
+
+/* Small devices (landscape phones, 481px to 767px) */
+@media (max-width: 767px) {
+    /* Show hamburger menu */
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    /* Hide desktop nav */
+    nav ul.hidden.md\\:flex,
+    nav ul[class*="md:flex"] {
+        display: none !important;
+    }
+    
+    /* Navbar adjustments */
+    nav {
+        padding: 12px 20px;
+    }
+    
+    /* Hero section spacing */
+    #hero-background {
+        padding-top: 80px;
+        padding-bottom: 40px;
+        min-height: auto;
+    }
+    
+    #hero-background h1 {
+        font-size: 2rem !important;
+        margin-bottom: 16px;
+    }
+    
+    #hero-background p {
+        font-size: 1rem !important;
+    }
+    
+    /* Stack hero buttons */
+    #hero-background .space-x-4 {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    #hero-background .space-x-4 > * {
+        margin: 0 !important;
+    }
+    
+    /* Grid adjustments */
+    .grid.md\\:grid-cols-4,
+    .grid.md\\:grid-cols-3,
+    .grid.md\\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    
+    /* Carousel cards */
+    .carousel .card {
+        flex: 0 0 280px !important;
+        min-height: 360px !important;
+        padding: 20px !important;
+    }
+    
+    .carousel-container {
+        padding: 0 16px;
+    }
+    
+    /* Header section */
+    .header-section h1 {
+        font-size: 1.75rem !important;
+    }
+    
+    .header-section p {
+        font-size: 1rem !important;
+    }
+    
+    /* Stats section */
+    .feature-card {
+        padding: 20px !important;
+    }
+    
+    /* Peer support section */
+    #peer-support .grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Modal adjustments */
+    .modal > div,
+    #loginModal > div,
+    #counselingModal > div,
+    #peerChatModal > div {
+        margin: 16px;
+        max-width: calc(100vw - 32px);
+        max-height: calc(100vh - 32px);
+        overflow-y: auto;
+    }
+    
+    /* Footer links */
+    .text-center.mt-8 .flex.justify-center.space-x-6 {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* Medium devices (tablets, 768px to 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Adjust grid columns */
+    .grid.md\\:grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .grid.md\\:grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* Carousel adjustments */
+    .carousel .card {
+        flex: 0 0 320px !important;
+    }
+}
+
+/* ==========================================================================
+   Chatbot Page Responsive
+   ========================================================================== */
+@media (max-width: 767px) {
+    /* Chat container */
+    .glass-container {
+        height: calc(100vh - 32px) !important;
+        max-height: none !important;
+        margin: 16px;
+        border-radius: 20px !important;
+    }
+    
+    /* Chat header */
+    .glass-header {
+        padding: 16px !important;
+    }
+    
+    .glass-header h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    .glass-header p {
+        font-size: 0.9rem !important;
+    }
+    
+    /* Chat messages */
+    .chat-messages-area {
+        padding: 12px !important;
+    }
+    
+    .message-user, .message-bot {
+        max-width: 85% !important;
+        padding: 12px 16px !important;
+    }
+    
+    /* Chat input */
+    #userInput {
+        padding: 12px 16px !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    #sendButton {
+        padding: 12px 20px !important;
+    }
+}
+
+/* ==========================================================================
+   Sound Therapy Page Responsive
+   ========================================================================== */
+@media (max-width: 767px) {
+    /* Sound therapy tabs */
+    .flex.flex-wrap.gap-3.justify-center {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .tab-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    /* Sound cards grid */
+    #soundsGrid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    
+    /* Audio player */
+    #audioPlayer {
+        left: 16px !important;
+        right: 16px !important;
+        transform: none !important;
+        width: auto !important;
+        max-width: none !important;
+    }
+    
+    /* Hero text */
+    .pt-32 h2 {
+        font-size: 1.75rem !important;
+    }
+}
+
+/* ==========================================================================
+   Assessment/Questions Page Responsive
+   ========================================================================== */
+@media (max-width: 767px) {
+    /* Question cards */
+    .question-card {
+        padding: 20px !important;
+    }
+    
+    .question-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+    
+    .question-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .question-title {
+        font-size: 1rem !important;
+    }
+    
+    /* Radio options - 2 columns on mobile */
+    .radio-group {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+    
+    .radio-option {
+        padding: 12px 8px !important;
+    }
+    
+    .option-number {
+        font-size: 1.25rem !important;
+    }
+    
+    .option-label {
+        font-size: 0.75rem !important;
+    }
+}
+
+@media (max-width: 400px) {
+    /* Single column radio on very small screens */
+    .radio-group {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ==========================================================================
+   Admin Page Responsive
+   ========================================================================== */
+@media (max-width: 767px) {
+    /* Tables become cards on mobile */
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table thead {
+        display: none;
+    }
+    
+    table tbody tr {
+        display: block;
+        margin-bottom: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    table tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--pwa-primary);
+    }
+}
+
+/* ==========================================================================
+   PWA Install Prompt
+   ========================================================================== */
+.pwa-install-prompt {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--pwa-primary), var(--pwa-secondary));
+    color: white;
+    padding: 16px 20px;
+    border-radius: 16px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+    z-index: 1000;
+    animation: slideUp 0.3s ease;
+}
+
+.pwa-install-prompt.show {
+    display: flex;
+}
+
+.pwa-install-prompt-text {
+    flex: 1;
+}
+
+.pwa-install-prompt-text h4 {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.pwa-install-prompt-text p {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.pwa-install-btn {
+    background: white;
+    color: var(--pwa-primary);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.pwa-install-dismiss {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+    opacity: 0.8;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ==========================================================================
+   Offline Indicator
+   ========================================================================== */
+.offline-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #ef4444;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    z-index: 9999;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+}
+
+.offline-indicator.show {
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   Accessibility Enhancements
+   ========================================================================== */
+
+/* Focus styles */
+*:focus-visible {
+    outline: 3px solid var(--pwa-primary);
+    outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .glass-card,
+    .feature-card,
+    .question-card {
+        background: white !important;
+        border: 2px solid black !important;
+    }
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+@media print {
+    nav,
+    .mobile-menu-toggle,
+    .mobile-nav-overlay,
+    .mobile-nav-menu,
+    .pwa-install-prompt,
+    .offline-indicator,
+    #audioPlayer {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+    }
+    
+    .glass-card,
+    .feature-card,
+    .question-card {
+        background: white !important;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        page-break-inside: avoid;
+    }
+}
