@@ -99,7 +99,7 @@ def search_best_match(user_query, top_k=2):
 
 
 def generate_response(user_input):
-    GEMINI_API_KEY = "AIzaSyDPmpOMohKrH-IWjomBgb8X26h2Ei_zPmg"
+    GEMINI_API_KEY = "AIzaSyDxdcpUaJJWE9uMSvPyOEbNoW3SruN-xZ4"
     GEMINI_URL = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
 
     top_matches = search_best_match(user_input)
