@@ -39,6 +39,30 @@ def get_db_connection():
     )
 
 # =========================
+# cHAt_bot LOGS
+# =========================
+def save_chat_logs(user_email, user_message, bot_reply):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        query = """
+        INSERT INTO CHAT_LOGS (USER_EMAIL, USER_MESSAGE, BOT_REPLY, CTREATED_AT)
+        VALUES (%s,%s,%s,%s)
+        """
+        cursor.execute(
+            query,
+            (user_email,user_message, bot_reply, datetime.now())
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+    except Exception as e:
+        print(" Failed to save chat log:",e)
+        
+        
+# =========================
 # FAQ + Embeddings Setup
 # =========================
 df = pd.read_csv('data/faq.csv')
@@ -152,7 +176,15 @@ def chat():
     user_msg = data.get('message', '').strip()
     if not user_msg:
         return jsonify({"reply": "Please write your query."})
-    return jsonify({'reply': generate_response(user_msg)})
+    
+    reply = generate_response(user_msg)
+    
+    # Get logged-in user (if available)
+    user_email = session.get("email", "anonymous")
+    
+    # Save chat
+    save_chat_logs(user_email, user_msg, reply)
+    return jsonify({'reply': reply})
 
 
 @app.route('/admin')
