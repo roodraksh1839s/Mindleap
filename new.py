@@ -47,7 +47,7 @@ def save_chat_logs(user_email, user_message, bot_reply):
         cursor = conn.cursor()
         
         query = """
-        INSERT INTO CHAT_LOGS (USER_EMAIL, USER_MESSAGE, BOT_REPLY, CTREATED_AT)
+        INSERT INTO CHAT_LOG (USER_EMAIL, USER_MESSAGE, BOT_REPLY, CTREATED_AT)
         VALUES (%s,%s,%s,%s)
         """
         cursor.execute(
@@ -186,6 +186,21 @@ def chat():
     save_chat_logs(user_email, user_msg, reply)
     return jsonify({'reply': reply})
 
+@app.route('/peer-support')
+def peer_support_ui():
+    return render_template('Peer_support.html')
+
+@app.route('/resources')
+def resources_ui():
+    return render_template('resource.html')
+
+@app.route('/book-session')
+def booking_ui():
+    return render_template('booking_page.html')
+
+@app.route('/therapy')
+def therapy_ui():
+    return render_template('sound_therapy.html')
 
 @app.route('/admin')
 def admin():
@@ -206,6 +221,70 @@ def admin():
             counts[row['PREDICTION']] += 1
 
     return render_template("Admin.html", rows=rows, counts=counts)
+
+@app.route('/form')
+def form():
+    return render_template('quesions.html')
+
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    global model  # make sure we use the model defined at the top
+
+    # collect integers from form
+    try:
+        responses = [int(request.form.get(f'q{i}', 0)) for i in range(1,10)]
+    except:
+        responses = []
+        for i in range(1,10):
+            val = request.form.get(f"q{i}", "0")
+            try:
+                responses.append(int(val))
+            except:
+                responses.append(0)
+
+    total_score = int(sum(responses))
+
+    risk_label = None
+
+    # if you loaded a model and want to use it
+    if model is not None:
+        try:
+            X = np.array(responses).reshape(1, -1)
+            pred = model.predict(X)[0]
+            risk_label = str(pred)
+        except Exception as e:
+            print("Model predict failed, falling back to rule-based:", e)
+            model = None  # safe to disable the model
+
+    if risk_label is None:  # fallback rule-based scoring
+        if total_score <= 4:
+            risk_label = "minimal"
+        elif total_score <= 9:
+            risk_label = "mild"
+        elif total_score <= 14:
+            risk_label = "moderate"
+        elif total_score <= 19:
+            risk_label = "moderately_severe"
+        else:
+            risk_label = "severe"
+            
+            
+    # after risk_label is decided
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        INSERT INTO assessments 
+        (Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,PREDICTION,SubmittedAt)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+    """
+    cursor.execute(query, (*responses, risk_label, datetime.now()))
+    conn.commit()
+    cursor.close()
+    conn.close()
+     
+    return render_template("result.html", score=total_score, risk=risk_label)
 
 # =========================
 # App Runner
