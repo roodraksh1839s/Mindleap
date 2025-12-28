@@ -162,13 +162,13 @@ def login():
     
     if user:
         session['email'] = user['EMAIL']
-        session['role'] = user['ROLE']  
+        session['role'] = user['role']  
         
-        if user['ROLE'] == 'STUDENT':
+        if user['role'] == 'STUDENT':
             return redirect(url_for('student_ui'))
-        elif user['ROLE'] == 'ADMIN':
+        elif user['role'] == 'ADMIN':
             return redirect(url_for('admin'))
-        elif user['ROLE'] == 'COUNSELLOR':
+        elif user['role'] == 'COUNSELLOR':
             return redirect(url_for('counsellor_ui'))
         
     else:
@@ -374,6 +374,24 @@ def counsellor_ui():
         return redirect(url_for('home'))
     return render_template("councellor.html")
 
+"""------------Add counsellors---------"""
+
+@app.route("/get-counsellors")
+def get_counsellors():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT name, email, type
+        FROM counsellors
+        WHERE active = 1
+    """)
+    rows = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return jsonify(rows)
+
 
 @app.route('/form')
 def form():
@@ -442,5 +460,5 @@ def submit():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port, debug=True, use_reloader=False)
 # print("DEBUG ROLE:", session.get("role"))

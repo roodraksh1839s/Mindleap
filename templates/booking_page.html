@@ -593,24 +593,22 @@
     </footer>
 
     <script>
-        // Sample counselor data
-        const counselors = {
-            College: [
-                { name: 'Dr. Priya Sharma', specialization: 'Stress Management' },
-                { name: 'Dr. Amit Patel', specialization: 'Anxiety & Depression' },
-                { name: 'Ms. Neha Gupta', specialization: 'Career Counseling' }
-            ],
-            Government: [
-                { name: 'Dr. Rajesh Kumar', specialization: 'General Counseling' },
-                { name: 'Dr. Sunita Singh', specialization: 'Family Therapy' },
-                { name: 'Mr. Vikram Rao', specialization: 'Addiction Support' }
-            ],
-            Private: [
-                { name: 'Dr. Anita Verma', specialization: 'Anxiety & Panic Disorders' },
-                { name: 'Dr. Karan Mehta', specialization: 'Relationship Counseling' },
-                { name: 'Ms. Riya Desai', specialization: 'Stress & Burnout' }
-            ]
-        };
+        async function loadCounsellors(type) {
+    const res = await fetch("/get-counsellors");
+    const data = await res.json();
+
+    const select = document.getElementById("counselorSelect");
+    select.innerHTML = `<option value="">Choose a counselor</option>`;
+
+    data
+      .filter(c => c.type.toLowerCase() === type.toLowerCase())
+      .forEach(c => {
+          const opt = document.createElement("option");
+          opt.value = c.email;                 // ✅ IDENTITY
+          opt.textContent = `${c.name} (${c.type})`;
+          select.appendChild(opt);
+      });
+}
 
         let selectedDate = null;
         let selectedTime = null;
@@ -621,7 +619,7 @@
 
         function openBookingModal(type) {
             document.getElementById('counselorType').value = type + ' Counselor';
-            populateCounselors(type);
+            loadCounsellors(type);
             generateCalendar();
             generateTimeSlots();
             document.getElementById('bookingModal').classList.add('active');
@@ -790,6 +788,30 @@
 
         // Initialize rating display
         setRating(5);
+
+        setInterval(() => {
+    fetch("/my-appointments?student_id=stu_demo_001")
+        .then(res => res.json())
+        .then(data => {
+            console.log("Updated appointments:", data);
+            // later: update UI
+        });
+}, 4000);
+
+fetch("/get-counsellors")
+  .then(res => res.json())
+  .then(data => {
+      const select = document.getElementById("counselorSelect");
+      select.innerHTML = "";
+
+      data.forEach(c => {
+          const opt = document.createElement("option");
+          opt.value = c.email;        // identity
+          opt.textContent = `${c.name} (${c.type})`; // display
+          select.appendChild(opt);
+      });
+  });
+
     </script>
 </body>
 

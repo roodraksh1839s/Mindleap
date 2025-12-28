@@ -3110,6 +3110,11 @@
       });
     });
 
+    fetch("/get-counsellors")
+  .then(res => res.json())
+  .then(data => {
+      console.log("Active counsellors:", data);
+  });
 
   </script>
 
