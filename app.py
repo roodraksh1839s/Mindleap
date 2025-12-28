@@ -275,6 +275,84 @@ def book_appointment():
 
     return jsonify({"success": True})
 
+""" 
+-------------Route for student's appointemnts(polling)----------------------"""
+
+@app.route("/my-appointments")
+def my_appointments():
+    student_id = request.args.get("student_id")
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT * FROM appointments
+        WHERE student_id = %s
+        ORDER BY created_at DESC
+    """, (student_id,))
+
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return jsonify(rows)
+
+"""---------------Route to get all appointments(Admin/Counsellor)------------------"""
+
+@app.route("/get-all-appointments")
+def get_all_appointments():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT * FROM appointments
+        ORDER BY created_at DESC
+    """)
+
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return jsonify(rows)
+
+"""---------------Route to update appointment status(Approve/Decline/Reschedule)------------------"""
+
+@app.route("/update-appointment", methods=["POST"])
+def update_appointment():
+    data = request.get_json()
+
+    appointment_id = data.get("appointment_id")
+    status = data.get("status")
+    date = data.get("date")
+    time = data.get("time")
+    remarks = data.get("remarks")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        UPDATE appointments
+        SET status=%s,
+            date = COALESCE(%s, date),
+            time = COALESCE(%s, time),
+            remarks = %s
+        WHERE id=%s
+    """
+
+    cursor.execute(query, (status, date, time, remarks, appointment_id))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"updated": True})
+
+"""------------Counsellor Page Route---------"""
+
+@app.route("/counsellor")
+def counsellor_ui():
+    return render_template("councellor.html")
+
 
 @app.route('/form')
 def form():
