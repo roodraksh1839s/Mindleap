@@ -38,6 +38,10 @@
             }
         }
     </script>
+    <script>
+            const COUNSELLOR_NAME = "Dr. Priya Sharma"; // TEMP identity
+    </script>
+
 
     <style>
         /* * STRICT THEME ENFORCEMENT 
@@ -329,7 +333,7 @@
                     <p class="mt-2 text-sm text-slate-500">Update appointment details for <span id="modalClientName" class="font-semibold text-teal-600">Client</span>.</p>
                 </div>
 
-                <form onsubmit="event.preventDefault(); closeModal();" class="space-y-4">
+                <form onsubmit="submitReschedule(event)" class="space-y-4">
                     <div>
                         <label for="date" class="block text-sm font-medium text-slate-700 mb-1">New Date</label>
                         <input type="date" id="date" class="block w-full rounded-lg border-slate-200 bg-white/50 text-slate-700 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-2.5 border">
@@ -379,6 +383,71 @@
             const modal = document.getElementById('rescheduleModal');
             modal.classList.add('hidden');
         }
-    </script>
+        async function loadCounsellorAppointments() {
+    const res = await fetch(`/get-all-appointments`);
+    const data = await res.json();
+
+    // Filter only this counsellor
+    const myAppointments = data.filter(
+        a => a.counselor_name === COUNSELLOR_NAME
+    );
+
+    renderUpcoming(myAppointments);
+}
+
+function renderUpcoming(appointments) {
+    // For now, log to console to verify
+    console.log("My appointments:", appointments);
+
+    // NEXT STEP: replace static cards (we’ll do that after confirmation)
+}
+
+setInterval(loadCounsellorAppointments, 4000);
+loadCounsellorAppointments();
+
+async function updateStatus(appointmentId, status) {
+    await fetch("/update-appointment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            appointment_id: appointmentId,
+            status: status
+        })
+    });
+
+    loadCounsellorAppointments();
+}
+    let CURRENT_APPOINTMENT_ID = null;
+
+    function openModal(clientName, appointmentId) {
+        CURRENT_APPOINTMENT_ID = appointmentId;
+        document.getElementById('modalClientName').textContent = clientName;
+        document.getElementById('rescheduleModal').classList.remove('hidden');
+    }
+
+    async function submitReschedule(e) {
+        e.preventDefault();
+
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value;
+        const note = document.getElementById('note').value;
+
+        await fetch("/update-appointment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                appointment_id: CURRENT_APPOINTMENT_ID,
+                status: "rescheduled",
+                date: date,
+                time: time,
+                remarks: note
+            })
+        });
+
+        closeModal();
+        loadCounsellorAppointments();
+    }
+</script>
+
 </body>
 </html>

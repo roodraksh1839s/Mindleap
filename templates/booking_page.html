@@ -718,20 +718,48 @@
             }
         }
 
-        document.getElementById('bookingForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+        document.getElementById('bookingForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-            if (!selectedDate || !selectedTime) {
-                alert('Please select both date and time');
-                return;
-            }
+    if (!selectedDate || !selectedTime) {
+        alert('Please select both date and time');
+        return;
+    }
 
-            document.getElementById('successAlert').style.display = 'block';
+    const anonymous = document.getElementById('anonymousToggle').checked;
 
-            setTimeout(() => {
-                closeBookingModal();
-            }, 3000);
+    const payload = {
+        student_name: anonymous ? "Anonymous" : document.getElementById('userName').value,
+        student_email: anonymous ? null : document.getElementById('userEmail').value,
+        student_id: "stu_demo_001",   // TEMP (later from login)
+        counselor_name: document.getElementById('counselorSelect').value,
+        counselor_type: document.getElementById('counselorType').value,
+        date: selectedDate,
+        time: selectedTime,
+        anonymous: anonymous,
+        reminder: document.getElementById('reminderToggle').checked
+    };
+
+    try {
+        const res = await fetch("/book-appointment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
         });
+
+        const data = await res.json();
+
+        if (data.success) {
+            document.getElementById('successAlert').style.display = 'block';
+            setTimeout(() => closeBookingModal(), 2500);
+        } else {
+            alert("Booking failed. Try again.");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Server error. Please try later.");
+    }
+});
 
         function openFeedbackModal() {
             document.getElementById('feedbackModal').classList.add('active');

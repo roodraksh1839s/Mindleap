@@ -232,6 +232,48 @@ def admin():
 
     return render_template("Admin.html", rows=rows, counts=counts)
 
+""" 
+-------------Routes related to Appointments Booking----------------------"""
+
+@app.route("/book-appointment", methods=["POST"])
+def book_appointment():
+    data = request.get_json()
+
+    student_id = data.get("student_id")
+    student_name = data.get("student_name")
+    student_email = data.get("student_email")
+
+    counselor_name = data.get("counselor_name")
+    counselor_type = data.get("counselor_type")
+
+    date = data.get("date")
+    time = data.get("time")
+
+    anonymous = int(data.get("anonymous", False))
+    reminder = int(data.get("reminder", False))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        INSERT INTO appointments
+        (student_id, student_name, student_email,
+         counselor_name, counselor_type,
+         date, time, anonymous, reminder, status)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,'pending')
+    """
+
+    cursor.execute(query, (
+        student_id, student_name, student_email,
+        counselor_name, counselor_type,
+        date, time, anonymous, reminder
+    ))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return jsonify({"success": True})
 
 
 @app.route('/form')
