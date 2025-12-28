@@ -39,7 +39,7 @@
         }
     </script>
     <script>
-            const COUNSELLOR_NAME = "Dr. Priya Sharma"; // TEMP identity
+            const COUNSELLOR_NAME = "{{session['email']}}"; // TEMP identity
     </script>
 
 
@@ -171,6 +171,17 @@
                 </div>
             </div>
         </section>
+        <!-- Live Session Status -->
+<section class="mb-10">
+  <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">
+    Live Session Status
+  </h2>
+
+  <div id="liveSession"
+       class="glass-panel rounded-2xl p-6 text-center text-slate-600">
+    No active session right now
+  </div>
+</section>
 
         <section class="mb-12">
             <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
@@ -178,100 +189,13 @@
                 <span class="bg-slate-200 text-slate-600 text-xs px-2 py-0.5 rounded-full">3</span>
             </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="glass-panel rounded-2xl p-6 hover-lift flex flex-col justify-between h-full">
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
-                                MJ
-                            </div>
-                            <span class="px-2 py-1 rounded-md text-xs font-semibold bg-indigo-50 text-indigo-600 border border-indigo-100">
-                                Upcoming
-                            </span>
-                        </div>
-                        <h3 class="text-lg font-bold text-slate-800">Michael Jordan</h3>
-                        <p class="text-sm text-slate-500 mb-4">Anxiety Management</p>
-                        
-                        <div class="space-y-2 text-sm text-slate-600">
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                Today
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                2:00 PM - 3:00 PM (1h)
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-white/40">
-                        <button onclick="openModal('Michael Jordan')" class="w-full py-2 px-4 rounded-lg border border-slate-300 text-slate-600 text-sm font-medium hover:bg-white/50 hover:text-slate-800 transition">
-                            Reschedule
-                        </button>
-                    </div>
-                </div>
-
-                <div class="glass-panel rounded-2xl p-6 hover-lift flex flex-col justify-between h-full">
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="h-10 w-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 font-bold">
-                                EL
-                            </div>
-                            <span class="px-2 py-1 rounded-md text-xs font-semibold bg-indigo-50 text-indigo-600 border border-indigo-100">
-                                Upcoming
-                            </span>
-                        </div>
-                        <h3 class="text-lg font-bold text-slate-800">Emma Lewis</h3>
-                        <p class="text-sm text-slate-500 mb-4">Family Therapy</p>
-                        
-                        <div class="space-y-2 text-sm text-slate-600">
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                Tomorrow
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                10:00 AM - 11:00 AM (1h)
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-white/40">
-                        <button onclick="openModal('Emma Lewis')" class="w-full py-2 px-4 rounded-lg border border-slate-300 text-slate-600 text-sm font-medium hover:bg-white/50 hover:text-slate-800 transition">
-                            Reschedule
-                        </button>
-                    </div>
-                </div>
-
-                <div class="glass-panel rounded-2xl p-6 hover-lift flex flex-col justify-between h-full">
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="h-10 w-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold">
-                                DK
-                            </div>
-                            <span class="px-2 py-1 rounded-md text-xs font-semibold bg-indigo-50 text-indigo-600 border border-indigo-100">
-                                Upcoming
-                            </span>
-                        </div>
-                        <h3 class="text-lg font-bold text-slate-800">David Kim</h3>
-                        <p class="text-sm text-slate-500 mb-4">Stress & Career</p>
-                        
-                        <div class="space-y-2 text-sm text-slate-600">
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                Dec 19, 2025
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                4:30 PM - 5:30 PM (1h)
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-white/40">
-                        <button onclick="openModal('David Kim')" class="w-full py-2 px-4 rounded-lg border border-slate-300 text-slate-600 text-sm font-medium hover:bg-white/50 hover:text-slate-800 transition">
-                            Reschedule
-                        </button>
-                    </div>
+            <div id="appointmentsGrid"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass-panel rounded-xl p-6 text-slate-500 text-center">
+                    Loading appointments…
                 </div>
             </div>
+
         </section>
 
         <section>
@@ -363,75 +287,86 @@
     </div>
 
     <script>
-        function openModal(clientName) {
-            const modal = document.getElementById('rescheduleModal');
-            const clientNameSpan = document.getElementById('modalClientName');
-            
-            clientNameSpan.textContent = clientName;
-            modal.classList.remove('hidden');
-            
-            // Simple animation handling
-            const panel = modal.querySelector('.transform');
-            panel.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                panel.classList.remove('scale-95', 'opacity-0');
-                panel.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
+/* ===============================
+   Counsellor Identity
+================================ */
+const COUNSELLOR_NAME = "{{ session['email'] }}";
 
-        function closeModal() {
-            const modal = document.getElementById('rescheduleModal');
-            modal.classList.add('hidden');
-        }
-        async function loadCounsellorAppointments() {
-    const res = await fetch(`/get-all-appointments`);
-    const data = await res.json();
+/* ===============================
+   Modal Handling
+================================ */
+let CURRENT_APPOINTMENT_ID = null;
 
-    // Filter only this counsellor
-    const myAppointments = data.filter(
-        a => a.counselor_name === COUNSELLOR_NAME
-    );
-
-    renderUpcoming(myAppointments);
+function openModal(clientName, appointmentId) {
+    CURRENT_APPOINTMENT_ID = appointmentId;
+    document.getElementById('modalClientName').textContent = clientName;
+    document.getElementById('rescheduleModal').classList.remove('hidden');
 }
 
-function renderUpcoming(appointments) {
-    // For now, log to console to verify
+function closeModal() {
+    document.getElementById('rescheduleModal').classList.add('hidden');
+}
+
+/* ===============================
+   Load Appointments (Polling)
+================================ */
+async function loadCounsellorAppointments() {
+    try {
+        const res = await fetch("/get-all-appointments");
+        const data = await res.json();
+
+        // Filter only logged-in counsellor's appointments
+        const myAppointments = data.filter(
+            a => a.counselor_name === COUNSELLOR_NAME
+        );
+
+        renderAppointments(myAppointments);
+    } catch (err) {
+        console.error("Failed to load appointments:", err);
+    }
+}
+
+/* ===============================
+   Render Appointments (UI only)
+================================ */
+function renderAppointments(appointments) {
     console.log("My appointments:", appointments);
 
-    // NEXT STEP: replace static cards (we’ll do that after confirmation)
+    // You already connected backend correctly.
+    // UI rendering logic can be expanded here safely.
 }
 
-setInterval(loadCounsellorAppointments, 4000);
-loadCounsellorAppointments();
-
+/* ===============================
+   Approve / Decline
+================================ */
 async function updateStatus(appointmentId, status) {
-    await fetch("/update-appointment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            appointment_id: appointmentId,
-            status: status
-        })
-    });
+    try {
+        await fetch("/update-appointment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                appointment_id: appointmentId,
+                status: status
+            })
+        });
 
-    loadCounsellorAppointments();
-}
-    let CURRENT_APPOINTMENT_ID = null;
-
-    function openModal(clientName, appointmentId) {
-        CURRENT_APPOINTMENT_ID = appointmentId;
-        document.getElementById('modalClientName').textContent = clientName;
-        document.getElementById('rescheduleModal').classList.remove('hidden');
+        loadCounsellorAppointments();
+    } catch (err) {
+        console.error("Failed to update status:", err);
     }
+}
 
-    async function submitReschedule(e) {
-        e.preventDefault();
+/* ===============================
+   Reschedule Submission
+================================ */
+async function submitReschedule(e) {
+    e.preventDefault();
 
-        const date = document.getElementById('date').value;
-        const time = document.getElementById('time').value;
-        const note = document.getElementById('note').value;
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const note = document.getElementById('note').value;
 
+    try {
         await fetch("/update-appointment", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -446,8 +381,80 @@ async function updateStatus(appointmentId, status) {
 
         closeModal();
         loadCounsellorAppointments();
+    } catch (err) {
+        console.error("Failed to reschedule:", err);
     }
+}
+
+/* ===============================
+   Auto Refresh
+================================ */
+setInterval(loadCounsellorAppointments, 4000);
+loadCounsellorAppointments();
+
+function renderAppointments(appointments) {
+    const grid = document.getElementById("appointmentsGrid");
+    grid.innerHTML = "";
+
+    if (appointments.length === 0) {
+        grid.innerHTML = `
+          <div class="glass-panel rounded-xl p-6 text-center text-slate-500">
+            No upcoming appointments
+          </div>`;
+        return;
+    }
+
+    appointments.forEach(app => {
+        const initials = app.student_name
+            ? app.student_name.split(" ").map(n => n[0]).join("")
+            : "AN";
+
+        grid.innerHTML += `
+          <div class="glass-panel rounded-2xl p-6 hover-lift flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-start mb-3">
+                <div class="h-10 w-10 rounded-full bg-teal-100
+                            flex items-center justify-center text-teal-700 font-bold">
+                  ${initials}
+                </div>
+                <span class="text-xs px-2 py-1 rounded-full
+                             bg-indigo-50 text-indigo-600">
+                  ${app.status}
+                </span>
+              </div>
+
+              <h3 class="font-bold text-slate-800">
+                ${app.student_name || "Anonymous"}
+              </h3>
+
+              <p class="text-sm text-slate-500 mt-1">
+                ${app.counselor_type}
+              </p>
+
+              <div class="mt-4 text-sm text-slate-600 space-y-1">
+                <div>📅 ${app.date}</div>
+                <div>⏰ ${app.time}</div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex gap-2">
+              <button onclick="updateStatus(${app.id}, 'approved')"
+                class="flex-1 bg-teal-600 text-white py-2 rounded-lg text-sm">
+                Approve
+              </button>
+
+              <button onclick="openModal('${app.student_name}', ${app.id})"
+                class="flex-1 border border-slate-300 py-2 rounded-lg text-sm">
+                Reschedule
+              </button>
+            </div>
+          </div>
+        `;
+    });
+}
+
 </script>
+
 
 </body>
 </html>

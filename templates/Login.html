@@ -247,7 +247,7 @@
                 <div class="mb-8">
                     <h2 class="text-xl font-bold text-gray-800 text-center mb-6">Select Login Type</h2>
 
-                    <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="grid grid-cols-3 gap-4 mb-6">
                         <!-- User Role -->
                         <div class="role-card p-6 rounded-2xl cursor-pointer text-center"
                             onclick="selectRole('student')" id="userRole">
@@ -262,6 +262,13 @@
                             <div class="text-3xl mb-3">⚙️</div>
                             <h3 class="font-bold text-gray-800 mb-2">Admin</h3>
                             <p class="text-sm text-gray-600">Manage platform</p>
+                        </div>
+                        <!-- Counsellor Role -->
+                        <div class="role-card p-6 rounded-2xl cursor-pointer text-center"
+                            onclick="selectRole('counsellor')" id="counsellorRole">
+                            <div class="text-3xl mb-3">🧑‍⚕️</div>
+                            <h3 class="font-bold text-gray-800 mb-2">Counsellor</h3>
+                            <p class="text-sm text-gray-600">Manage sessions</p>
                         </div>
                     </div>
                 </div>
@@ -434,32 +441,32 @@
 
         // Role Selection Function
         function selectRole(role) {
-            selectedRole = role;
+    selectedRole = role;
 
-            // Reset all cards
-            document.getElementById('userRole').classList.remove('selected');
-            document.getElementById('adminRole').classList.remove('selected');
+    // Reset all cards
+    ['userRole', 'adminRole', 'counsellorRole'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('selected');
+    });
 
-            // Highlight selected card
-            const selectedCard = document.getElementById(role + 'Role');
-            selectedCard.classList.add('selected');
+    // Highlight selected card
+    const selectedCard = document.getElementById(role + 'Role');
+    if (selectedCard) selectedCard.classList.add('selected');
 
-            // Update button styling based on role
-            const loginButton = document.getElementById('loginButton');
-            if (role === 'admin') {
-                loginButton.className = loginButton.className.replace('calm-button', 'admin-button calm-button');
-            } else {
-                loginButton.className = loginButton.className.replace('admin-button', '');
-            }
+    // Set role for Flask (IMPORTANT)
+    document.getElementById('roleInput').value = role.toUpperCase(); 
+    // STUDENT | ADMIN | COUNSELLOR
 
-            // Update placeholder text based on role
-            const emailInput = document.getElementById('email');
-            if (role === 'admin') {
-                emailInput.placeholder = 'Enter admin email address';
-            } else {
-                emailInput.placeholder = 'Enter your student email address';
-            }
-        }
+    // Update placeholder
+    const emailInput = document.getElementById('email');
+    if (role === 'admin') {
+        emailInput.placeholder = 'Enter admin email address';
+    } else if (role === 'counsellor') {
+        emailInput.placeholder = 'Enter counsellor email address';
+    } else {
+        emailInput.placeholder = 'Enter your student email address';
+    }
+}
 
         // Password Toggle Function
         function togglePassword() {
@@ -554,7 +561,7 @@
             setTimeout(initializeAnimation, 500);
 
             // Pre-select user role by default
-            selectRole('user');
+            selectRole('student');
         });
 
         // Responsive adjustments

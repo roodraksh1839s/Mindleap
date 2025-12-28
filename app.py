@@ -8,7 +8,6 @@ import os
 --------CHAT_BOT INTEGRATION (OPENAI)--------
 '''
 from flask import jsonify, request
-# from openai import OpenAI
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 import faiss, numpy as np
@@ -34,46 +33,64 @@ def get_db_connection():
         database = 'mindleap'
     )
 
+""" --------Global placeholders for chatbot -----------"""
 
-df = pd.read_csv('data/faq.csv')
+embed_model = None
+index = None
+questions = None
+answers = None
 
-# client = OpenAI(api_key="AIzaSyDsOxXjJpL3skc06Yo5d00SmLpcXQABxAE")
-# embed_model = SentenceTransformer('all-MiniLM-L6-v2')
 
-#Ensure columns are clean
+def load_embeddings():
+    global embed_model, index, questions, answers
 
-df.columns = [c.strip().lower() for c in df.columns]
+    if embed_model is not None:
+        return  # already loaded
 
-questions = df['questions'].tolist()
-answers = df['answers'].tolist()
+    print("🔁 Loading embeddings...")
 
-#Compute embeddings
+    df = pd.read_csv('data/faq.csv')
+    df.columns = [c.strip().lower() for c in df.columns]
 
-# Load or create FAISS embeddings
-embed_model = SentenceTransformer('all-MiniLM-L6-v2')
+    questions = df['questions'].tolist()
+    answers = df['answers'].tolist()
 
-if os.path.exists("data/embeddings.pkl"):
-    with open("data/embeddings.pkl", "rb") as f:
-        embeddings, index = pickle.load(f)
-    print("✅ Loaded cached embeddings")
-else:
-    embeddings = embed_model.encode(questions, show_progress_bar=True)
-    dimension = embeddings.shape[1]
-    index = faiss.IndexFlatL2(dimension)
-    index.add(np.array(embeddings))
-    with open("data/embeddings.pkl", "wb") as f:
-        pickle.dump((embeddings, index), f)
-    print("✅ Created and saved embeddings")
+    embed_model = SentenceTransformer('all-MiniLM-L6-v2')
+
+    if os.path.exists("data/embeddings.pkl"):
+        with open("data/embeddings.pkl", "rb") as f:
+            embeddings, index = pickle.load(f)
+        print("✅ Loaded cached embeddings")
+    else:
+        embeddings = embed_model.encode(questions, show_progress_bar=True)
+        dimension = embeddings.shape[1]
+        index = faiss.IndexFlatL2(dimension)
+        index.add(np.array(embeddings))
+        with open("data/embeddings.pkl", "wb") as f:
+            pickle.dump((embeddings, index), f)
+        print("✅ Created and saved embeddings")
+
     
     
 def search_best_match(user_query, top_k=2):
     """Find top-k most similar Q&A pairs"""
+
+    # 🔑 Lazy-load embeddings (only once)
+    load_embeddings()
+
+    # Safety check (edge case)
+    if embed_model is None or index is None:
+        return []
+
     query_emb = embed_model.encode([user_query])
     distances, indices = index.search(np.array(query_emb), top_k)
-    results =[]
+
+    results = []
     for idx in indices[0]:
         results.append((questions[idx], answers[idx]))
+
     return results
+
 
 
 
@@ -151,6 +168,8 @@ def login():
             return redirect(url_for('student_ui'))
         elif user['ROLE'] == 'ADMIN':
             return redirect(url_for('admin'))
+        elif user['ROLE'] == 'COUNSELLOR':
+            return redirect(url_for('counsellor_ui'))
         
     else:
         flash("Invalid credntials or role")
@@ -351,6 +370,8 @@ def update_appointment():
 
 @app.route("/counsellor")
 def counsellor_ui():
+    if 'role' not in session or session['role'] != 'COUNSELLOR':
+        return redirect(url_for('home'))
     return render_template("councellor.html")
 
 
